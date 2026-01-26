@@ -177,11 +177,23 @@ export default function HomeScreen() {
     return () => unsubscribe();
   }, [authUser]);
 
-  const currentIntake = useMemo(() => dailyLog?.totals || {
-    kcal: 0,
-    protein: 0,
-    fat: 0,
-    carbs: 0,
+  const currentIntake = useMemo(() => {
+    if (!dailyLog?.foods) {
+      return { kcal: 0, protein: 0, fat: 0, carbs: 0 };
+    }
+
+    // Only count checked foods
+    const checkedFoods = dailyLog.foods.filter(food => food.checked);
+
+    return checkedFoods.reduce(
+      (totals, food) => ({
+        kcal: totals.kcal + (food.kcal * food.servings),
+        protein: totals.protein + (food.protein * food.servings),
+        fat: totals.fat + (food.fat * food.servings),
+        carbs: totals.carbs + (food.carbs * food.servings),
+      }),
+      { kcal: 0, protein: 0, fat: 0, carbs: 0 }
+    );
   }, [dailyLog]);
 
   const kcalTarget = macroTargets ? macroTargets.kcal : 2000;
