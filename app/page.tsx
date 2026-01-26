@@ -17,8 +17,9 @@ import {
   toggleFoodChecked,
   removeFoodFromLog,
 } from "./firebase/dataService";
-import { DailyLog, LoggedFood, Recipe, MealType } from "./types/user";
+import type { DailyLog, LoggedFood, Recipe, MealType } from "./types/user";
 
+import ThemeSwitcherNav from "./components/ThemeSwitcherNav";
 import styles from "./home.module.css";
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -49,7 +50,9 @@ const ActivityRings = ({
   fatTarget: number;
   carbsTarget: number;
 }) => {
-  const [animatedProgress, setAnimatedProgress] = useState([0, 0, 0, 0]);
+  const [animatedProgress, setAnimatedProgress] = useState<[number, number, number, number]>([
+    0, 0, 0, 0,
+  ]);
 
   const ringSize = 90;
   const strokeWidth = 8;
@@ -92,12 +95,11 @@ const ActivityRings = ({
       const animate = () => {
         const elapsed = Date.now() - startTime;
         const progress = Math.min(elapsed / duration, 1);
-
         const easedProgress = 1 - Math.pow(1 - progress, 3);
 
         setAnimatedProgress((prev) => {
-          const newProgress = [...prev];
-          newProgress[index] = startProgress + progressDiff * easedProgress;
+          const newProgress: [number, number, number, number] = [...prev] as any;
+          newProgress[index as 0 | 1 | 2 | 3] = startProgress + progressDiff * easedProgress;
           return newProgress;
         });
 
@@ -113,8 +115,9 @@ const ActivityRings = ({
     <div className={styles.ringsWrap}>
       <svg width={ringSize} height={ringSize}>
         {rings.map((ring, index) => {
-          const progress = animatedProgress[index];
+          const progress = animatedProgress[index as 0 | 1 | 2 | 3];
           const strokeDashoffset = circumference - progress * circumference;
+
           return (
             <g key={index}>
               <circle
@@ -150,14 +153,13 @@ export default function HomeScreen() {
   useFont();
   const router = useRouter();
 
-  const [weekOffset, setWeekOffset] = useState(0);
-  const [selectedDayIndex, setSelectedDayIndex] = useState(-1);
+  const [weekOffset, setWeekOffset] = useState<number>(0);
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number>(-1);
 
   const [dailyLog, setDailyLog] = useState<DailyLog | null>(null);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [addFoodModalVisible, setAddFoodModalVisible] = useState(false);
-  const [selectedMealType, setSelectedMealType] =
-    useState<MealType>("breakfast");
+  const [addFoodModalVisible, setAddFoodModalVisible] = useState<boolean>(false);
+  const [selectedMealType, setSelectedMealType] = useState<MealType>("breakfast");
 
   const [expandedMeals, setExpandedMeals] = useState<Set<MealType>>(new Set());
   const [removingFoods, setRemovingFoods] = useState<Set<string>>(new Set());
@@ -168,7 +170,7 @@ export default function HomeScreen() {
     }
   }, [authUser, loading, router]);
 
-  const getSelectedDate = useCallback(() => {
+  const getSelectedDate = useCallback((): Date => {
     const today = new Date();
     if (selectedDayIndex === -1) return today;
 
@@ -375,8 +377,10 @@ export default function HomeScreen() {
               </span>
             </div>
 
-            <div className={cx(styles.flexRow, styles.activityValueRow)} style={undefined}>
-              <span className={styles.bigNumber}>{Math.round(currentIntake.kcal)}</span>
+            <div className={cx(styles.flexRow, styles.activityValueRow)}>
+              <span className={styles.bigNumber}>
+                {Math.round(currentIntake.kcal)}
+              </span>
               <span className={styles.unitText}>kcal</span>
             </div>
 
@@ -389,24 +393,36 @@ export default function HomeScreen() {
             <div className={cx(styles.flexBetween, styles.macrosRow)}>
               <div className={styles.macroGroup}>
                 <div className={styles.macroCol}>
-                  <p className={cx(styles.macroLabel, styles.macroLabelProtein)}>Eiwit</p>
-                  <p className={styles.macroValue}>{Math.round(currentIntake.protein)}g</p>
+                  <p className={cx(styles.macroLabel, styles.macroLabelProtein)}>
+                    Eiwit
+                  </p>
+                  <p className={styles.macroValue}>
+                    {Math.round(currentIntake.protein)}g
+                  </p>
                   <p className={styles.macroRemaining}>{remaining.protein}g</p>
                 </div>
 
                 <div className={styles.macroDivider} />
 
                 <div className={styles.macroCol}>
-                  <p className={cx(styles.macroLabel, styles.macroLabelFat)}>Vet</p>
-                  <p className={styles.macroValue}>{Math.round(currentIntake.fat)}g</p>
+                  <p className={cx(styles.macroLabel, styles.macroLabelFat)}>
+                    Vet
+                  </p>
+                  <p className={styles.macroValue}>
+                    {Math.round(currentIntake.fat)}g
+                  </p>
                   <p className={styles.macroRemaining}>{remaining.fat}g</p>
                 </div>
 
                 <div className={styles.macroDivider} />
 
                 <div className={styles.macroCol}>
-                  <p className={cx(styles.macroLabel, styles.macroLabelCarbs)}>Carbs</p>
-                  <p className={styles.macroValue}>{Math.round(currentIntake.carbs)}g</p>
+                  <p className={cx(styles.macroLabel, styles.macroLabelCarbs)}>
+                    Carbs
+                  </p>
+                  <p className={styles.macroValue}>
+                    {Math.round(currentIntake.carbs)}g
+                  </p>
                   <p className={styles.macroRemaining}>{remaining.carbs}g</p>
                 </div>
               </div>
@@ -544,7 +560,7 @@ export default function HomeScreen() {
           })}
         </div>
 
-        <div className={styles.bottomSpacer} />
+    
       </div>
 
       {addFoodModalVisible && (
@@ -553,8 +569,7 @@ export default function HomeScreen() {
             <div className={cx(styles.flexBetween, styles.modalHeader)}>
               <h3 className={styles.modalTitle}>
                 Add to{" "}
-                {selectedMealType.charAt(0).toUpperCase() +
-                  selectedMealType.slice(1)}
+                {selectedMealType.charAt(0).toUpperCase() + selectedMealType.slice(1)}
               </h3>
               <button
                 className={styles.iconButton}
@@ -606,6 +621,15 @@ export default function HomeScreen() {
           </div>
         </div>
       )}
+
+      {/* Bottom navigation switcher (reusable component) */}
+      <ThemeSwitcherNav
+        defaultValue="light"
+        onChange={(nextTheme: string) => {
+          // Hook into your theme system later
+          // Example: document.documentElement.dataset.theme = nextTheme;
+        }}
+      />
     </div>
   );
 }
