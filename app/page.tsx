@@ -142,6 +142,13 @@ export default function HomeScreen() {
 
   const [expandedMeals, setExpandedMeals] = useState<Set<MealType>>(new Set());
 
+  // Handle redirect to auth page if not authenticated
+  useEffect(() => {
+    if (!loading && !authUser && typeof window !== 'undefined') {
+      router.push('/auth');
+    }
+  }, [authUser, loading, router]);
+
   // Show loading spinner while Firebase auth is initializing
   if (loading) {
     return (
@@ -151,11 +158,8 @@ export default function HomeScreen() {
     );
   }
 
-  // Redirect to auth page if not authenticated
+  // Show redirect message while navigating to auth
   if (!authUser) {
-    if (typeof window !== 'undefined') {
-      router.push('/auth');
-    }
     return (
       <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="text-white text-xl">Redirecting to login...</div>
