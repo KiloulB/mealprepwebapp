@@ -141,6 +141,7 @@ export default function HomeScreen() {
   const [selectedMealType, setSelectedMealType] = useState<MealType>('breakfast');
 
   const [expandedMeals, setExpandedMeals] = useState<Set<MealType>>(new Set());
+  const [removingFoods, setRemovingFoods] = useState<Set<string>>(new Set());
 
   // Handle redirect to auth page if not authenticated
   useEffect(() => {
@@ -148,24 +149,6 @@ export default function HomeScreen() {
       router.push('/auth');
     }
   }, [authUser, loading, router]);
-
-  // Show loading spinner while Firebase auth is initializing
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-white text-xl">Loading...</div>
-      </div>
-    );
-  }
-
-  // Show redirect message while navigating to auth
-  if (!authUser) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-white text-xl">Redirecting to login...</div>
-      </div>
-    );
-  }
 
   const getSelectedDate = useCallback(() => {
     const today = new Date();
@@ -232,6 +215,24 @@ export default function HomeScreen() {
     fat: Math.max(0, fatTarget - currentIntake.fat),
     carbs: Math.max(0, carbsTarget - currentIntake.carbs),
   }), [currentIntake, kcalTarget, proteinTarget, fatTarget, carbsTarget]);
+
+  // Show loading spinner while Firebase auth is initializing
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show redirect message while navigating to auth
+  if (!authUser) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="text-white text-xl">Redirecting to login...</div>
+      </div>
+    );
+  }
 
   const getWeekDates = (offset: number) => {
     const today = new Date();
@@ -320,7 +321,20 @@ export default function HomeScreen() {
 
   const handleRemoveFood = async (foodId: string) => {
     if (!authUser) return;
-    await removeFoodFromLog(authUser.uid, getSelectedDate(), foodId);
+
+    // Add to removing set for animation
+    setRemovingFoods(prev => new Set(prev).add(foodId));
+
+    // Wait for animation to complete
+    setTimeout(async () => {
+      await removeFoodFromLog(authUser.uid, getSelectedDate(), foodId);
+      // Remove from removing set
+      setRemovingFoods(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(foodId);
+        return newSet;
+      });
+    }, 300);
   };
 
   const openAddFoodModal = (mealType: MealType) => {
@@ -365,7 +379,7 @@ export default function HomeScreen() {
         </button>
       </div>
 
-      <div className="overflow-y-auto pb-20" style={{paddingHorizontal: 20}}>
+      <div className="overflow-y-auto pb-20" style={{paddingLeft: 20, paddingRight: 20}}>
         {/* Macros Section */}
         <div className="mb-6">
           <div className="rounded-xl p-5 mb-3" style={{backgroundColor: '#1A1A1A', borderRadius: 16, padding: 20, marginBottom: 12, boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.06)'}}>
@@ -439,49 +453,8 @@ export default function HomeScreen() {
             const isExpanded = expandedMeals.has(meal.id);
             return (
               <div key={meal.id}>
-                {isExpanded ? (
-                  <div className="rounded-lg overflow-hidden cursor-pointer" style={{backgroundColor: '#2D2D2D', marginLeft: 20, marginRight: 20, marginTop: 16, borderRadius: 12}}>
-                    <div className="flex items-center justify-between p-5" onClick={() => toggleMealExpansion(meal.id)}>
-                      <div>
-                        <p className="text-base font-semibold" style={{color: '#FFFFFF'}}>{meal.name}</p>
-                        {hasItems ? (
-                          <p className="text-sm mt-2" style={{color: '#8DCF42'}}>{Math.round(mealData.kcal)} kcal • {mealData.items} item{mealData.items > 1 ? 's' : ''}</p>
-                        ) : (
-                          <p className="text-sm mt-2" style={{color: '#AAAAAA'}}>No items yet</p>
-                        )}
-                      </div>
-                      <button className="w-8 h-8 rounded-full flex items-center justify-center" style={{backgroundColor: '#4E4E4E'}} onClick={() => openAddFoodModal(meal.id)}>
-                        <IoAdd size={20} color="#FFFFFF" />
-                      </button>
-                    </div>
-
-                    {mealData.foods.length > 0 && (
-                      <div className="px-3 pb-2">
-                        {mealData.foods.map((food) => (
-                          <div key={food.id} className="flex items-center rounded-lg p-3 mb-2 cursor-pointer" style={{backgroundColor: '#212121', borderRadius: 12, padding: 12, marginBottom: 8}} onClick={() => handleToggleFood(food.id)}>
-                            <button
-                              className="w-6 h-6 rounded-full flex items-center justify-center mr-3"
-                              style={{borderWidth: 2, borderColor: food.checked ? '#10B981' : '#666666', backgroundColor: food.checked ? '#10B981' : 'transparent'}}
-                              onClick={() => handleToggleFood(food.id)}
-                            >
-                              {food.checked && <IoCheckmark size={16} color="#FFF" />}
-                            </button>
-                            <div className="flex-1">
-                              <p className="text-sm font-medium" style={{color: food.checked ? '#AAAAAA' : '#FFFFFF', textDecorationLine: food.checked ? 'line-through' : 'none'}}>{food.name}</p>
-                              <p className="text-xs mt-2" style={{color: '#CCCCCC'}}>
-                                {Math.round(food.kcal)} kcal • {food.type === 'food' && food.grams ? `${food.grams}g` : `${food.servings} serving${food.servings !== 1 ? 's' : ''}`}
-                              </p>
-                            </div>
-                            <button onClick={() => handleRemoveFood(food.id)}>
-                              <IoCloseCircleOutline size={20} color="#9CA3AF" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between px-5 py-4 cursor-pointer" onClick={() => toggleMealExpansion(meal.id)}>
+                <div className="rounded-lg overflow-hidden cursor-pointer" style={{backgroundColor: isExpanded ? '#2D2D2D' : 'transparent', marginLeft: 20, marginRight: 20, marginTop: 16, borderRadius: 12, transition: 'all 0.3s ease-in-out'}}>
+                  <div className="flex items-center justify-between p-5" onClick={() => toggleMealExpansion(meal.id)}>
                     <div>
                       <p className="text-base font-semibold" style={{color: '#FFFFFF'}}>{meal.name}</p>
                       {hasItems ? (
@@ -490,11 +463,53 @@ export default function HomeScreen() {
                         <p className="text-sm mt-2" style={{color: '#AAAAAA'}}>No items yet</p>
                       )}
                     </div>
-                    <button className="w-8 h-8 rounded-full flex items-center justify-center" style={{backgroundColor: '#4E4E4E'}} onClick={() => openAddFoodModal(meal.id)}>
+                    <button className="w-8 h-8 rounded-full flex items-center justify-center" style={{backgroundColor: '#4E4E4E'}} onClick={(e) => { e.stopPropagation(); openAddFoodModal(meal.id); }}>
                       <IoAdd size={20} color="#FFFFFF" />
                     </button>
                   </div>
-                )}
+
+                  <div style={{
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    overflow: 'hidden',
+                    maxHeight: isExpanded ? '500px' : '0px',
+                    opacity: isExpanded ? 1 : 0,
+                    transform: isExpanded ? 'scaleY(1)' : 'scaleY(0.8)',
+                    transformOrigin: 'top'
+                  }}>
+                    {mealData.foods.length > 0 && (
+                      <div className="px-3 pb-2">
+                        {mealData.foods.map((food) => (
+                          <div key={food.id} className="flex items-center rounded-lg p-3 mb-2 cursor-pointer" style={{
+                            backgroundColor: '#212121',
+                            borderRadius: 12,
+                            padding: 12,
+                            marginBottom: 8,
+                            transition: 'all 0.3s ease-in-out',
+                            opacity: removingFoods.has(food.id) ? 0 : 1,
+                            transform: removingFoods.has(food.id) ? 'translateX(-20px)' : 'translateX(0px)'
+                          }} onClick={() => handleToggleFood(food.id)}>
+                            <button
+                              className="w-6 h-6 rounded-full flex items-center justify-center mr-3"
+                              style={{borderWidth: 2, borderColor: food.checked ? '#10B981' : '#666666', backgroundColor: food.checked ? '#10B981' : 'transparent'}}
+                              onClick={(e) => { e.stopPropagation(); handleToggleFood(food.id); }}
+                            >
+                              {food.checked && <IoCheckmark size={16} color="#FFF" />}
+                            </button>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium" style={{color: food.checked ? '#AAAAAA' : '#FFFFFF', textDecorationLine: food.checked ? 'line-through' : 'none', transition: 'all 0.3s'}}>{food.name}</p>
+                              <p className="text-xs mt-2" style={{color: '#CCCCCC'}}>
+                                {Math.round(food.kcal)} kcal • {food.type === 'food' && food.grams ? `${food.grams}g` : `${food.servings} serving${food.servings !== 1 ? 's' : ''}`}
+                              </p>
+                            </div>
+                            <button style={{border: 'none', backgroundColor: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 4, transition: 'all 0.2s ease-in-out'}} onClick={(e) => { e.stopPropagation(); handleRemoveFood(food.id); }}>
+                              <IoCloseCircleOutline size={20} color="#9CA3AF" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
 
                 {index < meals.length - 1 && <div className="h-px bg-gray-700 mx-5" />}
               </div>
