@@ -343,6 +343,9 @@ export default function HomeScreen() {
   };
 
   const toggleMealExpansion = (mealType: MealType) => {
+    const mealData = getMealData(mealType);
+    if (mealData.items === 0) return; // Don't allow expansion if no items
+
     setExpandedMeals(prev => {
       const newSet = new Set(prev);
       if (newSet.has(mealType)) {
@@ -453,8 +456,8 @@ export default function HomeScreen() {
             const isExpanded = expandedMeals.has(meal.id);
             return (
               <div key={meal.id}>
-                <div className="rounded-lg overflow-hidden cursor-pointer" style={{backgroundColor: isExpanded ? '#2D2D2D' : 'transparent', marginLeft: 20, marginRight: 20, marginTop: 16, borderRadius: 12, transition: 'all 0.3s ease-in-out'}}>
-                  <div className="flex items-center justify-between p-5" onClick={() => toggleMealExpansion(meal.id)}>
+                <div className="rounded-lg overflow-hidden" style={{backgroundColor: isExpanded ? '#2D2D2D' : 'transparent', marginLeft: 20, marginRight: 20, marginTop: 16, borderRadius: 12, transition: 'all 0.3s ease-in-out', cursor: hasItems ? 'pointer' : 'default'}}>
+                  <div className="flex items-center justify-between p-5" onClick={() => hasItems && toggleMealExpansion(meal.id)}>
                     <div>
                       <p className="text-base font-semibold" style={{color: '#FFFFFF'}}>{meal.name}</p>
                       {hasItems ? (
