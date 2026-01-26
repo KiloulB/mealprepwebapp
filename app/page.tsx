@@ -127,7 +127,7 @@ const ActivityRings = ({
 };
 
 export default function HomeScreen() {
-  const { macroTargets, authUser } = useUser();
+  const { macroTargets, authUser, loading } = useUser();
   const { fontFamily, fontFamilyMedium, fontFamilySemiBold, fontFamilyBold } = useFont();
   const router = useRouter();
   const [weekOffset, setWeekOffset] = useState(0);
@@ -141,6 +141,27 @@ export default function HomeScreen() {
   const [selectedMealType, setSelectedMealType] = useState<MealType>('breakfast');
 
   const [expandedMeals, setExpandedMeals] = useState<Set<MealType>>(new Set());
+
+  // Show loading spinner while Firebase auth is initializing
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  // Redirect to auth page if not authenticated
+  if (!authUser) {
+    if (typeof window !== 'undefined') {
+      router.push('/auth');
+    }
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="text-white text-xl">Redirecting to login...</div>
+      </div>
+    );
+  }
 
   const getSelectedDate = useCallback(() => {
     const today = new Date();

@@ -1,84 +1,17 @@
 import { DailyLog, LoggedFood, Recipe, MealType } from '../types/user';
-
-// In-memory storage for mock data
-let mockDailyLogs: { [key: string]: DailyLog } = {
-  'default': {
-    totals: {
-      kcal: 1200,
-      protein: 80,
-      fat: 40,
-      carbs: 150,
-    },
-    foods: [
-      {
-        id: '1',
-        type: 'recipe',
-        sourceId: 'r1',
-        name: 'Chicken Salad',
-        kcal: 400,
-        protein: 30,
-        carbs: 20,
-        fat: 20,
-        servings: 1,
-        mealType: 'lunch',
-        checked: true,
-      },
-      {
-        id: '2',
-        type: 'recipe',
-        sourceId: 'r2',
-        name: 'Protein Shake',
-        kcal: 200,
-        protein: 25,
-        carbs: 10,
-        fat: 5,
-        servings: 1,
-        mealType: 'breakfast',
-        checked: true,
-      },
-      {
-        id: '3',
-        type: 'recipe',
-        sourceId: 'r3',
-        name: 'Salmon Dinner',
-        kcal: 600,
-        protein: 45,
-        carbs: 30,
-        fat: 35,
-        servings: 1,
-        mealType: 'dinner',
-        checked: false,
-      },
-    ],
-  }
-};
-
-const mockRecipes: Recipe[] = [
-  {
-    id: 'r1',
-    title: 'Chicken Salad',
-    kcal: 400,
-    protein: 30,
-    carbs: 20,
-    fat: 20,
-  },
-  {
-    id: 'r2',
-    title: 'Protein Shake',
-    kcal: 200,
-    protein: 25,
-    carbs: 10,
-    fat: 5,
-  },
-  {
-    id: 'r3',
-    title: 'Salmon Dinner',
-    kcal: 600,
-    protein: 45,
-    carbs: 30,
-    fat: 35,
-  },
-];
+import { db, auth } from './config';
+import {
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  onSnapshot,
+  query,
+  where,
+  arrayUnion,
+  arrayRemove
+} from 'firebase/firestore';
 
 // Helper function to calculate totals from foods
 const calculateTotals = (foods: LoggedFood[]) => {
@@ -94,12 +27,9 @@ const calculateTotals = (foods: LoggedFood[]) => {
   );
 };
 
-// Update totals whenever foods change
-const updateTotals = (userId: string) => {
-  const log = mockDailyLogs[userId];
-  if (log) {
-    log.totals = calculateTotals(log.foods);
-  }
+// Helper function to get date string for Firestore
+const getDateString = (date: Date) => {
+  return date.toISOString().split('T')[0]; // YYYY-MM-DD format
 };
 
 export const subscribeToDailyLog = (
@@ -107,20 +37,56 @@ export const subscribeToDailyLog = (
   date: Date,
   callback: (log: DailyLog | null) => void
 ) => {
-  // Mock: return mock data after a delay
-  const log = mockDailyLogs[userId] || mockDailyLogs['default'];
-  setTimeout(() => callback(log), 100);
+  if (!userId) {
+    callback(null);
+    return () => {};
+  }
 
-  // Return unsubscribe function (mock)
-  return () => {};
+  const dateStr = getDateString(date);
+  const docRef = doc(db, 'users', userId, 'dailyLogs', dateStr);
+
+  return onSnapshot(docRef, (docSnapshot) => {
+    if (docSnapshot.exists()) {
+      const data = docSnapshot.data();
+      const log: DailyLog = {
+        totals: data.totals || { kcal: 0, protein: 0, fat: 0, carbs: 0 },
+        foods: data.foods || [],
+      };
+      callback(log);
+    } else {
+      // Return empty log for new dates
+      callback({
+        totals: { kcal: 0, protein: 0, fat: 0, carbs: 0 },
+        foods: [],
+      });
+    }
+  }, (error) => {
+    console.error('Error subscribing to daily log:', error);
+    callback(null);
+  });
 };
 
 export const subscribeToRecipes = (
   userId: string,
   callback: (recipes: Recipe[]) => void
 ) => {
-  setTimeout(() => callback(mockRecipes), 100);
-  return () => {};
+  if (!userId) {
+    callback([]);
+    return () => {};
+  }
+
+  const recipesRef = collection(db, 'users', userId, 'recipes');
+
+  return onSnapshot(recipesRef, (querySnapshot) => {
+    const recipes: Recipe[] = [];
+    querySnapshot.forEach((doc) => {
+      recipes.push({ id: doc.id, ...doc.data() } as Recipe);
+    });
+    callback(recipes);
+  }, (error) => {
+    console.error('Error subscribing to recipes:', error);
+    callback([]);
+  });
 };
 
 export const addFoodToLog = async (
@@ -128,15 +94,38 @@ export const addFoodToLog = async (
   date: Date,
   food: Omit<LoggedFood, 'id'>
 ) => {
-  // Mock: add food to the log
-  const log = mockDailyLogs[userId] || mockDailyLogs['default'];
-  const newFood: LoggedFood = {
-    ...food,
-    id: Date.now().toString(), // Simple ID generation
-  };
-  log.foods.push(newFood);
-  updateTotals(userId);
-  console.log('Added food:', newFood);
+  if (!userId) return;
+
+  const dateStr = getDateString(date);
+  const docRef = doc(db, 'users', userId, 'dailyLogs', dateStr);
+
+  try {
+    // Get current document
+    const docSnap = await getDoc(docRef);
+    const currentFoods = docSnap.exists() ? docSnap.data()?.foods || [] : [];
+
+    // Create new food with unique ID
+    const newFood: LoggedFood = {
+      ...food,
+      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    };
+
+    // Add food to array and recalculate totals
+    const updatedFoods = [...currentFoods, newFood];
+    const updatedTotals = calculateTotals(updatedFoods);
+
+    // Update document
+    await setDoc(docRef, {
+      foods: updatedFoods,
+      totals: updatedTotals,
+      lastUpdated: new Date(),
+    });
+
+    console.log('Added food to log:', newFood);
+  } catch (error) {
+    console.error('Error adding food to log:', error);
+    throw error;
+  }
 };
 
 export const toggleFoodChecked = async (
@@ -144,13 +133,37 @@ export const toggleFoodChecked = async (
   date: Date,
   foodId: string
 ) => {
-  // Mock: toggle food checked status
-  const log = mockDailyLogs[userId] || mockDailyLogs['default'];
-  const food = log.foods.find(f => f.id === foodId);
-  if (food) {
-    food.checked = !food.checked;
-    updateTotals(userId);
-    console.log('Toggled food:', foodId, 'to', food.checked);
+  if (!userId) return;
+
+  const dateStr = getDateString(date);
+  const docRef = doc(db, 'users', userId, 'dailyLogs', dateStr);
+
+  try {
+    // Get current document
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) return;
+
+    const currentFoods: LoggedFood[] = docSnap.data()?.foods || [];
+
+    // Find and toggle the food
+    const updatedFoods = currentFoods.map(food =>
+      food.id === foodId ? { ...food, checked: !food.checked } : food
+    );
+
+    // Recalculate totals
+    const updatedTotals = calculateTotals(updatedFoods);
+
+    // Update document
+    await updateDoc(docRef, {
+      foods: updatedFoods,
+      totals: updatedTotals,
+      lastUpdated: new Date(),
+    });
+
+    console.log('Toggled food checked status:', foodId);
+  } catch (error) {
+    console.error('Error toggling food checked status:', error);
+    throw error;
   }
 };
 
@@ -159,12 +172,34 @@ export const removeFoodFromLog = async (
   date: Date,
   foodId: string
 ) => {
-  // Mock: remove food from the log
-  const log = mockDailyLogs[userId] || mockDailyLogs['default'];
-  const index = log.foods.findIndex(f => f.id === foodId);
-  if (index !== -1) {
-    log.foods.splice(index, 1);
-    updateTotals(userId);
-    console.log('Removed food:', foodId);
+  if (!userId) return;
+
+  const dateStr = getDateString(date);
+  const docRef = doc(db, 'users', userId, 'dailyLogs', dateStr);
+
+  try {
+    // Get current document
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) return;
+
+    const currentFoods: LoggedFood[] = docSnap.data()?.foods || [];
+
+    // Remove the food
+    const updatedFoods = currentFoods.filter(food => food.id !== foodId);
+
+    // Recalculate totals
+    const updatedTotals = calculateTotals(updatedFoods);
+
+    // Update document
+    await updateDoc(docRef, {
+      foods: updatedFoods,
+      totals: updatedTotals,
+      lastUpdated: new Date(),
+    });
+
+    console.log('Removed food from log:', foodId);
+  } catch (error) {
+    console.error('Error removing food from log:', error);
+    throw error;
   }
 };

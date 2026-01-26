@@ -1,10 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User as FirebaseUser, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/config';
 
 interface User {
   uid: string;
-  // Add other user properties as needed
+  email?: string;
+  displayName?: string;
 }
 
 interface MacroTargets {
@@ -19,12 +22,14 @@ interface UserContextType {
   macroTargets: MacroTargets | null;
   setAuthUser: (user: User | null) => void;
   setMacroTargets: (targets: MacroTargets | null) => void;
+  loading: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [authUser, setAuthUser] = useState<User | null>({ uid: 'mock-user' }); // Mock user
+  const [authUser, setAuthUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const [macroTargets, setMacroTargets] = useState<MacroTargets | null>({
     kcal: 2000,
     protein: 150,
@@ -32,8 +37,25 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     carbs: 250,
   });
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
+      if (firebaseUser) {
+        setAuthUser({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email || undefined,
+          displayName: firebaseUser.displayName || undefined,
+        });
+      } else {
+        setAuthUser(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <UserContext.Provider value={{ authUser, macroTargets, setAuthUser, setMacroTargets }}>
+    <UserContext.Provider value={{ authUser, macroTargets, setAuthUser, setMacroTargets, loading }}>
       {children}
     </UserContext.Provider>
   );
