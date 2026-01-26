@@ -458,7 +458,7 @@ export default function HomeScreen() {
                     {mealData.foods.length > 0 && (
                       <div className="px-3 pb-2">
                         {mealData.foods.map((food) => (
-                          <div key={food.id} className="flex items-center rounded-lg p-3 mb-2 cursor-pointer" style={{backgroundColor: '#212121', borderRadius: 12, padding: 12, marginBottom: 8}} onClick={() => handleToggleFood(food.id)}>
+                          <div key={food.id} className="flex items-center rounded-lg p-3 mb-2" style={{backgroundColor: '#212121', borderRadius: 12, padding: 12, marginBottom: 8}}>
                             <button
                               className="w-6 h-6 rounded-full flex items-center justify-center mr-3"
                               style={{borderWidth: 2, borderColor: food.checked ? '#10B981' : '#666666', backgroundColor: food.checked ? '#10B981' : 'transparent'}}
@@ -472,7 +472,7 @@ export default function HomeScreen() {
                                 {Math.round(food.kcal)} kcal • {food.type === 'food' && food.grams ? `${food.grams}g` : `${food.servings} serving${food.servings !== 1 ? 's' : ''}`}
                               </p>
                             </div>
-                            <button onClick={() => handleRemoveFood(food.id)}>
+                            <button onClick={(e) => { e.stopPropagation(); handleRemoveFood(food.id); }}>
                               <IoCloseCircleOutline size={20} color="#9CA3AF" />
                             </button>
                           </div>
