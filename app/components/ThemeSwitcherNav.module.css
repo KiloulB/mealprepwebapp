@@ -2,15 +2,15 @@
 
 /* Component-level defaults (safe to override globally) */
 :global(:root) {
-  --c-glass: #bbbbbc;
+  --c-glass: #818181;
   --c-light: #fff;
   --c-dark: #000;
 
   --c-content: #e1e1e1;
-  --c-action: #03d5ff;
+  --c-action: #8dcf42;
 
   --glass-reflex-dark: 2;
-  --glass-reflex-light: 0.3;
+  --glass-reflex-light: 0.2;
 
   --saturation: 150%;
 }
@@ -22,6 +22,7 @@
   left: 50%;
   bottom: 18px;
   translate: -50% 0;
+  font-weight:600;
 
   display: flex;
   align-items: center;
@@ -109,6 +110,26 @@
     box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
 }
 
+.switcher__content {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+}
+
+/* Reuse your existing .switcher__icon class, but make sure it styles react-icons too */
+.switcher__icon {
+  color: var(--c);
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.switcher__text {
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--c);
+}
+
+
 .switcher__legend {
   position: absolute;
   width: 1px;
@@ -163,7 +184,6 @@
 }
 
 .switcher__option:hover {
-  --c: var(--c-action);
   cursor: pointer;
 }
 
@@ -172,7 +192,7 @@
 }
 
 .switcher__option:has(input:checked) {
-  --c: var(--c-content);
+  --c: var(--c-action);
   cursor: auto;
 }
 
@@ -191,7 +211,7 @@
   height: calc(100% - 10px);
   border-radius: 99em;
 
-  background-color: color-mix(in srgb, var(--c-glass) 36%, transparent);
+  background-color: color-mix(in srgb, var(--c-glass) 26%, transparent);
   z-index: -1;
 
   box-shadow: inset 0 0 0 1px

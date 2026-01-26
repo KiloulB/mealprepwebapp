@@ -458,10 +458,14 @@ export default function HomeScreen() {
                     hasItems ? styles.mealWrapEnabled : styles.mealWrapDisabled
                   )}
                 >
-                  <div
-                    className={cx(styles.flexBetween, styles.mealHeader)}
-                    onClick={() => hasItems && toggleMealExpansion(meal.id)}
-                  >
+     <div
+  className={cx(
+    styles.flexBetween,
+    styles.mealHeader,
+    isExpanded && styles.mealHeaderExpanded
+  )}
+  onClick={() => hasItems && toggleMealExpansion(meal.id)}
+>
                     <div>
                       <p className={styles.mealName}>{meal.name}</p>
                       {hasItems ? (

@@ -264,7 +264,15 @@
 }
 
 .mealHeader {
-  padding: 20px;
+  padding: 0px;
+  transition: padding 0.3s ease-in-out;
+}
+
+.mealHeaderExpanded {
+  padding-left: 20px;
+    padding-right: 20px;
+    padding-top:20px;
+
 }
 
 .mealName {
@@ -314,6 +322,7 @@
   max-height: 500px;
   opacity: 1;
   transform: scaleY(1);
+  padding:10px;
 }
 
 .mealExpandedInner {
