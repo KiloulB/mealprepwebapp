@@ -22,6 +22,7 @@ import type { DailyLog, LoggedFood, Recipe, MealType } from "./types/user";
 import ThemeSwitcherNav from "./components/ThemeSwitcherNav";
 import styles from "./home.module.css";
 
+
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -30,6 +31,7 @@ function clampPercent(n: number) {
   if (Number.isNaN(n)) return 0;
   return Math.max(0, Math.min(100, Math.round(n)));
 }
+
 
 const ActivityRings = ({
   kcal,
@@ -207,6 +209,7 @@ export default function HomeScreen() {
   }, [authUser]);
 
   const currentIntake = useMemo(() => {
+    
     if (!dailyLog?.foods) return { kcal: 0, protein: 0, fat: 0, carbs: 0 };
 
     const checkedFoods = dailyLog.foods.filter((food) => food.checked);
@@ -221,6 +224,23 @@ export default function HomeScreen() {
       { kcal: 0, protein: 0, fat: 0, carbs: 0 }
     );
   }, [dailyLog]);
+
+  useEffect(() => {
+  if (!dailyLog?.foods) return;
+
+  setExpandedMeals((prev) => {
+    const next = new Set(prev);
+
+    (["breakfast", "lunch", "dinner", "snacks"] as MealType[]).forEach(
+      (mealType) => {
+        const hasItems = dailyLog.foods.some((f) => f.mealType === mealType);
+        if (!hasItems) next.delete(mealType);
+      }
+    );
+
+    return next;
+  });
+}, [dailyLog?.foods]);
 
   const kcalTarget = macroTargets ? macroTargets.kcal : 2000;
   const proteinTarget = macroTargets ? macroTargets.protein : 150;
@@ -266,9 +286,9 @@ export default function HomeScreen() {
   };
 
   const meals: { id: MealType; name: string; icon: string }[] = [
-    { id: "breakfast", name: "Breakfast", icon: "🍳" },
+    { id: "breakfast", name: "Ontbijt", icon: "🍳" },
     { id: "lunch", name: "Lunch", icon: "🍜" },
-    { id: "dinner", name: "Dinner", icon: "🍖" },
+    { id: "dinner", name: "Avondeten", icon: "🍖" },
     { id: "snacks", name: "Snacks", icon: "🍎" },
   ];
 
@@ -288,6 +308,12 @@ export default function HomeScreen() {
       mealType: selectedMealType,
       checked: true,
     });
+
+    setExpandedMeals((prev) => {
+  const next = new Set(prev);
+  next.add(selectedMealType); // or recipe meal type if you pass one
+  return next;
+});
 
     setAddFoodModalVisible(false);
   };
@@ -337,110 +363,112 @@ export default function HomeScreen() {
   const kcalPct = clampPercent((currentIntake.kcal / kcalTarget) * 100);
   const progressWidthClass = (styles as any)[`w${kcalPct}`] as string;
 
-  return (
-    <div className={styles.screen}>
-      <div className={styles.headerRow}>
-        <div>
-          <h1 className={styles.headerTitle}>Overzicht</h1>
-          <p className={styles.headerSubtitle}>{todayDateString}</p>
-        </div>
 
-        <button
-          className={styles.headerButton}
-          onClick={() => router.push("/settings")}
-        >
-          <IoPersonOutline size={24} color="#9CA3AF" />
-        </button>
+return (
+  <div className={styles.screen}>
+    <div className={styles.headerRow}>
+      <div className={styles.headerDivider}>
+        <h1 className={styles.headerTitle}>Overzicht</h1>
+        <p className={styles.headerSubtitle}>{todayDateString}</p>
       </div>
 
-      <div className={styles.scrollArea}>
-        <div className={styles.section}>
-          <div className={styles.card}>
-            <div className={cx(styles.flexBetween, styles.cardRowBottom)}>
-              <span className={cx(styles.cardTitle, styles.cardTitleActivity)}>
-                🔥 Activiteit
-              </span>
-            </div>
+      <button
+        className={styles.headerButton}
+        onClick={() => router.push("/settings")}
+      >
+        <IoPersonOutline size={24} color="#9CA3AF" />
+      </button>
+    </div>
 
-            <div className={cx(styles.flexRow, styles.activityValueRow)}>
-              <span className={styles.bigNumber}>4,093</span>
-              <span className={cx(styles.unitText, styles.unitTextStrong)}>
-                stappen
-              </span>
-            </div>
+    <div className={styles.scrollArea}>
+      {/* OPTION A: mealsCard is inside the same section, below the cards */}
+      <div className={styles.section}>
+        <div className={styles.card}>
+          <div className={cx(styles.flexBetween, styles.cardRowBottom)}>
+            <span className={cx(styles.cardTitle, styles.cardTitleActivity)}>
+              🔥 Activiteit
+            </span>
           </div>
 
-          <div className={styles.card}>
-            <div className={cx(styles.flexBetween, styles.cardRowBottom)}>
-              <span className={cx(styles.cardTitle, styles.cardTitleFood)}>
-                🥗 Voeding
-              </span>
-            </div>
-
-            <div className={cx(styles.flexRow, styles.activityValueRow)}>
-              <span className={styles.bigNumber}>
-                {Math.round(currentIntake.kcal)}
-              </span>
-              <span className={styles.unitText}>kcal</span>
-            </div>
-
-            <div className={styles.progressTrack}>
-              <div className={cx(styles.progressFill, progressWidthClass)} />
-            </div>
-
-            <p className={styles.remainingText}>{remaining.kcal} kcal remaining</p>
-
-            <div className={cx(styles.flexBetween, styles.macrosRow)}>
-              <div className={styles.macroGroup}>
-                <div className={styles.macroCol}>
-                  <p className={cx(styles.macroLabel, styles.macroLabelProtein)}>
-                    Eiwit
-                  </p>
-                  <p className={styles.macroValue}>
-                    {Math.round(currentIntake.protein)}g
-                  </p>
-                  <p className={styles.macroRemaining}>{remaining.protein}g</p>
-                </div>
-
-                <div className={styles.macroDivider} />
-
-                <div className={styles.macroCol}>
-                  <p className={cx(styles.macroLabel, styles.macroLabelFat)}>
-                    Vet
-                  </p>
-                  <p className={styles.macroValue}>
-                    {Math.round(currentIntake.fat)}g
-                  </p>
-                  <p className={styles.macroRemaining}>{remaining.fat}g</p>
-                </div>
-
-                <div className={styles.macroDivider} />
-
-                <div className={styles.macroCol}>
-                  <p className={cx(styles.macroLabel, styles.macroLabelCarbs)}>
-                    Carbs
-                  </p>
-                  <p className={styles.macroValue}>
-                    {Math.round(currentIntake.carbs)}g
-                  </p>
-                  <p className={styles.macroRemaining}>{remaining.carbs}g</p>
-                </div>
-              </div>
-
-              <ActivityRings
-                kcal={currentIntake.kcal}
-                protein={currentIntake.protein}
-                fat={currentIntake.fat}
-                carbs={currentIntake.carbs}
-                kcalTarget={kcalTarget}
-                proteinTarget={proteinTarget}
-                fatTarget={fatTarget}
-                carbsTarget={carbsTarget}
-              />
-            </div>
+          <div className={cx(styles.flexRow, styles.activityValueRow)}>
+            <span className={styles.bigNumber}>4,093</span>
+            <span className={cx(styles.unitText, styles.unitTextStrong)}>
+              stappen
+            </span>
           </div>
         </div>
 
+        <div className={styles.card}>
+          <div className={cx(styles.flexBetween, styles.cardRowBottom)}>
+            <span className={cx(styles.cardTitle, styles.cardTitleFood)}>
+              🥗 Voeding
+            </span>
+          </div>
+
+          <div className={cx(styles.flexRow, styles.activityValueRow)}>
+            <span className={styles.bigNumber}>
+              {Math.round(currentIntake.kcal)}
+            </span>
+            <span className={styles.unitText}>kcal</span>
+          </div>
+
+          <div className={styles.progressTrack}>
+            <div className={cx(styles.progressFill, progressWidthClass)} />
+          </div>
+
+          <p className={styles.remainingText}>{remaining.kcal} kcal remaining</p>
+
+          <div className={cx(styles.flexBetween, styles.macrosRow)}>
+            <div className={styles.macroGroup}>
+              <div className={styles.macroCol}>
+                <p className={cx(styles.macroLabel, styles.macroLabelProtein)}>
+                  Eiwit
+                </p>
+                <p className={styles.macroValue}>
+                  {Math.round(currentIntake.protein)}g
+                </p>
+                <p className={styles.macroRemaining}>{remaining.protein}g</p>
+              </div>
+
+              <div className={styles.macroDivider} />
+
+              <div className={styles.macroCol}>
+                <p className={cx(styles.macroLabel, styles.macroLabelFat)}>
+                  Vet
+                </p>
+                <p className={styles.macroValue}>
+                  {Math.round(currentIntake.fat)}g
+                </p>
+                <p className={styles.macroRemaining}>{remaining.fat}g</p>
+              </div>
+
+              <div className={styles.macroDivider} />
+
+              <div className={styles.macroCol}>
+                <p className={cx(styles.macroLabel, styles.macroLabelCarbs)}>
+                  Carbs
+                </p>
+                <p className={styles.macroValue}>
+                  {Math.round(currentIntake.carbs)}g
+                </p>
+                <p className={styles.macroRemaining}>{remaining.carbs}g</p>
+              </div>
+            </div>
+
+            <ActivityRings
+              kcal={currentIntake.kcal}
+              protein={currentIntake.protein}
+              fat={currentIntake.fat}
+              carbs={currentIntake.carbs}
+              kcalTarget={kcalTarget}
+              proteinTarget={proteinTarget}
+              fatTarget={fatTarget}
+              carbsTarget={carbsTarget}
+            />
+          </div>
+        </div>
+
+        {/* MOVED HERE: mealsCard now falls under the cards in the same section */}
         <div className={styles.mealsCard}>
           <h2 className={styles.mealsTitle}>Maaltijden</h2>
 
@@ -454,18 +482,20 @@ export default function HomeScreen() {
                 <div
                   className={cx(
                     styles.mealWrap,
-                    isExpanded ? styles.mealWrapExpanded : styles.mealWrapCollapsed,
+                    isExpanded
+                      ? styles.mealWrapExpanded
+                      : styles.mealWrapCollapsed,
                     hasItems ? styles.mealWrapEnabled : styles.mealWrapDisabled
                   )}
                 >
-     <div
-  className={cx(
-    styles.flexBetween,
-    styles.mealHeader,
-    isExpanded && styles.mealHeaderExpanded
-  )}
-  onClick={() => hasItems && toggleMealExpansion(meal.id)}
->
+                  <div
+                    className={cx(
+                      styles.flexBetween,
+                      styles.mealHeader,
+                      isExpanded && styles.mealHeaderExpanded
+                    )}
+                    onClick={() => hasItems && toggleMealExpansion(meal.id)}
+                  >
                     <div>
                       <p className={styles.mealName}>{meal.name}</p>
                       {hasItems ? (
@@ -475,7 +505,7 @@ export default function HomeScreen() {
                         </p>
                       ) : (
                         <p className={cx(styles.mealMeta, styles.mealMetaEmpty)}>
-                          No items yet
+                          Nog geen items
                         </p>
                       )}
                     </div>
@@ -501,34 +531,43 @@ export default function HomeScreen() {
                       <div className={styles.mealExpandedInner}>
                         {mealData.foods.map((food) => {
                           const isRemoving = removingFoods.has(food.id);
+
                           return (
                             <div
                               key={food.id}
                               className={cx(
                                 styles.flexRow,
                                 styles.foodRow,
-                                isRemoving ? styles.foodRemoving : styles.foodNormal
+                                isRemoving
+                                  ? styles.foodRemoving
+                                  : styles.foodNormal
                               )}
                               onClick={() => handleToggleFood(food.id)}
                             >
                               <button
                                 className={cx(
                                   styles.checkBtn,
-                                  food.checked ? styles.checkBtnChecked : styles.checkBtnUnchecked
+                                  food.checked
+                                    ? styles.checkBtnChecked
+                                    : styles.checkBtnUnchecked
                                 )}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleToggleFood(food.id);
                                 }}
                               >
-                                {food.checked && <IoCheckmark size={16} color="#FFF" />}
+                                {food.checked && (
+                                  <IoCheckmark size={16} color="#FFF" />
+                                )}
                               </button>
 
                               <div className={styles.foodMain}>
                                 <p
                                   className={cx(
                                     styles.foodName,
-                                    food.checked ? styles.foodNameChecked : styles.foodNameUnchecked
+                                    food.checked
+                                      ? styles.foodNameChecked
+                                      : styles.foodNameUnchecked
                                   )}
                                 >
                                   {food.name}
@@ -537,7 +576,9 @@ export default function HomeScreen() {
                                   {Math.round(food.kcal)} kcal •{" "}
                                   {food.type === "food" && food.grams
                                     ? `${food.grams}g`
-                                    : `${food.servings} serving${food.servings !== 1 ? "s" : ""}`}
+                                    : `${food.servings} serving${
+                                        food.servings !== 1 ? "s" : ""
+                                      }`}
                                 </p>
                               </div>
 
@@ -548,7 +589,10 @@ export default function HomeScreen() {
                                   handleRemoveFood(food.id);
                                 }}
                               >
-                                <IoCloseCircleOutline size={20} color="#9CA3AF" />
+                                <IoCloseCircleOutline
+                                  size={20}
+                                  color="#9CA3AF"
+                                />
                               </button>
                             </div>
                           );
@@ -563,77 +607,80 @@ export default function HomeScreen() {
             );
           })}
         </div>
-
-    
       </div>
+    </div>
 
-      {addFoodModalVisible && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalCard}>
-            <div className={cx(styles.flexBetween, styles.modalHeader)}>
-              <h3 className={styles.modalTitle}>
-                Add to{" "}
-                {selectedMealType.charAt(0).toUpperCase() + selectedMealType.slice(1)}
-              </h3>
-              <button
-                className={styles.iconButton}
-                onClick={() => setAddFoodModalVisible(false)}
-              >
-                <IoCloseCircleOutline size={24} color="#6B7280" />
-              </button>
-            </div>
+    {addFoodModalVisible && (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalCard}>
+          <div className={cx(styles.flexBetween, styles.modalHeader)}>
+            <h3 className={styles.modalTitle}>
+              Add to{" "}
+              {selectedMealType.charAt(0).toUpperCase() +
+                selectedMealType.slice(1)}
+            </h3>
+            <button
+              className={styles.iconButton}
+              onClick={() => setAddFoodModalVisible(false)}
+            >
+              <IoCloseCircleOutline size={24} color="#6B7280" />
+            </button>
+          </div>
 
-            <div>
-              <h4 className={styles.modalSectionTitle}>Your Recipes</h4>
+          <div>
+            <h4 className={styles.modalSectionTitle}>Your Recipes</h4>
 
-              {recipes.length === 0 ? (
-                <p className={styles.modalEmptyText}>
-                  No recipes yet. Create one in the Recipes tab!
-                </p>
-              ) : (
-                recipes.map((recipe) => (
-                  <div
-                    key={recipe.id}
-                    className={cx(styles.flexRow, styles.recipeRow)}
-                    onClick={() => handleAddRecipeToLog(recipe)}
-                  >
-                    {recipe.image && (
-                      <img
-                        src={recipe.image}
-                        alt={recipe.title}
-                        className={styles.recipeImg}
-                      />
-                    )}
-                    <div className={styles.recipeMain}>
-                      <p className={styles.recipeTitle}>{recipe.title}</p>
-                      <p className={styles.recipeMeta}>
-                        {recipe.kcal} kcal • {recipe.protein}g protein
-                      </p>
-                    </div>
-                    <IoAdd size={24} color="#4A90D9" />
-                  </div>
-                ))
-              )}
-
-              <h4 className={cx(styles.modalSectionTitle, styles.modalSectionTitleSpaced)}>
-                Search Foods
-              </h4>
-              <p className={styles.modalInfoText}>
-                Go to the Food tab to search and add foods
+            {recipes.length === 0 ? (
+              <p className={styles.modalEmptyText}>
+                No recipes yet. Create one in the Recipes tab!
               </p>
-            </div>
+            ) : (
+              recipes.map((recipe) => (
+                <div
+                  key={recipe.id}
+                  className={cx(styles.flexRow, styles.recipeRow)}
+                  onClick={() => handleAddRecipeToLog(recipe)}
+                >
+                  {recipe.image && (
+                    <img
+                      src={recipe.image}
+                      alt={recipe.title}
+                      className={styles.recipeImg}
+                    />
+                  )}
+                  <div className={styles.recipeMain}>
+                    <p className={styles.recipeTitle}>{recipe.title}</p>
+                    <p className={styles.recipeMeta}>
+                      {recipe.kcal} kcal • {recipe.protein}g protein
+                    </p>
+                  </div>
+                  <IoAdd size={24} color="#4A90D9" />
+                </div>
+              ))
+            )}
+
+            <h4
+              className={cx(
+                styles.modalSectionTitle,
+                styles.modalSectionTitleSpaced
+              )}
+            >
+              Search Foods
+            </h4>
+            <p className={styles.modalInfoText}>
+              Go to the Food tab to search and add foods
+            </p>
           </div>
         </div>
-      )}
+      </div>
+    )}
 
-      {/* Bottom navigation switcher (reusable component) */}
-      <ThemeSwitcherNav
-        defaultValue="light"
-        onChange={(nextTheme: string) => {
-          // Hook into your theme system later
-          // Example: document.documentElement.dataset.theme = nextTheme;
-        }}
-      />
-    </div>
-  );
+    <ThemeSwitcherNav
+      defaultValue="light"
+      onChange={(nextTheme: string) => {
+        // Hook into your theme system later
+      }}
+    />
+  </div>
+);
 }
