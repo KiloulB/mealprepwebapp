@@ -27,6 +27,8 @@ const ActivityRings = ({
   fatTarget: number;
   carbsTarget: number;
 }) => {
+  const [animatedProgress, setAnimatedProgress] = useState([0, 0, 0, 0]);
+
   const ringSize = 90;
   const strokeWidth = 8;
   const radius = (ringSize - strokeWidth) / 2;
@@ -34,32 +36,66 @@ const ActivityRings = ({
 
   const rings = [
     {
-      progress: Math.min(kcal / kcalTarget, 1),
-      color: '#E4222A',
-      backgroundColor: '#4A1C1E'
+      targetProgress: Math.min(kcal / kcalTarget, 1),
+      color: '#E4222A', // Red front
+      backgroundColor: '#4A1C1E', // Red background
     },
     {
-      progress: Math.min(protein / proteinTarget, 1),
-      color: '#08B6DC',
-      backgroundColor: '#16424C'
+      targetProgress: Math.min(protein / proteinTarget, 1),
+      color: '#08B6DC', // Blue front
+      backgroundColor: '#16424C', // Blue background
     },
     {
-      progress: Math.min(fat / fatTarget, 1),
-      color: '#F1A500',
-      backgroundColor: '#4E4021'
+      targetProgress: Math.min(fat / fatTarget, 1),
+      color: '#F1A500', // Yellow/orange front
+      backgroundColor: '#4E4021', // Yellow/orange background
     },
     {
-      progress: Math.min(carbs / carbsTarget, 1),
-      color: '#8DCF42',
-      backgroundColor: '#323C28'
+      targetProgress: Math.min(carbs / carbsTarget, 1),
+      color: '#8DCF42', // Green front
+      backgroundColor: '#323C28', // Green background
     },
   ];
+
+  useEffect(() => {
+    const duration = 1500; // 1.5 seconds total
+    const delay = 200; // 200ms delay between rings
+    const steps = 60; // 60 FPS animation
+
+    rings.forEach((ring, index) => {
+      const startTime = Date.now() + (index * delay);
+      const startProgress = animatedProgress[index];
+      const targetProgress = ring.targetProgress;
+      const progressDiff = targetProgress - startProgress;
+
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Easing function (ease-out)
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+        setAnimatedProgress(prev => {
+          const newProgress = [...prev];
+          newProgress[index] = startProgress + (progressDiff * easedProgress);
+          return newProgress;
+        });
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        }
+      };
+
+      setTimeout(animate, index * delay);
+    });
+  }, [kcal, protein, fat, carbs, kcalTarget, proteinTarget, fatTarget, carbsTarget]);
 
   return (
     <div className="flex items-center justify-center">
       <svg width={ringSize} height={ringSize}>
         {rings.map((ring, index) => {
-          const strokeDashoffset = circumference - (ring.progress * circumference);
+          const progress = animatedProgress[index];
+          const strokeDashoffset = circumference - (progress * circumference);
           return (
             <g key={index}>
               <circle
