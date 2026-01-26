@@ -1,13 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from 'next/font/google';
 import "./globals.css";
 import { UserProvider } from "./context/UserContext";
 import { FontProvider } from "./context/FontContext";
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-});
 
 export const metadata: Metadata = {
   title: "Meal Prep App",
@@ -22,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} antialiased`}
+        className="antialiased"
       >
         <UserProvider>
           <FontProvider>

@@ -12,10 +12,10 @@ interface FontContextType {
 const FontContext = createContext<FontContextType | undefined>(undefined);
 
 export const FontProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const fontFamily = 'var(--font-inter)';
-  const fontFamilyMedium = 'var(--font-inter)';
-  const fontFamilySemiBold = 'var(--font-inter)';
-  const fontFamilyBold = 'var(--font-inter)';
+  const fontFamily = 'Arial, sans-serif';
+  const fontFamilyMedium = 'Arial, sans-serif';
+  const fontFamilySemiBold = 'Arial, sans-serif';
+  const fontFamilyBold = 'Arial, sans-serif';
 
   return (
     <FontContext.Provider value={{ fontFamily, fontFamilyMedium, fontFamilySemiBold, fontFamilyBold }}>
