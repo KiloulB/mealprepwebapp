@@ -1,31 +1,135 @@
 "use client";
 
-import React, { useMemo, useRef, useState, useEffect } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import homeStyles from "../home.module.css";
 import foodStyles from "./FoodScreen.module.css";
 
 import { useUser } from "../context/UserContext";
 import { useFont } from "../context/FontContext";
 import { addFoodToLog } from "../firebase/dataService";
-import { MealType } from "../types/user";
+import { FiPlus } from "react-icons/fi";
 
 function cx(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 const SERVING_PRESETS = [
-  { label: "1 tsp", grams: 5 },
-  { label: "1 tbsp", grams: 15 },
+  { label: "1 tl", grams: 5 },
+  { label: "1 el", grams: 15 },
   { label: "50g", grams: 50 },
   { label: "100g", grams: 100 },
   { label: "150g", grams: 150 },
   { label: "200g", grams: 200 },
 ];
 
-/**
- * Search result products (minimal fields only)
- * We purposely do NOT request nutriments here to speed up list rendering.
- */
+// --- Open Food Facts endpoints ---
+// Full-text search: use v1 (/cgi/search.pl + json=1). [web:19][web:23]
+// Product details: use v2 product endpoint + fields to limit payload. [web:23][web:33]
+const OFF_BASE = "https://world.openfoodfacts.net";
+const SEARCH_PAGE_SIZE = 15;
+
+// conservative “anti-burst” to avoid accidental rate limit hits
+const MIN_MS_BETWEEN_SEARCHES = 1200;
+
+// In-memory caches
+const searchCache = new Map(); // key: normalized query -> products[]
+const productCache = new Map(); // key: code -> full product
+
+function normalizeQuery(q) {
+  return q.trim().toLowerCase();
+}
+
+async function fetchJson(url, { signal } = {}) {
+  const res = await fetch(url, { method: "GET", signal });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+function getImageUrl(product) {
+  if (!product) return undefined;
+  return (
+    product.image_front_url ||
+    product.image_front_small_url ||
+    product.image_url
+  );
+}
+
+function getKcal(nutriments) {
+  if (!nutriments) return undefined;
+
+  if (nutriments.energy_kcal_100g !== undefined)
+    return nutriments.energy_kcal_100g;
+  if (nutriments["energy-kcal_100g"] !== undefined)
+    return nutriments["energy-kcal_100g"];
+  if (nutriments["energy-kcal"] !== undefined) return nutriments["energy-kcal"];
+  if (nutriments.energy_kcal !== undefined) return nutriments.energy_kcal;
+
+  // If only kJ is available, convert to kcal (1 kcal = 4.184 kJ)
+  if (nutriments.energy_100g !== undefined)
+    return Math.round(nutriments.energy_100g / 4.184);
+
+  return undefined;
+}
+
+function formatNumber(value) {
+  if (value === undefined || value === null || Number.isNaN(value)) return "-";
+  return String(Math.round(value * 10) / 10);
+}
+
+// ---- OFF calls ----
+
+// V1 search: supports full-text via search_terms. [web:19]
+async function offSearchV1(query, { signal } = {}) {
+  const q = normalizeQuery(query);
+  if (q.length < 2) return [];
+
+  if (searchCache.has(q)) return searchCache.get(q);
+
+  const params = new URLSearchParams();
+  params.set("search_terms", q);
+  params.set("search_simple", "1");
+  params.set("action", "process");
+  params.set("json", "1");
+  params.set("page_size", String(SEARCH_PAGE_SIZE));
+  params.set("cc", "nl");
+  // Limit returned fields to what you show in the list. [web:33]
+  params.set("fields", "code,product_name,brands,image_front_small_url");
+
+  const url = `${OFF_BASE}/cgi/search.pl?${params.toString()}`;
+  const data = await fetchJson(url, { signal });
+
+  const products = Array.isArray(data?.products) ? data.products : [];
+  searchCache.set(q, products);
+  return products;
+}
+
+// V2 product: limit payload via fields. [web:23][web:33]
+async function offProductV2(code, { signal } = {}) {
+  const key = String(code || "").trim();
+  if (!key) return null;
+
+  if (productCache.has(key)) return productCache.get(key);
+
+  const fields = [
+    "code",
+    "product_name",
+    "brands",
+    "image_front_url",
+    "image_front_small_url",
+    "nutriments",
+  ].join(",");
+
+  const url = `${OFF_BASE}/api/v2/product/${encodeURIComponent(
+    key,
+  )}?fields=${encodeURIComponent(fields)}`;
+
+  const data = await fetchJson(url, { signal });
+  const product = data?.product ?? null;
+
+  if (product) productCache.set(key, product);
+  return product;
+}
+
 export default function FoodScreen() {
   const { authUser } = useUser();
   const { fontFamily, fontFamilyMedium, fontFamilySemiBold, fontFamilyBold } =
@@ -34,234 +138,46 @@ export default function FoodScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState("");
 
-  // Selected product detail (full fields)
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
-
   const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [mealSelectModalVisible, setMealSelectModalVisible] = useState(false);
 
-  // Web barcode modal (manual input)
+  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
+  const [productError, setProductError] = useState("");
+
+  // Barcode modal (manual input)
   const [scannerVisible, setScannerVisible] = useState(false);
   const [barcodeInput, setBarcodeInput] = useState("");
   const [isLookingUpBarcode, setIsLookingUpBarcode] = useState(false);
-
-  // Meal selection modal
-  const [mealSelectModalVisible, setMealSelectModalVisible] = useState(false);
-  const [addingFood, setAddingFood] = useState(false);
 
   // Serving size
   const [selectedGrams, setSelectedGrams] = useState(100);
   const [customGramsInput, setCustomGramsInput] = useState("");
 
+  // Add to log
+  const [addingFood, setAddingFood] = useState(false);
+
   const mealOptions = useMemo(
     () => [
-      { id: "breakfast", name: "Breakfast", icon: "🍳" },
+      { id: "breakfast", name: "Ontbijt", icon: "🍳" },
       { id: "lunch", name: "Lunch", icon: "🍜" },
-      { id: "dinner", name: "Dinner", icon: "🍖" },
+      { id: "dinner", name: "Avondeten", icon: "🍖" },
       { id: "snacks", name: "Snacks", icon: "🍎" },
     ],
     [],
   );
 
-  const getImageUrl = (product) => {
-    if (!product) return undefined;
-    return (
-      product.image_front_url ||
-      product.image_front_small_url ||
-      product.image_url
-    );
-  };
+  const mealLabelById = useMemo(() => {
+    return Object.fromEntries(mealOptions.map((m) => [m.id, m.name]));
+  }, [mealOptions]);
 
-  const getKcal = (nutriments) => {
-    if (!nutriments) return undefined;
+  // Abort + throttle refs
+  const lastSearchAtRef = useRef(0);
+  const searchAbortRef = useRef(null);
+  const productAbortRef = useRef(null);
 
-    if (nutriments.energy_kcal_100g !== undefined)
-      return nutriments.energy_kcal_100g;
-    if (nutriments["energy-kcal_100g"] !== undefined)
-      return nutriments["energy-kcal_100g"];
-    if (nutriments["energy-kcal"] !== undefined)
-      return nutriments["energy-kcal"];
-    if (nutriments.energy_kcal !== undefined) return nutriments.energy_kcal;
-
-    // If only kJ is available, convert to kcal (1 kcal = 4.184 kJ)
-    if (nutriments.energy_100g !== undefined) {
-      return Math.round(nutriments.energy_100g / 4.184);
-    }
-
-    return undefined;
-  };
-
-  const formatNumber = (value) => {
-    if (value === undefined || value === null || Number.isNaN(value))
-      return "-";
-    return String(Math.round(value * 10) / 10);
-  };
-
-  // ---------- FAST SEARCH (manual trigger only) ----------
-  // ---------- FAST SEARCH (v2) ----------
-  const searchTimeoutRef = useRef(null);
-  const searchCacheRef = useRef(new Map()); // key: normalized query, val: products
-  const abortRef = useRef(null);
-  useEffect(() => {
-    const q = searchQuery.trim().toLowerCase();
-
-    // reset UI quickly
-    if (q.length < 2) {
-      setSearchResults([]);
-      setIsSearching(false);
-      if (abortRef.current) abortRef.current.abort();
-      return;
-    }
-
-    // debounce
-    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
-
-    searchTimeoutRef.current = setTimeout(async () => {
-      // cache hit
-      if (searchCacheRef.current.has(q)) {
-        setSearchResults(searchCacheRef.current.get(q));
-        setIsSearching(false);
-        return;
-      }
-
-      // cancel previous request
-      if (abortRef.current) abortRef.current.abort();
-      abortRef.current = new AbortController();
-
-      await searchProducts(q, { signal: abortRef.current.signal, cacheKey: q });
-    }, 250); // tweak 150–350ms
-
-    return () => {
-      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
-    };
-  }, [searchQuery]);
-
-  const searchProducts = async (query, { signal, cacheKey } = {}) => {
-    const q = query.trim();
-    if (q.length < 2) {
-      setSearchResults([]);
-      return;
-    }
-
-    setIsSearching(true);
-    try {
-      const params = new URLSearchParams();
-      params.set("search_terms", q);
-      params.set("search_simple", "1");
-      params.set("action", "process");
-      params.set("json", "1");
-      params.set("page_size", "15");
-      params.set("cc", "nl");
-      params.set(
-        "fields",
-        "code,product_name,brands,image_front_small_url,stores,stores_tags",
-      );
-
-      const url = `https://world.openfoodfacts.org/cgi/search.pl?${params.toString()}`;
-      const response = await fetch(url, { signal });
-      const data = await response.json();
-
-      const products = data?.products || [];
-      setSearchResults(products);
-
-      // store in cache
-      if (cacheKey) searchCacheRef.current.set(cacheKey, products);
-    } catch (error) {
-      // ignore abort errors (user typed again)
-      if (error?.name !== "AbortError") {
-        console.error("Search error:", error);
-        alert("Failed to search products. Please try again.");
-      }
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  // ---------- LOAD FULL PRODUCT ONLY WHEN NEEDED ----------
-  const fetchFullProduct = async (code) => {
-    if (!code) return null;
-
-    setIsLoadingProduct(true);
-    try {
-      // Use product-by-code endpoint, and still limit fields for speed. [web:57][web:62]
-      const response = await fetch(
-        `https://world.openfoodfacts.org/api/v0/product/${encodeURIComponent(
-          code,
-        )}.json`,
-      );
-      const data = await response.json();
-
-      if (data?.status === 1 && data?.product) return data.product;
-
-      return null;
-    } catch (error) {
-      console.error("Product fetch error:", error);
-      return null;
-    } finally {
-      setIsLoadingProduct(false);
-    }
-  };
-
-  const openProductDetails = async (productFromList) => {
-    const code = productFromList?.code;
-    setSelectedProduct(null);
-    setDetailModalVisible(true);
-
-    const full = await fetchFullProduct(code);
-    if (!full) {
-      setDetailModalVisible(false);
-      alert("Product not found.");
-      return;
-    }
-
-    setSelectedProduct(full);
-  };
-
-  const handleQuickAdd = async (productFromList) => {
-    const code = productFromList?.code;
-    setSelectedGrams(100);
-    setCustomGramsInput("");
-
-    setSelectedProduct(null);
-    setMealSelectModalVisible(true);
-
-    const full = await fetchFullProduct(code);
-    if (!full) {
-      setMealSelectModalVisible(false);
-      alert("Product not found.");
-      return;
-    }
-
-    setSelectedProduct(full);
-  };
-
-  // ---------- BARCODE LOOKUP (manual input modal) ----------
-  const handleOpenScanner = () => {
-    setBarcodeInput("");
-    setScannerVisible(true);
-  };
-
-  const fetchProductByBarcode = async (barcode) => {
-    const code = barcode.trim();
-    if (!code) return;
-
-    setIsLookingUpBarcode(true);
-    try {
-      const full = await fetchFullProduct(code);
-      if (!full) {
-        alert("This product was not found in the database.");
-        return;
-      }
-      setSelectedProduct(full);
-      setDetailModalVisible(true);
-    } finally {
-      setIsLookingUpBarcode(false);
-      setScannerVisible(false);
-    }
-  };
-
-  // ---------- NUTRITION CALC ----------
   const calculatedNutrition = useMemo(() => {
     if (!selectedProduct?.nutriments)
       return { kcal: 0, protein: 0, carbs: 0, fat: 0 };
@@ -277,13 +193,116 @@ export default function FoodScreen() {
     };
   }, [selectedProduct, selectedGrams]);
 
+  const searchProducts = async (query) => {
+    const q = query.trim();
+    if (q.length < 2) {
+      setSearchResults([]);
+      setSearchError("");
+      return;
+    }
+
+    // avoid double click bursts
+    const now = Date.now();
+    if (now - lastSearchAtRef.current < MIN_MS_BETWEEN_SEARCHES) return;
+    lastSearchAtRef.current = now;
+
+    if (searchAbortRef.current) searchAbortRef.current.abort();
+    const ac = new AbortController();
+    searchAbortRef.current = ac;
+
+    setIsSearching(true);
+    setSearchError("");
+
+    try {
+      const products = await offSearchV1(q, { signal: ac.signal });
+      setSearchResults(products);
+    } catch (e) {
+      if (e?.name !== "AbortError")
+        setSearchError("Zoeken mislukt. Probeer het opnieuw.");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const fetchFullProduct = async (code) => {
+    const c = String(code || "").trim();
+    if (!c) return null;
+
+    if (productAbortRef.current) productAbortRef.current.abort();
+    const ac = new AbortController();
+    productAbortRef.current = ac;
+
+    setIsLoadingProduct(true);
+    setProductError("");
+
+    try {
+      const full = await offProductV2(c, { signal: ac.signal });
+      if (!full) setProductError("Product niet gevonden.");
+      return full;
+    } catch (e) {
+      if (e?.name !== "AbortError")
+        setProductError("Product laden mislukt. Probeer opnieuw.");
+      return null;
+    } finally {
+      setIsLoadingProduct(false);
+    }
+  };
+
+  const openProductDetails = async (productFromList) => {
+    const code = productFromList?.code;
+
+    setSelectedProduct(null);
+    setProductError("");
+    setDetailModalVisible(true);
+
+    const full = await fetchFullProduct(code);
+    if (full) setSelectedProduct(full);
+  };
+
+  const handleQuickAdd = async (productFromList) => {
+    const code = productFromList?.code;
+
+    setSelectedGrams(100);
+    setCustomGramsInput("");
+
+    setSelectedProduct(null);
+    setProductError("");
+    setMealSelectModalVisible(true);
+
+    const full = await fetchFullProduct(code);
+    if (full) setSelectedProduct(full);
+  };
+
+  const handleOpenScanner = () => {
+    setBarcodeInput("");
+    setScannerVisible(true);
+  };
+
+  const fetchProductByBarcode = async (barcode) => {
+    const code = barcode.trim();
+    if (!code) return;
+
+    setIsLookingUpBarcode(true);
+    try {
+      setSelectedProduct(null);
+      setProductError("");
+      setDetailModalVisible(true);
+
+      const full = await fetchFullProduct(code);
+      if (full) setSelectedProduct(full);
+    } finally {
+      setIsLookingUpBarcode(false);
+      setScannerVisible(false);
+    }
+  };
+
   const handleCustomGramsChange = (text) => {
     setCustomGramsInput(text);
+    if (text === "") return;
     const parsed = parseInt(text, 10);
     if (!Number.isNaN(parsed) && parsed > 0) setSelectedGrams(parsed);
   };
 
-  // ---------- ADD TO LOG ----------
   const handleAddToMeal = async (mealType) => {
     if (!selectedProduct || !authUser) return;
 
@@ -298,7 +317,7 @@ export default function FoodScreen() {
       await addFoodToLog(authUser.uid, new Date(), {
         type: "food",
         sourceId: selectedProduct.code,
-        name: selectedProduct.product_name || "Unknown Food",
+        name: selectedProduct.product_name || "Onbekend product",
         image: getImageUrl(selectedProduct) || undefined,
 
         kcal: calculatedNutrition.kcal,
@@ -313,7 +332,7 @@ export default function FoodScreen() {
 
         grams: selectedGrams,
         servings: 1,
-        mealType: mealType,
+        mealType,
         checked: true,
       });
 
@@ -322,12 +341,12 @@ export default function FoodScreen() {
       setSelectedGrams(100);
       setCustomGramsInput("");
 
+      const mealLabel = mealLabelById[mealType] ?? mealType;
       alert(
-        `Added! ${selectedGrams}g of ${selectedProduct.product_name} added to ${mealType}`,
+        `${selectedGrams}g van ${selectedProduct.product_name} is toegevoegd aan ${mealLabel}`,
       );
-    } catch (error) {
-      console.error("Error adding food:", error);
-      alert("Failed to add food. Please try again.");
+    } catch {
+      alert("Toevoegen van eten is mislukt. Probeer het opnieuw.");
     } finally {
       setAddingFood(false);
     }
@@ -338,17 +357,16 @@ export default function FoodScreen() {
       className={homeStyles.screen}
       style={{ fontFamily: fontFamily || "inherit" }}
     >
-      {/* Header like Home */}
       <div className={homeStyles.headerRow}>
         <div>
           <h1
             className={homeStyles.headerTitle}
             style={{ fontFamily: fontFamilyBold || fontFamily }}
           >
-            Food
+            Voeding
           </h1>
           <p className={homeStyles.headerSubtitle}>
-            Search products (press Enter / Search)
+            Zoek producten (Enter / Zoeken)
           </p>
         </div>
 
@@ -356,7 +374,7 @@ export default function FoodScreen() {
           className={homeStyles.headerButton}
           onClick={handleOpenScanner}
           type="button"
-          aria-label="Open barcode input"
+          aria-label="Barcode-invoer openen"
           title="Barcode"
         >
           <span className={foodStyles.headerBtnIcon} aria-hidden="true">
@@ -367,12 +385,11 @@ export default function FoodScreen() {
 
       <div className={homeStyles.scrollArea}>
         <div className={homeStyles.section}>
-          {/* Search card */}
           <div className={homeStyles.card}>
             <div className={foodStyles.searchRow}>
               <input
                 className={foodStyles.searchInput}
-                placeholder="Search products..."
+                placeholder="Zoek producten..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => {
@@ -385,7 +402,7 @@ export default function FoodScreen() {
                   className={foodStyles.clearBtn}
                   onClick={() => setSearchQuery("")}
                   type="button"
-                  aria-label="Clear search"
+                  aria-label="Zoekopdracht wissen"
                 >
                   ✕
                 </button>
@@ -399,18 +416,21 @@ export default function FoodScreen() {
               style={{ fontFamily: fontFamilySemiBold || fontFamily }}
               disabled={isSearching}
             >
-              {isSearching ? "Searching..." : "Search"}
+              {isSearching ? "Bezig met zoeken..." : "Zoeken"}
             </button>
+
+            {searchError && (
+              <div className={foodStyles.muted}>{searchError}</div>
+            )}
           </div>
 
-          {/* Results card */}
           <div className={homeStyles.card}>
             <div className={foodStyles.resultsHeader}>
               <span
                 className={cx(homeStyles.cardTitle, foodStyles.resultsTitle)}
                 style={{ fontFamily: fontFamilySemiBold || fontFamily }}
               >
-                Results
+                Resultaten
               </span>
               <span className={foodStyles.muted}>
                 {isSearching ? "..." : `${searchResults.length} items`}
@@ -420,12 +440,12 @@ export default function FoodScreen() {
             {isSearching ? (
               <div className={foodStyles.stateBox}>
                 <div className={foodStyles.spinner} />
-                <div className={foodStyles.stateText}>Searching...</div>
+                <div className={foodStyles.stateText}>Bezig met zoeken...</div>
               </div>
             ) : searchResults.length === 0 ? (
               <div className={foodStyles.stateBox}>
                 <div className={foodStyles.stateText}>
-                  Type a query and press Enter (or tap Search).
+                  Typ een zoekopdracht en druk op Enter (of tik op Zoeken).
                 </div>
               </div>
             ) : (
@@ -463,9 +483,9 @@ export default function FoodScreen() {
                       <div
                         className={foodStyles.name}
                         style={{ fontFamily: fontFamilySemiBold || fontFamily }}
-                        title={product.product_name || "Unknown Product"}
+                        title={product.product_name || "Onbekend product"}
                       >
-                        {product.product_name || "Unknown Product"}
+                        {product.product_name || "Onbekend product"}
                       </div>
 
                       {product.brands && (
@@ -479,7 +499,7 @@ export default function FoodScreen() {
 
                       <div className={foodStyles.meta}>
                         <span className={foodStyles.protein}>
-                          Tap for nutrition
+                          Tik voor voedingswaarden
                         </span>
                       </div>
                     </div>
@@ -491,8 +511,8 @@ export default function FoodScreen() {
                         handleQuickAdd(product);
                       }}
                       type="button"
-                      aria-label="Quick add"
-                      title="Quick add"
+                      aria-label="Snel toevoegen"
+                      title="Snel toevoegen"
                     >
                       +
                     </button>
@@ -520,21 +540,21 @@ export default function FoodScreen() {
                 className={homeStyles.iconButton}
                 onClick={() => setScannerVisible(false)}
                 type="button"
-                aria-label="Close"
+                aria-label="Sluiten"
               >
                 ✕
               </button>
             </div>
 
             <p className={foodStyles.modalHint}>
-              Web version: paste/enter a barcode (EAN/UPC).
+              Webversie: plak/voer een barcode in (EAN/UPC).
             </p>
 
             <input
               className={foodStyles.modalInput}
               value={barcodeInput}
               onChange={(e) => setBarcodeInput(e.target.value)}
-              placeholder="e.g. 737628064502"
+              placeholder="bijv. 737628064502"
               onKeyDown={(e) => {
                 if (e.key === "Enter") fetchProductByBarcode(barcodeInput);
               }}
@@ -546,7 +566,7 @@ export default function FoodScreen() {
               type="button"
               disabled={isLookingUpBarcode}
             >
-              {isLookingUpBarcode ? "Looking up..." : "Lookup"}
+              {isLookingUpBarcode ? "Bezig met opzoeken..." : "Opzoeken"}
             </button>
           </div>
         </div>
@@ -561,12 +581,12 @@ export default function FoodScreen() {
         >
           <div className={cx(homeStyles.modalCard, foodStyles.detailModalCard)}>
             <div className={cx(homeStyles.flexBetween, homeStyles.modalHeader)}>
-              <h3 className={homeStyles.modalTitle}>Nutrition Info</h3>
+              <h3 className={homeStyles.modalTitle}>Voedingswaarden</h3>
               <button
                 className={homeStyles.iconButton}
                 onClick={() => setDetailModalVisible(false)}
                 type="button"
-                aria-label="Close"
+                aria-label="Sluiten"
               >
                 ✕
               </button>
@@ -575,7 +595,10 @@ export default function FoodScreen() {
             {!selectedProduct || isLoadingProduct ? (
               <div className={foodStyles.stateBox}>
                 <div className={foodStyles.spinner} />
-                <div className={foodStyles.stateText}>Loading product...</div>
+                <div className={foodStyles.stateText}>Product laden...</div>
+                {productError && (
+                  <div className={foodStyles.muted}>{productError}</div>
+                )}
               </div>
             ) : (
               <>
@@ -600,7 +623,7 @@ export default function FoodScreen() {
                     className={foodStyles.detailName}
                     style={{ fontFamily: fontFamilyBold || fontFamily }}
                   >
-                    {selectedProduct.product_name || "Unknown Product"}
+                    {selectedProduct.product_name || "Onbekend product"}
                   </div>
 
                   {selectedProduct.brands && (
@@ -611,37 +634,38 @@ export default function FoodScreen() {
                 </div>
 
                 <div className={foodStyles.nutriGrid}>
-                  <div className={foodStyles.nutriItem}>
+                  <div className={foodStyles.nutriCell}>
                     <div className={foodStyles.nutriVal}>
                       {formatNumber(getKcal(selectedProduct.nutriments))}
                     </div>
-                    <div className={foodStyles.nutriLab}>Kcal / 100g</div>
+                    <div className={foodStyles.nutriLabel}>kcal / 100g</div>
                   </div>
-                  <div className={foodStyles.nutriItem}>
+
+                  <div className={foodStyles.nutriCell}>
                     <div className={foodStyles.nutriVal}>
                       {formatNumber(selectedProduct.nutriments?.proteins_100g)}g
                     </div>
-                    <div className={foodStyles.nutriLab}>Protein</div>
+                    <div className={foodStyles.nutriLabel}>eiwit / 100g</div>
                   </div>
-                  <div className={foodStyles.nutriItem}>
+
+                  <div className={foodStyles.nutriCell}>
                     <div className={foodStyles.nutriVal}>
                       {formatNumber(
                         selectedProduct.nutriments?.carbohydrates_100g,
                       )}
                       g
                     </div>
-                    <div className={foodStyles.nutriLab}>Carbs</div>
+                    <div className={foodStyles.nutriLabel}>
+                      koolhydraten / 100g
+                    </div>
                   </div>
-                  <div className={foodStyles.nutriItem}>
+
+                  <div className={foodStyles.nutriCell}>
                     <div className={foodStyles.nutriVal}>
                       {formatNumber(selectedProduct.nutriments?.fat_100g)}g
                     </div>
-                    <div className={foodStyles.nutriLab}>Fat</div>
+                    <div className={foodStyles.nutriLabel}>vet / 100g</div>
                   </div>
-                </div>
-
-                <div className={foodStyles.dataSource}>
-                  Data from Open Food Facts
                 </div>
 
                 <button
@@ -649,7 +673,8 @@ export default function FoodScreen() {
                   onClick={() => setMealSelectModalVisible(true)}
                   type="button"
                 >
-                  Add to Today’s Meal
+                  <FiPlus aria-hidden="true" />
+                  Toevoegen
                 </button>
               </>
             )}
@@ -657,7 +682,7 @@ export default function FoodScreen() {
         </div>
       )}
 
-      {/* Meal select modal + serving size */}
+      {/* Meal select modal */}
       {mealSelectModalVisible && (
         <div
           className={homeStyles.modalOverlay}
@@ -666,12 +691,12 @@ export default function FoodScreen() {
         >
           <div className={homeStyles.modalCard}>
             <div className={cx(homeStyles.flexBetween, homeStyles.modalHeader)}>
-              <h3 className={homeStyles.modalTitle}>Add to meal</h3>
+              <h3 className={homeStyles.modalTitle}>Toevoegen aan maaltijd</h3>
               <button
                 className={homeStyles.iconButton}
                 onClick={() => setMealSelectModalVisible(false)}
                 type="button"
-                aria-label="Close"
+                aria-label="Sluiten"
               >
                 ✕
               </button>
@@ -680,7 +705,10 @@ export default function FoodScreen() {
             {!selectedProduct || isLoadingProduct ? (
               <div className={foodStyles.stateBox}>
                 <div className={foodStyles.spinner} />
-                <div className={foodStyles.stateText}>Loading product...</div>
+                <div className={foodStyles.stateText}>Product laden...</div>
+                {productError && (
+                  <div className={foodStyles.muted}>{productError}</div>
+                )}
               </div>
             ) : (
               <>
@@ -690,7 +718,7 @@ export default function FoodScreen() {
                   </div>
                 )}
 
-                <h4 className={homeStyles.modalSectionTitle}>How much?</h4>
+                <h4 className={homeStyles.modalSectionTitle}>Hoeveel?</h4>
 
                 <div className={foodStyles.presetWrap}>
                   {SERVING_PRESETS.map((preset) => {
@@ -727,16 +755,21 @@ export default function FoodScreen() {
                   <input
                     className={foodStyles.customInput}
                     value={customGramsInput}
-                    onChange={(e) => handleCustomGramsChange(e.target.value)}
+                    onChange={(e) => {
+                      const digitsOnly = e.target.value.replace(/[^\d]/g, "");
+                      handleCustomGramsChange(digitsOnly);
+                    }}
                     inputMode="numeric"
-                    placeholder="Custom amount"
+                    pattern="[0-9]*"
+                    type="text"
+                    placeholder="Aangepaste hoeveelheid"
                   />
-                  <span className={foodStyles.customUnit}>grams</span>
+                  <span className={foodStyles.customUnit}>gram</span>
                 </div>
 
                 <div className={foodStyles.previewCard}>
                   <div className={foodStyles.previewTitle}>
-                    Nutrition for {selectedGrams}g:
+                    Voedingswaarden voor {selectedGrams}g:
                   </div>
                   <div className={foodStyles.previewGrid}>
                     <div className={foodStyles.previewItem}>
@@ -749,24 +782,26 @@ export default function FoodScreen() {
                       <div className={foodStyles.previewVal}>
                         {calculatedNutrition.protein}g
                       </div>
-                      <div className={foodStyles.previewLab}>Protein</div>
+                      <div className={foodStyles.previewLab}>Eiwit</div>
                     </div>
                     <div className={foodStyles.previewItem}>
                       <div className={foodStyles.previewVal}>
                         {calculatedNutrition.carbs}g
                       </div>
-                      <div className={foodStyles.previewLab}>Carbs</div>
+                      <div className={foodStyles.previewLab}>Koolhydraten</div>
                     </div>
                     <div className={foodStyles.previewItem}>
                       <div className={foodStyles.previewVal}>
                         {calculatedNutrition.fat}g
                       </div>
-                      <div className={foodStyles.previewLab}>Fat</div>
+                      <div className={foodStyles.previewLab}>Vet</div>
                     </div>
                   </div>
                 </div>
 
-                <h4 className={homeStyles.modalSectionTitle}>Add to meal</h4>
+                <h4 className={homeStyles.modalSectionTitle}>
+                  Toevoegen aan maaltijd
+                </h4>
 
                 <div className={foodStyles.mealRow}>
                   {mealOptions.map((meal) => (
@@ -793,13 +828,16 @@ export default function FoodScreen() {
                 {addingFood && (
                   <div className={foodStyles.addingRow}>
                     <div className={foodStyles.smallSpinner} />
-                    <div className={foodStyles.addingText}>Adding...</div>
+                    <div className={foodStyles.addingText}>
+                      Bezig met toevoegen...
+                    </div>
                   </div>
                 )}
 
                 {!authUser && (
                   <div className={foodStyles.warn}>
-                    You’re not logged in. Login is required to add foods.
+                    Je bent niet ingelogd. Inloggen is vereist om eten toe te
+                    voegen.
                   </div>
                 )}
 
@@ -808,7 +846,7 @@ export default function FoodScreen() {
                   onClick={() => setMealSelectModalVisible(false)}
                   type="button"
                 >
-                  Cancel
+                  Annuleren
                 </button>
               </>
             )}

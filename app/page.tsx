@@ -250,15 +250,16 @@ export default function HomeScreen() {
   const fatTarget = macroTargets ? macroTargets.fat : 80;
   const carbsTarget = macroTargets ? macroTargets.carbs : 250;
 
-  const remaining = useMemo(
-    () => ({
-      kcal: Math.max(0, kcalTarget - currentIntake.kcal),
-      protein: Math.max(0, proteinTarget - currentIntake.protein),
-      fat: Math.max(0, fatTarget - currentIntake.fat),
-      carbs: Math.max(0, carbsTarget - currentIntake.carbs),
-    }),
-    [currentIntake, kcalTarget, proteinTarget, fatTarget, carbsTarget]
-  );
+const remaining = useMemo(
+  () => ({
+    kcal: Math.max(0, Math.round(kcalTarget - currentIntake.kcal)),
+    protein: Math.max(0, Math.round(proteinTarget - currentIntake.protein)),
+    fat: Math.max(0, Math.round(fatTarget - currentIntake.fat)),
+    carbs: Math.max(0, Math.round(carbsTarget - currentIntake.carbs)),
+  }),
+  [currentIntake, kcalTarget, proteinTarget, fatTarget, carbsTarget]
+);
+
 
   if (loading) {
     return (
