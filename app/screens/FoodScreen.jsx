@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import homeStyles from "../home.module.css";
 import foodStyles from "./FoodScreen.module.css";
 
@@ -100,7 +100,44 @@ export default function FoodScreen() {
 
   // ---------- FAST SEARCH (manual trigger only) ----------
   // ---------- FAST SEARCH (v2) ----------
-  const searchProducts = async (query) => {
+  const searchTimeoutRef = useRef(null);
+  const searchCacheRef = useRef(new Map()); // key: normalized query, val: products
+  const abortRef = useRef(null);
+  useEffect(() => {
+    const q = searchQuery.trim().toLowerCase();
+
+    // reset UI quickly
+    if (q.length < 2) {
+      setSearchResults([]);
+      setIsSearching(false);
+      if (abortRef.current) abortRef.current.abort();
+      return;
+    }
+
+    // debounce
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+
+    searchTimeoutRef.current = setTimeout(async () => {
+      // cache hit
+      if (searchCacheRef.current.has(q)) {
+        setSearchResults(searchCacheRef.current.get(q));
+        setIsSearching(false);
+        return;
+      }
+
+      // cancel previous request
+      if (abortRef.current) abortRef.current.abort();
+      abortRef.current = new AbortController();
+
+      await searchProducts(q, { signal: abortRef.current.signal, cacheKey: q });
+    }, 250); // tweak 150–350ms
+
+    return () => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    };
+  }, [searchQuery]);
+
+  const searchProducts = async (query, { signal, cacheKey } = {}) => {
     const q = query.trim();
     if (q.length < 2) {
       setSearchResults([]);
@@ -115,24 +152,27 @@ export default function FoodScreen() {
       params.set("action", "process");
       params.set("json", "1");
       params.set("page_size", "15");
-
-      // Netherlands filter (country where sold)
       params.set("cc", "nl");
-
-      // Keep it fast: only fetch list fields (no nutriments here)
       params.set(
         "fields",
         "code,product_name,brands,image_front_small_url,stores,stores_tags",
       );
 
       const url = `https://world.openfoodfacts.org/cgi/search.pl?${params.toString()}`;
-      const response = await fetch(url);
+      const response = await fetch(url, { signal });
       const data = await response.json();
 
-      setSearchResults(data?.products || []);
+      const products = data?.products || [];
+      setSearchResults(products);
+
+      // store in cache
+      if (cacheKey) searchCacheRef.current.set(cacheKey, products);
     } catch (error) {
-      console.error("Search error:", error);
-      alert("Failed to search products. Please try again.");
+      // ignore abort errors (user typed again)
+      if (error?.name !== "AbortError") {
+        console.error("Search error:", error);
+        alert("Failed to search products. Please try again.");
+      }
     } finally {
       setIsSearching(false);
     }
