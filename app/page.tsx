@@ -4,6 +4,8 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "./context/UserContext";
 import { useFont } from "./context/FontContext";
+import FoodScreen from "./screens/FoodScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 import {
   IoPersonOutline,
   IoAdd,
@@ -19,7 +21,7 @@ import {
 } from "./firebase/dataService";
 import type { DailyLog, LoggedFood, Recipe, MealType } from "./types/user";
 
-import ThemeSwitcherNav from "./components/ThemeSwitcherNav";
+import BottomNav from "./components/BottomNav/BottomNav";
 import styles from "./home.module.css";
 
 
@@ -151,6 +153,7 @@ const ActivityRings = ({
 };
 
 export default function HomeScreen() {
+  const [activeTab, setActiveTab] = useState("home");
   const { macroTargets, authUser, loading } = useUser();
   useFont();
   const router = useRouter();
@@ -366,6 +369,8 @@ export default function HomeScreen() {
 
 return (
   <div className={styles.screen}>
+        {activeTab === "home" ? (
+      <>
     <div className={styles.headerRow}>
       <div className={styles.headerDivider}>
         <h1 className={styles.headerTitle}>Overzicht</h1>
@@ -674,12 +679,17 @@ return (
         </div>
       </div>
     )}
+            </>
+    ) : activeTab === "food" ? (
+      <FoodScreen />
+    ) : (
+      <ProfileScreen />
+    )}
 
-    <ThemeSwitcherNav
-      defaultValue="light"
-      onChange={(nextTheme: string) => {
-        // Hook into your theme system later
-      }}
+
+    <BottomNav
+      defaultValue="home"
+      onChange={(nextValue) => setActiveTab(nextValue)}
     />
   </div>
 );

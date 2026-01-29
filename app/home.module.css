@@ -1,5 +1,12 @@
 /* app/home.module.css */
 
+
+
+html, body {
+  touch-action: pan-x pan-y; /* allow scrolling, block pinch-zoom */
+}
+
+
 .screen {
   min-height: 100vh;
   background: #000;

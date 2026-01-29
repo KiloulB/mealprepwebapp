@@ -1,0 +1,492 @@
+/* screens/food.module.css */
+
+/* Header button icon */
+.headerBtnIcon {
+  font-size: 18px;
+  color: #fff;
+}
+
+/* Search card UI (inside homeStyles.card) */
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #2a2a2a;
+  border-radius: 14px;
+  padding: 12px 12px;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+}
+
+.searchInput::placeholder {
+  color: #97969b;
+}
+
+.clearBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 0;
+  background: #1c1c1e;
+  color: #fff;
+  cursor: pointer;
+}
+
+.searchBtn {
+  margin-top: 12px;
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #8dcf42;
+  color: #000;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Results */
+.resultsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.resultsTitle {
+  color: #8dcf42;
+}
+
+.muted {
+  font-size: 13px;
+  color: #97969b;
+}
+
+.stateBox {
+  padding: 22px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.stateText {
+  font-size: 14px;
+  color: #97969b;
+  text-align: center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #212121;
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.row:hover {
+  background: #252525;
+}
+
+.thumbWrap {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+}
+
+.thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: #2a2a2a;
+  object-fit: contain;
+}
+
+.thumbPh {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #97969b;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.brand {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #97969b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.kcal {
+  color: #8dcf42;
+  font-weight: 600;
+}
+
+.protein {
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.dot {
+  color: #4b5563;
+}
+
+.quickAdd {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 0;
+  background: #1c1c1e;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Modals (we reuse homeStyles.modalOverlay + homeStyles.modalCard) */
+.modalHint {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #97969b;
+  text-align: center;
+}
+
+.modalInput {
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #000;
+  color: #fff;
+  outline: none;
+}
+
+.modalPrimaryBtn {
+  margin-top: 12px;
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #8dcf42;
+  color: #000;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.modalPrimaryBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modalSecondaryBtn {
+  margin-top: 12px;
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #2a2a2a;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.detailModalCard {
+  max-width: 34rem;
+}
+
+.detailTop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.detailImg {
+  width: 96px;
+  height: 96px;
+  border-radius: 16px;
+  background: #2a2a2a;
+  object-fit: contain;
+}
+
+.detailName {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.detailBrand {
+  color: #97969b;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Simple nutrition grid inside modal */
+.nutriGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.nutriItem {
+  background: #2a2a2a;
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+}
+
+.nutriVal {
+  font-size: 16px;
+  font-weight: 800;
+  color: #8dcf42;
+}
+
+.nutriLab {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #97969b;
+}
+
+.dataSource {
+  text-align: center;
+  font-size: 12px;
+  color: #97969b;
+  margin-bottom: 10px;
+}
+
+/* Serving size UI */
+.servingProduct {
+  text-align: center;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.presetWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.presetBtn {
+  border: 2px solid transparent;
+  background: #2a2a2a;
+  border-radius: 9999px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.presetBtnActive {
+  border-color: #8dcf42;
+}
+
+.presetText {
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.presetTextActive {
+  color: #8dcf42;
+}
+
+.customRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #000;
+  border: 1px solid #333;
+  margin-bottom: 12px;
+}
+
+.customInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
+}
+
+.customInput::placeholder {
+  color: #97969b;
+}
+
+.customUnit {
+  color: #97969b;
+  font-size: 13px;
+}
+
+.previewCard {
+  background: #2a2a2a;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.previewTitle {
+  font-size: 13px;
+  color: #8dcf42;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.previewGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.previewItem {
+  text-align: center;
+}
+
+.previewVal {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.previewLab {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #97969b;
+}
+
+.mealRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.mealBtn {
+  border: 0;
+  background: #2a2a2a;
+  border-radius: 14px;
+  padding: 10px 8px;
+  cursor: pointer;
+}
+
+.mealBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mealEmoji {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.mealName {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.addingRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.addingText {
+  font-size: 13px;
+  color: #8dcf42;
+  font-weight: 700;
+}
+
+.warn {
+  margin-top: 10px;
+  background: rgba(228, 34, 42, 0.12);
+  border: 1px solid rgba(228, 34, 42, 0.35);
+  color: #ffb4b8;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+/* spinner */
+.spinner,
+.smallSpinner {
+  border: 3px solid rgba(141, 207, 66, 0.2);
+  border-top-color: rgba(141, 207, 66, 1);
+  border-radius: 999px;
+  animation: spin 0.9s linear infinite;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+}
+
+.smallSpinner {
+  width: 16px;
+  height: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 520px) {
+  .previewGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .mealRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.inlineInfo{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+}

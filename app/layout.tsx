@@ -2,6 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { UserProvider } from "./context/UserContext";
 import { FontProvider } from "./context/FontContext";
+import NoZoom from "./NoZoom";
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "Meal Prep App",
