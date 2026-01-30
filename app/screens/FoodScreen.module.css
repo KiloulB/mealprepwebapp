@@ -239,10 +239,16 @@
 
 .detailTop {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: start;
   gap: 8px;
   margin-bottom: 14px;
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .detailImg {
@@ -263,7 +269,13 @@
 .detailBrand {
   color: #97969b;
   font-size: 13px;
-  text-align: center;
+  text-align: left;
+}
+
+.per100Label {
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  opacity: 0.6;
 }
 
 /* Simple nutrition grid inside modal */

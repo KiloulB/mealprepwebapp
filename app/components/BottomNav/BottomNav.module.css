@@ -106,8 +106,8 @@
         transparent
       );
 
-  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
-    box-shadow 400ms cubic-bezier(1, 0, 0.4, 1);
+  transition: background-color 300ms cubic-bezier(1, 0, 0.4, 1),
+    box-shadow 300ms cubic-bezier(1, 0, 0.4, 1);
 }
 
 .switcher__content {
@@ -261,17 +261,17 @@
 .switcher:has(input[c-option="1"]:checked)::after {
   translate: 0 0;
   transform-origin: right;
-  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
-    box-shadow 400ms cubic-bezier(1, 0, 0.4, 1),
-    translate 400ms cubic-bezier(1, 0, 0.4, 1);
+  transition: background-color 300ms cubic-bezier(1, 0, 0.4, 1),
+    box-shadow 300ms cubic-bezier(1, 0, 0.4, 1),
+    translate 300ms cubic-bezier(1, 0, 0.4, 1);
   animation: scaleToggle 440ms ease;
 }
 
 .switcher:has(input[c-option="2"]:checked)::after {
   translate: 76px 0;
-  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
-    box-shadow 400ms cubic-bezier(1, 0, 0.4, 1),
-    translate 400ms cubic-bezier(1, 0, 0.4, 1);
+  transition: background-color 300ms cubic-bezier(1, 0, 0.4, 1),
+    box-shadow 300ms cubic-bezier(1, 0, 0.4, 1),
+    translate 300ms cubic-bezier(1, 0, 0.4, 1);
   animation: scaleToggle2 440ms ease;
 }
 
@@ -286,11 +286,28 @@
 .switcher:has(input[c-option="3"]:checked)::after {
   translate: 152px 0;
   transform-origin: left;
-  transition: background-color 400ms cubic-bezier(1, 0, 0.4, 1),
-    box-shadow 400ms cubic-bezier(1, 0, 0.4, 1),
-    translate 400ms cubic-bezier(1, 0, 0.4, 1);
+  transition: background-color 300ms cubic-bezier(1, 0, 0.4, 1),
+    box-shadow 300ms cubic-bezier(1, 0, 0.4, 1),
+    translate 300ms cubic-bezier(1, 0, 0.4, 1);
   animation: scaleToggle3 440ms ease;
 }
+
+/* 4th tab (Recepten) */
+.switcher:has(input[c-option="4"]:checked)::after {
+  translate: 228px 0; /* 76px * 3 */
+  transform-origin: left;
+  transition: background-color 300ms cubic-bezier(1, 0, 0.4, 1),
+    box-shadow 300ms cubic-bezier(1, 0, 0.4, 1),
+    translate 300ms cubic-bezier(1, 0, 0.4, 1);
+  animation: scaleToggle4 440ms ease;
+}
+
+@keyframes scaleToggle4 {
+  0% { scale: 1 1; }
+  50% { scale: 1.1 1; }
+  100% { scale: 1 1; }
+}
+
 
 @keyframes scaleToggle {
   0% { scale: 1 1; }

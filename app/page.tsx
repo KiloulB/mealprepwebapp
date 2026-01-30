@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "./context/UserContext";
 import { useFont } from "./context/FontContext";
 import FoodScreen from "./screens/FoodScreen";
+import RecipeScreen from "./screens/RecipeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import {
   IoPersonOutline,
@@ -682,11 +683,12 @@ return (
     )}
             </>
     ) : activeTab === "food" ? (
-      <FoodScreen />
-    ) : (
-      <ProfileScreen />
-    )}
-
+  <FoodScreen />
+) : activeTab === "recepten" ? (
+  <RecipeScreen />
+) : (
+  <ProfileScreen />
+)}
 
     <BottomNav
       defaultValue="home"

@@ -343,7 +343,7 @@ export default function FoodScreen() {
 
       const mealLabel = mealLabelById[mealType] ?? mealType;
       alert(
-        `${selectedGrams}g van ${selectedProduct.product_name} is toegevoegd aan ${mealLabel}`,
+        `${selectedGrams}g van ${selectedProduct.product_name} is toegevoegd aan je ${mealLabel}`,
       );
     } catch {
       alert("Toevoegen van eten is mislukt. Probeer het opnieuw.");
@@ -603,49 +603,52 @@ export default function FoodScreen() {
             ) : (
               <>
                 <div className={foodStyles.detailTop}>
-                  {getImageUrl(selectedProduct) ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      className={foodStyles.detailImg}
-                      src={getImageUrl(selectedProduct)}
-                      alt=""
-                    />
-                  ) : (
-                    <div
-                      className={cx(foodStyles.detailImg, foodStyles.thumbPh)}
-                      aria-hidden="true"
-                    >
-                      📦
-                    </div>
-                  )}
+                  <div className={foodStyles.detailHeader}>
+                    {getImageUrl(selectedProduct) ? (
+                      <img
+                        className={foodStyles.detailImg}
+                        src={getImageUrl(selectedProduct)}
+                        alt=""
+                      />
+                    ) : (
+                      <div
+                        className={cx(foodStyles.detailImg, foodStyles.thumbPh)}
+                        aria-hidden="true"
+                      >
+                        📦
+                      </div>
+                    )}
 
-                  <div
-                    className={foodStyles.detailName}
-                    style={{ fontFamily: fontFamilyBold || fontFamily }}
-                  >
-                    {selectedProduct.product_name || "Onbekend product"}
+                    <div className={foodStyles.detailText}>
+                      <div
+                        className={foodStyles.detailName}
+                        style={{ fontFamily: fontFamilyBold || fontFamily }}
+                      >
+                        {selectedProduct.product_name || "Onbekend product"}
+                      </div>
+
+                      {selectedProduct.brands && (
+                        <div className={foodStyles.detailBrand}>
+                          {selectedProduct.brands}
+                        </div>
+                      )}
+                    </div>
                   </div>
-
-                  {selectedProduct.brands && (
-                    <div className={foodStyles.detailBrand}>
-                      {selectedProduct.brands}
-                    </div>
-                  )}
                 </div>
-
+                <div className={foodStyles.per100Label}>Per 100 gram:</div>
                 <div className={foodStyles.nutriGrid}>
                   <div className={foodStyles.nutriCell}>
                     <div className={foodStyles.nutriVal}>
                       {formatNumber(getKcal(selectedProduct.nutriments))}
                     </div>
-                    <div className={foodStyles.nutriLabel}>kcal / 100g</div>
+                    <div className={foodStyles.nutriLabel}>kcal</div>
                   </div>
 
                   <div className={foodStyles.nutriCell}>
                     <div className={foodStyles.nutriVal}>
                       {formatNumber(selectedProduct.nutriments?.proteins_100g)}g
                     </div>
-                    <div className={foodStyles.nutriLabel}>eiwit / 100g</div>
+                    <div className={foodStyles.nutriLabel}>eiwit</div>
                   </div>
 
                   <div className={foodStyles.nutriCell}>
@@ -655,16 +658,14 @@ export default function FoodScreen() {
                       )}
                       g
                     </div>
-                    <div className={foodStyles.nutriLabel}>
-                      koolhydraten / 100g
-                    </div>
+                    <div className={foodStyles.nutriLabel}>koolhydraten</div>
                   </div>
 
                   <div className={foodStyles.nutriCell}>
                     <div className={foodStyles.nutriVal}>
                       {formatNumber(selectedProduct.nutriments?.fat_100g)}g
                     </div>
-                    <div className={foodStyles.nutriLabel}>vet / 100g</div>
+                    <div className={foodStyles.nutriLabel}>vet</div>
                   </div>
                 </div>
 

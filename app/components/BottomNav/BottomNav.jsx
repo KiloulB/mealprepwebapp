@@ -5,6 +5,7 @@ import styles from "./BottomNav.module.css";
 import { HiHome } from "react-icons/hi2";
 import { ImSpoonKnife } from "react-icons/im";
 import { IoPersonCircleSharp } from "react-icons/io5";
+import { IoBookSharp } from "react-icons/io5"; // NEW (pick any icon you like)
 
 export default function BottomNav({
   defaultValue = "home",
@@ -82,13 +83,33 @@ export default function BottomNav({
         </span>
       </label>
 
+      {/* NEW TAB: Recepten */}
+      <label className={styles["switcher__option"]}>
+        <input
+          className={styles["switcher__input"]}
+          type="radio"
+          name="nav"
+          value="recepten"
+          c-option="3"
+          checked={value === "recepten"}
+          onChange={handleNavChange}
+        />
+        <span className={styles["switcher__content"]}>
+          <IoBookSharp
+            className={styles["switcher__icon"]}
+            aria-hidden="true"
+          />
+          <span className={styles["switcher__text"]}>Recepten</span>
+        </span>
+      </label>
+
       <label className={styles["switcher__option"]}>
         <input
           className={styles["switcher__input"]}
           type="radio"
           name="nav"
           value="profile"
-          c-option="3"
+          c-option="4"
           checked={value === "profile"}
           onChange={handleNavChange}
         />
