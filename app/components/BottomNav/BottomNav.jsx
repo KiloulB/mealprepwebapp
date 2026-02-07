@@ -1,21 +1,20 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./BottomNav.module.css";
 import { HiHome } from "react-icons/hi2";
 import { ImSpoonKnife } from "react-icons/im";
-import { IoPersonCircleSharp } from "react-icons/io5";
-import { IoBookSharp } from "react-icons/io5"; // NEW (pick any icon you like)
+import { IoPersonCircleSharp, IoBookSharp } from "react-icons/io5";
 
 export default function BottomNav({
-  defaultValue = "home",
+  value = "home", // <-- controlled
   onChange,
   className = "",
 }) {
-  const [value, setValue] = useState(defaultValue);
   const navRef = useRef(null);
   const previousOptionRef = useRef("1");
 
+  // Update the animated "previous" attribute whenever value changes
   useEffect(() => {
     const el = navRef.current;
     if (!el) return;
@@ -23,20 +22,13 @@ export default function BottomNav({
     const checked = el.querySelector('input[type="radio"]:checked');
     if (checked) {
       const opt = checked.getAttribute("c-option") || "1";
+      el.setAttribute("c-previous", previousOptionRef.current);
       previousOptionRef.current = opt;
-      el.setAttribute("c-previous", opt);
     }
-  }, []);
+  }, [value]);
 
   const handleNavChange = (e) => {
     const nextValue = e.target.value;
-    const nextOption = e.target.getAttribute("c-option") || "";
-
-    if (navRef.current)
-      navRef.current.setAttribute("c-previous", previousOptionRef.current);
-    previousOptionRef.current = nextOption;
-
-    setValue(nextValue);
     onChange?.(nextValue);
   };
 
@@ -83,7 +75,6 @@ export default function BottomNav({
         </span>
       </label>
 
-      {/* NEW TAB: Recepten */}
       <label className={styles["switcher__option"]}>
         <input
           className={styles["switcher__input"]}

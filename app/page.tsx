@@ -1,18 +1,21 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "./context/UserContext";
 import { useFont } from "./context/FontContext";
+
 import FoodScreen from "./screens/FoodScreen";
 import RecipeScreen from "./screens/RecipeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+
 import {
   IoPersonOutline,
   IoAdd,
   IoCheckmark,
   IoCloseCircleOutline,
 } from "react-icons/io5";
+
 import {
   subscribeToDailyLog,
   subscribeToRecipes,
@@ -20,11 +23,11 @@ import {
   toggleFoodChecked,
   removeFoodFromLog,
 } from "./firebase/dataService";
+
 import type { DailyLog, LoggedFood, Recipe, MealType } from "./types/user";
 
 import BottomNav from "./components/BottomNav/BottomNav";
 import styles from "./home.module.css";
-
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -34,7 +37,6 @@ function clampPercent(n: number) {
   if (Number.isNaN(n)) return 0;
   return Math.max(0, Math.min(100, Math.round(n)));
 }
-
 
 const ActivityRings = ({
   kcal,
@@ -55,9 +57,9 @@ const ActivityRings = ({
   fatTarget: number;
   carbsTarget: number;
 }) => {
-  const [animatedProgress, setAnimatedProgress] = useState<[number, number, number, number]>([
-    0, 0, 0, 0,
-  ]);
+  const [animatedProgress, setAnimatedProgress] = useState<
+    [number, number, number, number]
+  >([0, 0, 0, 0]);
 
   const ringSize = 90;
   const strokeWidth = 8;
@@ -103,9 +105,9 @@ const ActivityRings = ({
         const easedProgress = 1 - Math.pow(1 - progress, 3);
 
         setAnimatedProgress((prev) => {
-          const newProgress: [number, number, number, number] = [...prev] as any;
-          newProgress[index as 0 | 1 | 2 | 3] = startProgress + progressDiff * easedProgress;
-          return newProgress;
+          const next: [number, number, number, number] = [...prev] as any;
+          next[index as 0 | 1 | 2 | 3] = startProgress + progressDiff * easedProgress;
+          return next;
         });
 
         if (progress < 1) requestAnimationFrame(animate);
@@ -154,10 +156,14 @@ const ActivityRings = ({
 };
 
 export default function HomeScreen() {
-  const [activeTab, setActiveTab] = useState("home");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // URL-driven tabs: /?tab=home | food | recepten | profile
+  const activeTab = searchParams.get("tab") || "home";
+
   const { macroTargets, authUser, loading } = useUser();
   useFont();
-  const router = useRouter();
 
   const [weekOffset, setWeekOffset] = useState<number>(0);
   const [selectedDayIndex, setSelectedDayIndex] = useState<number>(-1);
@@ -213,7 +219,6 @@ export default function HomeScreen() {
   }, [authUser]);
 
   const currentIntake = useMemo(() => {
-    
     if (!dailyLog?.foods) return { kcal: 0, protein: 0, fat: 0, carbs: 0 };
 
     const checkedFoods = dailyLog.foods.filter((food) => food.checked);
@@ -230,37 +235,34 @@ export default function HomeScreen() {
   }, [dailyLog]);
 
   useEffect(() => {
-  if (!dailyLog?.foods) return;
+    if (!dailyLog?.foods) return;
 
-  setExpandedMeals((prev) => {
-    const next = new Set(prev);
+    setExpandedMeals((prev) => {
+      const next = new Set(prev);
 
-    (["breakfast", "lunch", "dinner", "snacks"] as MealType[]).forEach(
-      (mealType) => {
+      (["breakfast", "lunch", "dinner", "snacks"] as MealType[]).forEach((mealType) => {
         const hasItems = dailyLog.foods.some((f) => f.mealType === mealType);
         if (!hasItems) next.delete(mealType);
-      }
-    );
+      });
 
-    return next;
-  });
-}, [dailyLog?.foods]);
+      return next;
+    });
+  }, [dailyLog?.foods]);
 
   const kcalTarget = macroTargets ? macroTargets.kcal : 2000;
   const proteinTarget = macroTargets ? macroTargets.protein : 150;
   const fatTarget = macroTargets ? macroTargets.fat : 80;
   const carbsTarget = macroTargets ? macroTargets.carbs : 250;
 
-const remaining = useMemo(
-  () => ({
-    kcal: Math.max(0, Math.round(kcalTarget - currentIntake.kcal)),
-    protein: Math.max(0, Math.round(proteinTarget - currentIntake.protein)),
-    fat: Math.max(0, Math.round(fatTarget - currentIntake.fat)),
-    carbs: Math.max(0, Math.round(carbsTarget - currentIntake.carbs)),
-  }),
-  [currentIntake, kcalTarget, proteinTarget, fatTarget, carbsTarget]
-);
-
+  const remaining = useMemo(
+    () => ({
+      kcal: Math.max(0, Math.round(kcalTarget - currentIntake.kcal)),
+      protein: Math.max(0, Math.round(proteinTarget - currentIntake.protein)),
+      fat: Math.max(0, Math.round(fatTarget - currentIntake.fat)),
+      carbs: Math.max(0, Math.round(carbsTarget - currentIntake.carbs)),
+    }),
+    [currentIntake, kcalTarget, proteinTarget, fatTarget, carbsTarget]
+  );
 
   if (loading) {
     return (
@@ -315,10 +317,10 @@ const remaining = useMemo(
     });
 
     setExpandedMeals((prev) => {
-  const next = new Set(prev);
-  next.add(selectedMealType); // or recipe meal type if you pass one
-  return next;
-});
+      const next = new Set(prev);
+      next.add(selectedMealType);
+      return next;
+    });
 
     setAddFoodModalVisible(false);
   };
@@ -368,332 +370,300 @@ const remaining = useMemo(
   const kcalPct = clampPercent((currentIntake.kcal / kcalTarget) * 100);
   const progressWidthClass = (styles as any)[`w${kcalPct}`] as string;
 
+  const handleTabChange = (nextValue: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", nextValue);
+    router.push(`/?${params.toString()}`);
+  };
 
-return (
-  <div className={styles.screen}>
-        {activeTab === "home" ? (
-      <>
-    <div className={styles.headerRow}>
-      <div className={styles.headerDivider}>
-        <h1 className={styles.headerTitle}>Overzicht</h1>
-        <p className={styles.headerSubtitle}>{todayDateString}</p>
-      </div>
-
-      <button
-        className={styles.headerButton}
-        onClick={() => router.push("/settings")}
-      >
-        <IoPersonOutline size={24} color="#9CA3AF" />
-      </button>
-    </div>
-
-    <div className={styles.scrollArea}>
-      {/* OPTION A: mealsCard is inside the same section, below the cards */}
-      <div className={styles.section}>
-        <div className={styles.card}>
-          <div className={cx(styles.flexBetween, styles.cardRowBottom)}>
-            <span className={cx(styles.cardTitle, styles.cardTitleActivity)}>
-              🔥 Activiteit
-            </span>
-          </div>
-
-          <div className={cx(styles.flexRow, styles.activityValueRow)}>
-            <span className={styles.bigNumber}>4,093</span>
-            <span className={cx(styles.unitText, styles.unitTextStrong)}>
-              stappen
-            </span>
-          </div>
-        </div>
-
-        <div className={styles.card}>
-          <div className={cx(styles.flexBetween, styles.cardRowBottom)}>
-            <span className={cx(styles.cardTitle, styles.cardTitleFood)}>
-              🥗 Voeding
-            </span>
-          </div>
-
-          <div className={cx(styles.flexRow, styles.activityValueRow)}>
-            <span className={styles.bigNumber}>
-              {Math.round(currentIntake.kcal)}
-            </span>
-            <span className={styles.unitText}>kcal</span>
-          </div>
-
-          <div className={styles.progressTrack}>
-            <div className={cx(styles.progressFill, progressWidthClass)} />
-          </div>
-
-          <p className={styles.remainingText}>{remaining.kcal} kcal remaining</p>
-
-          <div className={cx(styles.flexBetween, styles.macrosRow)}>
-            <div className={styles.macroGroup}>
-              <div className={styles.macroCol}>
-                <p className={cx(styles.macroLabel, styles.macroLabelProtein)}>
-                  Eiwit
-                </p>
-                <p className={styles.macroValue}>
-                  {Math.round(currentIntake.protein)}g
-                </p>
-                <p className={styles.macroRemaining}>{remaining.protein}g</p>
-              </div>
-
-              <div className={styles.macroDivider} />
-
-              <div className={styles.macroCol}>
-                <p className={cx(styles.macroLabel, styles.macroLabelFat)}>
-                  Vet
-                </p>
-                <p className={styles.macroValue}>
-                  {Math.round(currentIntake.fat)}g
-                </p>
-                <p className={styles.macroRemaining}>{remaining.fat}g</p>
-              </div>
-
-              <div className={styles.macroDivider} />
-
-              <div className={styles.macroCol}>
-                <p className={cx(styles.macroLabel, styles.macroLabelCarbs)}>
-                  Carbs
-                </p>
-                <p className={styles.macroValue}>
-                  {Math.round(currentIntake.carbs)}g
-                </p>
-                <p className={styles.macroRemaining}>{remaining.carbs}g</p>
-              </div>
+  return (
+    <div className={styles.screen}>
+      {activeTab === "home" ? (
+        <>
+          <div className={styles.headerRow}>
+            <div className={styles.headerDivider}>
+              <h1 className={styles.headerTitle}>Overzicht</h1>
+              <p className={styles.headerSubtitle}>{todayDateString}</p>
             </div>
 
-            <ActivityRings
-              kcal={currentIntake.kcal}
-              protein={currentIntake.protein}
-              fat={currentIntake.fat}
-              carbs={currentIntake.carbs}
-              kcalTarget={kcalTarget}
-              proteinTarget={proteinTarget}
-              fatTarget={fatTarget}
-              carbsTarget={carbsTarget}
-            />
-          </div>
-        </div>
-
-        {/* MOVED HERE: mealsCard now falls under the cards in the same section */}
-        <div className={styles.mealsCard}>
-          <h2 className={styles.mealsTitle}>Maaltijden</h2>
-
-          {meals.map((meal, index) => {
-            const mealData = getMealData(meal.id);
-            const hasItems = mealData.items > 0;
-            const isExpanded = expandedMeals.has(meal.id);
-
-            return (
-              <div key={meal.id}>
-                <div
-                  className={cx(
-                    styles.mealWrap,
-                    isExpanded
-                      ? styles.mealWrapExpanded
-                      : styles.mealWrapCollapsed,
-                    hasItems ? styles.mealWrapEnabled : styles.mealWrapDisabled
-                  )}
-                >
-                  <div
-                    className={cx(
-                      styles.flexBetween,
-                      styles.mealHeader,
-                      isExpanded && styles.mealHeaderExpanded
-                    )}
-                    onClick={() => hasItems && toggleMealExpansion(meal.id)}
-                  >
-                    <div>
-                      <p className={styles.mealName}>{meal.name}</p>
-                      {hasItems ? (
-                        <p className={cx(styles.mealMeta, styles.mealMetaHas)}>
-                          {Math.round(mealData.kcal)} kcal • {mealData.items} item
-                          {mealData.items > 1 ? "s" : ""}
-                        </p>
-                      ) : (
-                        <p className={cx(styles.mealMeta, styles.mealMetaEmpty)}>
-                          Nog geen items
-                        </p>
-                      )}
-                    </div>
-
-                    <button
-                      className={styles.mealAddBtn}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openAddFoodModal(meal.id);
-                      }}
-                    >
-                      <IoAdd size={20} color="#FFFFFF" />
-                    </button>
-                  </div>
-
-                  <div
-                    className={cx(
-                      styles.mealExpandArea,
-                      isExpanded ? styles.mealExpandOpen : styles.mealExpandClosed
-                    )}
-                  >
-                    {mealData.foods.length > 0 && (
-                      <div className={styles.mealExpandedInner}>
-                        {mealData.foods.map((food) => {
-                          const isRemoving = removingFoods.has(food.id);
-
-                          return (
-                            <div
-                              key={food.id}
-                              className={cx(
-                                styles.flexRow,
-                                styles.foodRow,
-                                isRemoving
-                                  ? styles.foodRemoving
-                                  : styles.foodNormal
-                              )}
-                              onClick={() => handleToggleFood(food.id)}
-                            >
-                              <button
-                                className={cx(
-                                  styles.checkBtn,
-                                  food.checked
-                                    ? styles.checkBtnChecked
-                                    : styles.checkBtnUnchecked
-                                )}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleToggleFood(food.id);
-                                }}
-                              >
-                                {food.checked && (
-                                  <IoCheckmark size={16} color="#FFF" />
-                                )}
-                              </button>
-
-                              <div className={styles.foodMain}>
-                                <p
-                                  className={cx(
-                                    styles.foodName,
-                                    food.checked
-                                      ? styles.foodNameChecked
-                                      : styles.foodNameUnchecked
-                                  )}
-                                >
-                                  {food.name}
-                                </p>
-                                <p className={styles.foodMeta}>
-                                  {Math.round(food.kcal)} kcal •{" "}
-                                  {food.type === "food" && food.grams
-                                    ? `${food.grams}g`
-                                    : `${food.servings} serving${
-                                        food.servings !== 1 ? "s" : ""
-                                      }`}
-                                </p>
-                              </div>
-
-                              <button
-                                className={styles.iconButton}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleRemoveFood(food.id);
-                                }}
-                              >
-                                <IoCloseCircleOutline
-                                  size={20}
-                                  color="#9CA3AF"
-                                />
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {index < meals.length - 1 && <div className={styles.hr} />}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-
-    {addFoodModalVisible && (
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalCard}>
-          <div className={cx(styles.flexBetween, styles.modalHeader)}>
-            <h3 className={styles.modalTitle}>
-              Add to{" "}
-              {selectedMealType.charAt(0).toUpperCase() +
-                selectedMealType.slice(1)}
-            </h3>
             <button
-              className={styles.iconButton}
-              onClick={() => setAddFoodModalVisible(false)}
+              className={styles.headerButton}
+              onClick={() => router.push("/settings")}
+              type="button"
             >
-              <IoCloseCircleOutline size={24} color="#6B7280" />
+              <IoPersonOutline size={24} color="#9CA3AF" />
             </button>
           </div>
 
-          <div>
-            <h4 className={styles.modalSectionTitle}>Your Recipes</h4>
-
-            {recipes.length === 0 ? (
-              <p className={styles.modalEmptyText}>
-                No recipes yet. Create one in the Recipes tab!
-              </p>
-            ) : (
-              recipes.map((recipe) => (
-                <div
-                  key={recipe.id}
-                  className={cx(styles.flexRow, styles.recipeRow)}
-                  onClick={() => handleAddRecipeToLog(recipe)}
-                >
-                  {recipe.image && (
-                    <img
-                      src={recipe.image}
-                      alt={recipe.title}
-                      className={styles.recipeImg}
-                    />
-                  )}
-                  <div className={styles.recipeMain}>
-                    <p className={styles.recipeTitle}>{recipe.title}</p>
-                    <p className={styles.recipeMeta}>
-                      {recipe.kcal} kcal • {recipe.protein}g protein
-                    </p>
-                  </div>
-                  <IoAdd size={24} color="#4A90D9" />
+          <div className={styles.scrollArea}>
+            <div className={styles.section}>
+              <div className={styles.card}>
+                <div className={cx(styles.flexBetween, styles.cardRowBottom)}>
+                  <span className={cx(styles.cardTitle, styles.cardTitleActivity)}>
+                    🔥 Activiteit
+                  </span>
                 </div>
-              ))
-            )}
 
-            <h4
-              className={cx(
-                styles.modalSectionTitle,
-                styles.modalSectionTitleSpaced
-              )}
-            >
-              Search Foods
-            </h4>
-            <p className={styles.modalInfoText}>
-              Go to the Food tab to search and add foods
-            </p>
+                <div className={cx(styles.flexRow, styles.activityValueRow)}>
+                  <span className={styles.bigNumber}>4,093</span>
+                  <span className={cx(styles.unitText, styles.unitTextStrong)}>stappen</span>
+                </div>
+              </div>
+
+              <div className={styles.card}>
+                <div className={cx(styles.flexBetween, styles.cardRowBottom)}>
+                  <span className={cx(styles.cardTitle, styles.cardTitleFood)}>🥗 Voeding</span>
+                </div>
+
+                <div className={cx(styles.flexRow, styles.activityValueRow)}>
+                  <span className={styles.bigNumber}>{Math.round(currentIntake.kcal)}</span>
+                  <span className={styles.unitText}>kcal</span>
+                </div>
+
+                <div className={styles.progressTrack}>
+                  <div className={cx(styles.progressFill, progressWidthClass)} />
+                </div>
+
+                <p className={styles.remainingText}>{remaining.kcal} kcal remaining</p>
+
+                <div className={cx(styles.flexBetween, styles.macrosRow)}>
+                  <div className={styles.macroGroup}>
+                    <div className={styles.macroCol}>
+                      <p className={cx(styles.macroLabel, styles.macroLabelProtein)}>Eiwit</p>
+                      <p className={styles.macroValue}>{Math.round(currentIntake.protein)}g</p>
+                      <p className={styles.macroRemaining}>{remaining.protein}g</p>
+                    </div>
+
+                    <div className={styles.macroDivider} />
+
+                    <div className={styles.macroCol}>
+                      <p className={cx(styles.macroLabel, styles.macroLabelFat)}>Vet</p>
+                      <p className={styles.macroValue}>{Math.round(currentIntake.fat)}g</p>
+                      <p className={styles.macroRemaining}>{remaining.fat}g</p>
+                    </div>
+
+                    <div className={styles.macroDivider} />
+
+                    <div className={styles.macroCol}>
+                      <p className={cx(styles.macroLabel, styles.macroLabelCarbs)}>Carbs</p>
+                      <p className={styles.macroValue}>{Math.round(currentIntake.carbs)}g</p>
+                      <p className={styles.macroRemaining}>{remaining.carbs}g</p>
+                    </div>
+                  </div>
+
+                  <ActivityRings
+                    kcal={currentIntake.kcal}
+                    protein={currentIntake.protein}
+                    fat={currentIntake.fat}
+                    carbs={currentIntake.carbs}
+                    kcalTarget={kcalTarget}
+                    proteinTarget={proteinTarget}
+                    fatTarget={fatTarget}
+                    carbsTarget={carbsTarget}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.mealsCard}>
+                <h2 className={styles.mealsTitle}>Maaltijden</h2>
+
+                {meals.map((meal, index) => {
+                  const mealData = getMealData(meal.id);
+                  const hasItems = mealData.items > 0;
+                  const isExpanded = expandedMeals.has(meal.id);
+
+                  return (
+                    <div key={meal.id}>
+                      <div
+                        className={cx(
+                          styles.mealWrap,
+                          isExpanded ? styles.mealWrapExpanded : styles.mealWrapCollapsed,
+                          hasItems ? styles.mealWrapEnabled : styles.mealWrapDisabled
+                        )}
+                      >
+                        <div
+                          className={cx(
+                            styles.flexBetween,
+                            styles.mealHeader,
+                            isExpanded && styles.mealHeaderExpanded
+                          )}
+                          onClick={() => hasItems && toggleMealExpansion(meal.id)}
+                        >
+                          <div>
+                            <p className={styles.mealName}>{meal.name}</p>
+                            {hasItems ? (
+                              <p className={cx(styles.mealMeta, styles.mealMetaHas)}>
+                                {Math.round(mealData.kcal)} kcal • {mealData.items} item
+                                {mealData.items > 1 ? "s" : ""}
+                              </p>
+                            ) : (
+                              <p className={cx(styles.mealMeta, styles.mealMetaEmpty)}>
+                                Nog geen items
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            className={styles.mealAddBtn}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openAddFoodModal(meal.id);
+                            }}
+                            type="button"
+                          >
+                            <IoAdd size={20} color="#FFFFFF" />
+                          </button>
+                        </div>
+
+                        <div
+                          className={cx(
+                            styles.mealExpandArea,
+                            isExpanded ? styles.mealExpandOpen : styles.mealExpandClosed
+                          )}
+                        >
+                          {mealData.foods.length > 0 && (
+                            <div className={styles.mealExpandedInner}>
+                              {mealData.foods.map((food) => {
+                                const isRemoving = removingFoods.has(food.id);
+
+                                return (
+                                  <div
+                                    key={food.id}
+                                    className={cx(
+                                      styles.flexRow,
+                                      styles.foodRow,
+                                      isRemoving ? styles.foodRemoving : styles.foodNormal
+                                    )}
+                                    onClick={() => handleToggleFood(food.id)}
+                                  >
+                                    <button
+                                      className={cx(
+                                        styles.checkBtn,
+                                        food.checked ? styles.checkBtnChecked : styles.checkBtnUnchecked
+                                      )}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleToggleFood(food.id);
+                                      }}
+                                      type="button"
+                                    >
+                                      {food.checked && <IoCheckmark size={16} color="#FFF" />}
+                                    </button>
+
+                                    <div className={styles.foodMain}>
+                                      <p
+                                        className={cx(
+                                          styles.foodName,
+                                          food.checked ? styles.foodNameChecked : styles.foodNameUnchecked
+                                        )}
+                                      >
+                                        {food.name}
+                                      </p>
+                                      <p className={styles.foodMeta}>
+                                        {Math.round(food.kcal)} kcal •{" "}
+                                        {food.type === "food" && (food as any).grams
+                                          ? `${(food as any).grams}g`
+                                          : `${food.servings} serving${food.servings !== 1 ? "s" : ""}`}
+                                      </p>
+                                    </div>
+
+                                    <button
+                                      className={styles.iconButton}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRemoveFood(food.id);
+                                      }}
+                                      type="button"
+                                    >
+                                      <IoCloseCircleOutline size={20} color="#9CA3AF" />
+                                    </button>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {index < meals.length - 1 && <div className={styles.hr} />}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    )}
-            </>
-    ) : activeTab === "food" ? (
-  <FoodScreen />
-) : activeTab === "recepten" ? (
-  <RecipeScreen />
-) : (
-  <ProfileScreen />
-)}
 
-    <BottomNav
-      defaultValue="home"
-      onChange={(nextValue) => setActiveTab(nextValue)}
-    />
-  </div>
-);
+          {addFoodModalVisible && (
+            <div className={styles.modalOverlay}>
+              <div className={styles.modalCard}>
+                <div className={cx(styles.flexBetween, styles.modalHeader)}>
+                  <h3 className={styles.modalTitle}>
+                    Add to {selectedMealType.charAt(0).toUpperCase() + selectedMealType.slice(1)}
+                  </h3>
+
+                  <button
+                    className={styles.iconButton}
+                    onClick={() => setAddFoodModalVisible(false)}
+                    type="button"
+                  >
+                    <IoCloseCircleOutline size={24} color="#6B7280" />
+                  </button>
+                </div>
+
+                <div>
+                  <h4 className={styles.modalSectionTitle}>Your Recipes</h4>
+
+                  {recipes.length === 0 ? (
+                    <p className={styles.modalEmptyText}>
+                      No recipes yet. Create one in the Recipes tab!
+                    </p>
+                  ) : (
+                    recipes.map((recipe) => (
+                      <div
+                        key={recipe.id}
+                        className={cx(styles.flexRow, styles.recipeRow)}
+                        onClick={() => handleAddRecipeToLog(recipe)}
+                      >
+                        {recipe.image && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={recipe.image}
+                            alt={recipe.title}
+                            className={styles.recipeImg}
+                          />
+                        )}
+
+                        <div className={styles.recipeMain}>
+                          <p className={styles.recipeTitle}>{recipe.title}</p>
+                          <p className={styles.recipeMeta}>
+                            {recipe.kcal} kcal • {recipe.protein}g protein
+                          </p>
+                        </div>
+
+                        <IoAdd size={24} color="#4A90D9" />
+                      </div>
+                    ))
+                  )}
+
+                  <h4 className={cx(styles.modalSectionTitle, styles.modalSectionTitleSpaced)}>
+                    Search Foods
+                  </h4>
+                  <p className={styles.modalInfoText}>Go to the Food tab to search and add foods</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      ) : activeTab === "food" ? (
+        <FoodScreen />
+      ) : activeTab === "recepten" ? (
+        <RecipeScreen />
+      ) : (
+        <ProfileScreen />
+      )}
+
+      <BottomNav value={activeTab} onChange={handleTabChange} />
+
+    </div>
+  );
 }

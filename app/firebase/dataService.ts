@@ -1,36 +1,36 @@
-import { DailyLog, LoggedFood, Recipe, MealType } from '../types/user';
-import { db, auth } from './config';
+import type { DailyLog, LoggedFood, Recipe, MealType } from "../types/user";
+import { db } from "./config";
 import {
   collection,
   doc,
   getDoc,
   setDoc,
   updateDoc,
+  deleteDoc,
   onSnapshot,
-  query,
-  where,
-  arrayUnion,
-  arrayRemove
-} from 'firebase/firestore';
+  serverTimestamp,
+} from "firebase/firestore";
 
-// Helper function to calculate totals from foods
+/* ------------------------- Daily log helpers ------------------------- */
+
 const calculateTotals = (foods: LoggedFood[]) => {
-  const checkedFoods = foods.filter(food => food.checked);
+  const checkedFoods = foods.filter((food) => food.checked);
   return checkedFoods.reduce(
     (totals, food) => ({
-      kcal: totals.kcal + (food.kcal * food.servings),
-      protein: totals.protein + (food.protein * food.servings),
-      fat: totals.fat + (food.fat * food.servings),
-      carbs: totals.carbs + (food.carbs * food.servings),
+      kcal: totals.kcal + food.kcal * food.servings,
+      protein: totals.protein + food.protein * food.servings,
+      fat: totals.fat + food.fat * food.servings,
+      carbs: totals.carbs + food.carbs * food.servings,
     }),
     { kcal: 0, protein: 0, fat: 0, carbs: 0 }
   );
 };
 
-// Helper function to get date string for Firestore
 const getDateString = (date: Date) => {
-  return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+  return date.toISOString().split("T")[0]; // YYYY-MM-DD
 };
+
+/* ------------------------- Daily log subscriptions ------------------------- */
 
 export const subscribeToDailyLog = (
   userId: string,
@@ -43,28 +43,33 @@ export const subscribeToDailyLog = (
   }
 
   const dateStr = getDateString(date);
-  const docRef = doc(db, 'users', userId, 'dailyLogs', dateStr);
+  const docRef = doc(db, "users", userId, "dailyLogs", dateStr);
 
-  return onSnapshot(docRef, (docSnapshot) => {
-    if (docSnapshot.exists()) {
-      const data = docSnapshot.data();
-      const log: DailyLog = {
-        totals: data.totals || { kcal: 0, protein: 0, fat: 0, carbs: 0 },
-        foods: data.foods || [],
-      };
-      callback(log);
-    } else {
-      // Return empty log for new dates
-      callback({
-        totals: { kcal: 0, protein: 0, fat: 0, carbs: 0 },
-        foods: [],
-      });
+  return onSnapshot(
+    docRef,
+    (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const data = docSnapshot.data();
+        const log: DailyLog = {
+          totals: data.totals || { kcal: 0, protein: 0, fat: 0, carbs: 0 },
+          foods: data.foods || [],
+        };
+        callback(log);
+      } else {
+        callback({
+          totals: { kcal: 0, protein: 0, fat: 0, carbs: 0 },
+          foods: [],
+        });
+      }
+    },
+    (error) => {
+      console.error("Error subscribing to daily log:", error);
+      callback(null);
     }
-  }, (error) => {
-    console.error('Error subscribing to daily log:', error);
-    callback(null);
-  });
+  );
 };
+
+/* ------------------------- Recipes (read/subscribe) ------------------------- */
 
 export const subscribeToRecipes = (
   userId: string,
@@ -75,131 +80,150 @@ export const subscribeToRecipes = (
     return () => {};
   }
 
-  const recipesRef = collection(db, 'users', userId, 'recipes');
+  const recipesRef = collection(db, "users", userId, "recipes");
 
-  return onSnapshot(recipesRef, (querySnapshot) => {
-    const recipes: Recipe[] = [];
-    querySnapshot.forEach((doc) => {
-      recipes.push({ id: doc.id, ...doc.data() } as Recipe);
-    });
-    callback(recipes);
-  }, (error) => {
-    console.error('Error subscribing to recipes:', error);
-    callback([]);
+  return onSnapshot(
+    recipesRef,
+    (querySnapshot) => {
+      const recipes: Recipe[] = [];
+      querySnapshot.forEach((d) => {
+        recipes.push({ id: d.id, ...(d.data() as Omit<Recipe, "id">) } as Recipe);
+      });
+      callback(recipes);
+    },
+    (error) => {
+      console.error("Error subscribing to recipes:", error);
+      callback([]);
+    }
+  );
+};
+
+export const getRecipeById = async (userId: string, recipeId: string) => {
+  if (!userId) throw new Error("Missing userId");
+  if (!recipeId) throw new Error("Missing recipeId");
+
+  const recipeRef = doc(db, "users", userId, "recipes", recipeId);
+  const snap = await getDoc(recipeRef);
+
+  if (!snap.exists()) return null;
+  return { id: snap.id, ...(snap.data() as Omit<Recipe, "id">) } as Recipe;
+};
+
+/* ------------------------- Recipes (CRUD) ------------------------- */
+
+// What your Expo screen saves: everything except id. [file:3]
+export type RecipeInput = Omit<Recipe, "id">;
+
+export const saveRecipe = async (userId: string, data: RecipeInput) => {
+  if (!userId) throw new Error("Missing userId");
+
+  const recipesRef = collection(db, "users", userId, "recipes");
+  const newRef = doc(recipesRef); // auto-id
+
+  await setDoc(newRef, {
+    ...data,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+
+  return newRef.id;
+};
+
+export const updateRecipe = async (
+  userId: string,
+  recipeId: string,
+  data: Partial<RecipeInput>
+) => {
+  if (!userId) throw new Error("Missing userId");
+  if (!recipeId) throw new Error("Missing recipeId");
+
+  const recipeRef = doc(db, "users", userId, "recipes", recipeId);
+
+  await updateDoc(recipeRef, {
+    ...data,
+    updatedAt: serverTimestamp(),
   });
 };
+
+export const deleteRecipe = async (userId: string, recipeId: string) => {
+  if (!userId) throw new Error("Missing userId");
+  if (!recipeId) throw new Error("Missing recipeId");
+
+  const recipeRef = doc(db, "users", userId, "recipes", recipeId);
+  await deleteDoc(recipeRef);
+};
+
+/* ------------------------- Daily log mutations ------------------------- */
 
 export const addFoodToLog = async (
   userId: string,
   date: Date,
-  food: Omit<LoggedFood, 'id'>
+  food: Omit<LoggedFood, "id">
 ) => {
   if (!userId) return;
 
   const dateStr = getDateString(date);
-  const docRef = doc(db, 'users', userId, 'dailyLogs', dateStr);
+  const docRef = doc(db, "users", userId, "dailyLogs", dateStr);
 
-  try {
-    // Get current document
-    const docSnap = await getDoc(docRef);
-    const currentFoods = docSnap.exists() ? docSnap.data()?.foods || [] : [];
+  const docSnap = await getDoc(docRef);
+  const currentFoods = docSnap.exists() ? docSnap.data()?.foods || [] : [];
 
-    // Create new food with unique ID
-    const newFood: LoggedFood = {
-      ...food,
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-    };
+  const newFood: LoggedFood = {
+    ...food,
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
+  };
 
-    // Add food to array and recalculate totals
-    const updatedFoods = [...currentFoods, newFood];
-    const updatedTotals = calculateTotals(updatedFoods);
+  const updatedFoods = [...currentFoods, newFood];
+  const updatedTotals = calculateTotals(updatedFoods);
 
-    // Update document
-    await setDoc(docRef, {
-      foods: updatedFoods,
-      totals: updatedTotals,
-      lastUpdated: new Date(),
-    });
-
-    console.log('Added food to log:', newFood);
-  } catch (error) {
-    console.error('Error adding food to log:', error);
-    throw error;
-  }
+  await setDoc(docRef, {
+    foods: updatedFoods,
+    totals: updatedTotals,
+    lastUpdated: new Date(),
+  });
 };
 
-export const toggleFoodChecked = async (
-  userId: string,
-  date: Date,
-  foodId: string
-) => {
+export const toggleFoodChecked = async (userId: string, date: Date, foodId: string) => {
   if (!userId) return;
 
   const dateStr = getDateString(date);
-  const docRef = doc(db, 'users', userId, 'dailyLogs', dateStr);
+  const docRef = doc(db, "users", userId, "dailyLogs", dateStr);
 
-  try {
-    // Get current document
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) return;
+  const docSnap = await getDoc(docRef);
+  if (!docSnap.exists()) return;
 
-    const currentFoods: LoggedFood[] = docSnap.data()?.foods || [];
+  const currentFoods: LoggedFood[] = docSnap.data()?.foods || [];
 
-    // Find and toggle the food
-    const updatedFoods = currentFoods.map(food =>
-      food.id === foodId ? { ...food, checked: !food.checked } : food
-    );
+  const updatedFoods = currentFoods.map((food) =>
+    food.id === foodId ? { ...food, checked: !food.checked } : food
+  );
 
-    // Recalculate totals
-    const updatedTotals = calculateTotals(updatedFoods);
+  const updatedTotals = calculateTotals(updatedFoods);
 
-    // Update document
-    await updateDoc(docRef, {
-      foods: updatedFoods,
-      totals: updatedTotals,
-      lastUpdated: new Date(),
-    });
-
-    console.log('Toggled food checked status:', foodId);
-  } catch (error) {
-    console.error('Error toggling food checked status:', error);
-    throw error;
-  }
+  await updateDoc(docRef, {
+    foods: updatedFoods,
+    totals: updatedTotals,
+    lastUpdated: new Date(),
+  });
 };
 
-export const removeFoodFromLog = async (
-  userId: string,
-  date: Date,
-  foodId: string
-) => {
+export const removeFoodFromLog = async (userId: string, date: Date, foodId: string) => {
   if (!userId) return;
 
   const dateStr = getDateString(date);
-  const docRef = doc(db, 'users', userId, 'dailyLogs', dateStr);
+  const docRef = doc(db, "users", userId, "dailyLogs", dateStr);
 
-  try {
-    // Get current document
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) return;
+  const docSnap = await getDoc(docRef);
+  if (!docSnap.exists()) return;
 
-    const currentFoods: LoggedFood[] = docSnap.data()?.foods || [];
+  const currentFoods: LoggedFood[] = docSnap.data()?.foods || [];
 
-    // Remove the food
-    const updatedFoods = currentFoods.filter(food => food.id !== foodId);
+  const updatedFoods = currentFoods.filter((food) => food.id !== foodId);
+  const updatedTotals = calculateTotals(updatedFoods);
 
-    // Recalculate totals
-    const updatedTotals = calculateTotals(updatedFoods);
-
-    // Update document
-    await updateDoc(docRef, {
-      foods: updatedFoods,
-      totals: updatedTotals,
-      lastUpdated: new Date(),
-    });
-
-    console.log('Removed food from log:', foodId);
-  } catch (error) {
-    console.error('Error removing food from log:', error);
-    throw error;
-  }
+  await updateDoc(docRef, {
+    foods: updatedFoods,
+    totals: updatedTotals,
+    lastUpdated: new Date(),
+  });
 };

@@ -1,0 +1,482 @@
+/* Make RecipeScreen match FoodScreen.module.css look & feel */
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardBtn {
+  width: 100%;
+  border: 0;
+  background: #212121;
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: left;
+}
+
+.cardBtn:hover {
+  background: #252525;
+}
+
+.cardImg {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #2a2a2a;
+  flex: 0 0 52px;
+}
+
+.cardImgPlaceholder {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 52px;
+}
+
+.cardMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardMeta {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.kcal {
+  color: #8dcf42;
+  font-weight: 600;
+}
+
+.muted {
+  color: #97969b;
+  font-weight: 600;
+}
+
+.dot {
+  color: #4b5563;
+}
+
+.emptyState {
+  padding: 22px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.emptyTitle {
+  font-size: 14px;
+  color: #97969b;
+  text-align: center;
+  font-weight: 700;
+}
+
+.emptySub {
+  font-size: 13px;
+  color: #97969b;
+  text-align: center;
+}
+
+/* FAB */
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 92px;
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  border: 0;
+  background: #8dcf42;
+  color: #000;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(141, 207, 66, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 62;
+}
+
+.fabOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  border: 0;
+  z-index: 60;
+}
+
+.fabMenu {
+  position: fixed;
+  right: 20px;
+  bottom: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 61;
+}
+
+.fabMenuItem {
+  border: 0;
+  background: #2a2a2a;
+  color: #fff;
+  border-radius: 9999px;
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fabIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background: #1c1c1e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.fabLabel {
+  font-weight: 700;
+}
+
+/* Modal sizing */
+.modalWide {
+  max-width: 44rem;
+}
+
+.modalNarrow {
+  max-width: 34rem;
+}
+
+.modalHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trashBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 0;
+  background: rgba(228, 34, 42, 0.12);
+  border: 1px solid rgba(228, 34, 42, 0.35);
+  color: #ffb4b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Image picker */
+.imagePicker {
+  width: 100%;
+  height: 180px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  background: #2a2a2a;
+  cursor: pointer;
+  display: block;
+}
+
+.fileInput {
+  display: none;
+}
+
+.pickedImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  color: #97969b;
+}
+
+.imagePlaceholderText {
+  font-size: 13px;
+  color: #97969b;
+  font-weight: 700;
+}
+
+/* Form */
+.formGrid {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.formGrid > * {
+  min-width: 0;
+}
+
+
+.label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #97969b;
+  font-weight: 700;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #000;
+  color: #fff;
+  outline: none;
+}
+
+.box {
+  background: #2a2a2a;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.boxHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.boxTitle {
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.nutriRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.timeRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.smallLabel {
+  font-size: 12px;
+  color: #97969b;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.smallInput {
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #000;
+  color: #fff;
+  outline: none;
+  text-align: center;
+}
+
+.circleBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 0;
+  background: #1c1c1e;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ingredients rows */
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+  min-width: 0;
+}
+
+.row > * {
+  min-width: 0;
+}
+
+.amountInput {
+  width: 100px;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #000;
+  color: #fff;
+  outline: none;
+}
+
+.nameInput {
+  flex: 1;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #000;
+  color: #fff;
+  outline: none;
+}
+
+.removeBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 0;
+  background: #1c1c1e;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Steps rows */
+.stepRow {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.stepNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: #8dcf42;
+  color: #000;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  flex: 0 0 28px;
+}
+
+.textarea {
+  flex: 1;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #000;
+  color: #fff;
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Save button (like Food modalPrimaryBtn) */
+.primaryBtn {
+  margin-top: 12px;
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #8dcf42;
+  color: #000;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Select-to-edit list */
+.selectList {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.selectItem {
+  width: 100%;
+  border: 0;
+  background: #212121;
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.selectImg {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #2a2a2a;
+}
+
+.selectImgPlaceholder {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selectMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.selectTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 18px;
+}
+
+.selectMeta {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #97969b;
+}

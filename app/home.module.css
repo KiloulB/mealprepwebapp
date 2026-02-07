@@ -6,6 +6,25 @@ html, body {
   touch-action: pan-x pan-y; /* allow scrolling, block pinch-zoom */
 }
 
+/* Keep scrolling enabled */
+html, body {
+  height: 100%;
+  overflow: auto;
+
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* IE/old Edge */
+  -ms-overflow-style: none;
+}
+
+/* Chrome / Safari / newer Edge */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 
 .screen {
   min-height: 100vh;
@@ -811,7 +830,8 @@ box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 50;
+  margin: 10px 20px 10px 20px;
+  z-index: 99;
 }
 
 .modalCard {
@@ -823,6 +843,9 @@ box-sizing: border-box;
   overflow-y: auto;
   background: #1C1C1E;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    overflow: auto;
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE/old Edge */
 }
 
 .modalHeader {
