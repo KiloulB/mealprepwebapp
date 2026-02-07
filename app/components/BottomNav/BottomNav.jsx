@@ -109,7 +109,7 @@ export default function BottomNav({
             className={styles["switcher__icon"]}
             aria-hidden="true"
           />
-          <span className={styles["switcher__text"]}>Profilee</span>
+          <span className={styles["switcher__text"]}>Profile</span>
         </span>
       </label>
 
