@@ -1,0 +1,286 @@
+.modalWide {
+  max-width: 44rem;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trashBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 0;
+  background: rgba(228, 34, 42, 0.12);
+  border: 1px solid rgba(228, 34, 42, 0.35);
+  color: #ffb4b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.body {
+  padding: 14px;
+  box-sizing: border-box;
+}
+
+.body * {
+  box-sizing: border-box;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #97969b;
+  font-weight: 700;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #000;
+  color: #fff;
+  outline: none;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 14px 0 10px;
+}
+
+.sectionTitle {
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.circleBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 0;
+  background: #1c1c1e;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workoutCard {
+  background: #2a2a2a;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.workoutTop {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.workoutName {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #000;
+  color: #fff;
+  outline: none;
+  font-weight: 800;
+}
+
+.workoutActions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.secondaryBtn {
+  border: 0;
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #1c1c1e;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.smallDanger {
+  border: 0;
+  border-radius: 9999px;
+  padding: 8px 10px;
+  background: rgba(228, 34, 42, 0.12);
+  border: 1px solid rgba(228, 34, 42, 0.35);
+  color: #ffb4b8;
+  cursor: pointer;
+}
+
+.exerciseRow {
+  margin-top: 10px;
+  background: #212121;
+  border-radius: 14px;
+  padding: 10px;
+  position: relative;
+}
+
+.exerciseLeft {
+  margin-bottom: 8px;
+}
+
+.exerciseTitle {
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.exerciseSub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #97969b;
+  font-weight: 700;
+}
+
+.exerciseThumb,
+.pickImg {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #2a2a2a;
+  display: block;
+}
+
+.exerciseThumbPlaceholder {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: #2a2a2a;
+}
+
+.removeBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 0;
+  background: #1c1c1e;
+  color: #fff;
+  cursor: pointer;
+}
+
+.exerciseGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.smallInput {
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #000;
+  color: #fff;
+  outline: none;
+  text-align: center;
+}
+
+.primaryBtn {
+  margin-top: 12px;
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #8dcf42;
+  color: #000;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Picker */
+.searchRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: #1c1c1e;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  outline: none;
+}
+
+.pickList {
+  max-height: 60vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pickItem {
+  width: 100%;
+  border: 0;
+  background: #212121;
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.pickImgPlaceholder {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pickTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pickMeta {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #97969b;
+  font-weight: 700;
+}
+
+.muted {
+  color: #97969b;
+  font-weight: 700;
+}
