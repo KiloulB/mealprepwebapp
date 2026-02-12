@@ -37,46 +37,27 @@ export function normalizeTag(s: string) {
 }
 
 export function buildExerciseTags(ex: FreeExercise): string[] {
-  const out: string[] = [];
+  const tags = new Set<string>();
 
-  const add = (t?: string) => {
-    if (!t) return;
-    if (out.includes(t)) return;
-    if (out.length >= 2) return;
-    out.push(t);
-  };
+  if (ex.category) tags.add(normalizeTag(ex.category));
+  if (ex.force) tags.add(normalizeTag(ex.force));
+  if (ex.level) tags.add(normalizeTag(ex.level));
+  if (ex.mechanic) tags.add(normalizeTag(ex.mechanic));
 
-  const equipment = normalizeTag(ex.equipment || "");
-  const category = normalizeTag(ex.category || "");
-  const prim = (Array.isArray(ex.primaryMuscles) ? ex.primaryMuscles : []).map(normalizeTag);
-  const sec = (Array.isArray(ex.secondaryMuscles) ? ex.secondaryMuscles : []).map(normalizeTag);
-  const muscles = new Set([...prim, ...sec]);
-
-  // 1) Tag bucket: modality / equipment (high priority)
-  if (category === "cardio") add("Cardio"); // category enum includes "cardio" in schema [web:52]
-
-  if (out.length < 2) {
-    if (equipment === "body only") add("Bodyweight"); // equipment enum includes "body only" [web:52]
-    else if (equipment === "dumbbell") add("Dumbbell"); // equipment enum includes "dumbbell" [web:52]
-    else if (equipment === "cable") add("Cable"); // equipment enum includes "cable" [web:52]
-    else if (equipment === "machine") add("Machine"); // equipment enum includes "machine" [web:52]
+  // equipment is string | null in this DB [web:109]
+  if (typeof (ex as any).equipment === "string" && (ex as any).equipment.trim()) {
+    tags.add(normalizeTag((ex as any).equipment));
   }
 
-  // 2) Tag bucket: general body region
-  const isCore =
-    muscles.has("abdominals") || muscles.has("abductors") || muscles.has("adductors"); // muscle enums include these [web:52]
-  const isBack =
-    muscles.has("lats") || muscles.has("lower back") || muscles.has("middle back") || muscles.has("traps"); // muscle enums include these [web:52]
-  const isArms =
-    muscles.has("biceps") || muscles.has("triceps") || muscles.has("forearms"); // muscle enums include these [web:52]
+  (Array.isArray(ex.primaryMuscles) ? ex.primaryMuscles : []).forEach((m) =>
+    tags.add(normalizeTag(m))
+  );
+  (Array.isArray(ex.secondaryMuscles) ? ex.secondaryMuscles : []).forEach((m) =>
+    tags.add(normalizeTag(m))
+  );
 
-  if (isCore) add("Core");
-  else if (isBack) add("Back");
-  else if (isArms) add("Arms");
-
-  return out;
+  return [...tags].filter(Boolean).sort((a, b) => a.localeCompare(b));
 }
-
 
 export function searchExercises(query: string, tagFilters: string[] = []) {
   const q = normalizeTag(query);
