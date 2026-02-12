@@ -1,32 +1,32 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase/config';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { auth } from "../firebase/config";
 
 export default function AuthPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Redirect to home if user is already authenticated
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push('/');
-      }
+      if (user) router.push("/");
     });
-
     return () => unsubscribe();
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
@@ -35,8 +35,9 @@ export default function AuthPage() {
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
-    } catch (error: any) {
-      setError(error.message);
+      router.push("/");
+    } catch (err: any) {
+      setError(err?.message ?? "Auth failed");
     } finally {
       setLoading(false);
     }
@@ -44,7 +45,10 @@ export default function AuthPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-black">
-      <div className="w-full max-w-md p-8 rounded-3xl shadow-2xl" style={{backgroundColor: '#1A1A1A'}}>
+      <div
+        className="w-full max-w-md p-8 rounded-3xl shadow-2xl"
+        style={{ backgroundColor: "#1A1A1A" }}
+      >
         <h1 className="text-2xl font-bold text-center text-white mb-8">
           Meal Prep App
         </h1>
@@ -78,18 +82,14 @@ export default function AuthPage() {
             />
           </div>
 
-          {error && (
-            <div className="text-red-500 text-sm text-center">
-              {error}
-            </div>
-          )}
+          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
 
           <button
             type="submit"
             disabled={loading}
             className="w-full py-3 px-4 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none disabled:opacity-50"
           >
-            {loading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Sign In')}
+            {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
           </button>
         </form>
 
@@ -98,7 +98,7 @@ export default function AuthPage() {
             onClick={() => setIsSignUp(!isSignUp)}
             className="text-blue-400 hover:text-blue-300 text-sm"
           >
-            {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+            {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
           </button>
         </div>
       </div>

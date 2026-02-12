@@ -1,0 +1,168 @@
+.timerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: #97969B;
+  font-size: 14px;
+}
+
+.primaryBtn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 14px;
+  border-radius: 16px;
+  border: none;
+  background: #ff2d2d;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondaryBtn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid #333;
+  background: transparent;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.smallBtn {
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid #333;
+  background: transparent;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.exerciseRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #2a2a2a;
+  border-radius: 16px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.exerciseImg {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #111;
+}
+
+.exerciseMain {
+  flex: 1;
+}
+
+.exerciseName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.exerciseMeta {
+  font-size: 12px;
+  margin-top: 6px;
+  color: #97969B;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tagChip {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  background: #1c1c1e;
+  border: 1px solid #333;
+  color: #cfcfcf;
+}
+
+.sheetOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 120;
+  display: flex;
+  align-items: flex-end;
+}
+
+.sheetExercise{
+  display:flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top:12px;
+}
+
+.sheet {
+  width: 100%;
+  max-height: 90vh;
+  background: #0b0b0b;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding: 14px 14px 18px;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sheet::-webkit-scrollbar { width: 0; height: 0; }
+
+.sheetHandle {
+  width: 42px;
+  height: 4px;
+  border-radius: 9999px;
+  background: #333;
+  margin: 6px auto 10px;
+}
+
+.sheetHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.searchInput {
+  flex: 1;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid #2a2a2a;
+  background: #111;
+  color: #fff;
+  padding: 0 12px;
+  outline: none;
+}
+
+.iconBtn {
+  width: 100px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid #2a2a2a;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+.infoBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid #2a2a2a;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
