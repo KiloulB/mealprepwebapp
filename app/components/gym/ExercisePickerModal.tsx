@@ -346,14 +346,7 @@ export default function ExercisePickerModal({
 
 
 
-              <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
-                Muscles
-              </div>
-              <div className={homeStyles.normalText} style={{ marginBottom: 10 }}>
-                Primary: {(info.primaryMuscles || []).join(", ") || "—"}
-                <br />
-                Secondary: {(info.secondaryMuscles || []).join(", ") || "—"}
-              </div>
+
 
               <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
                 Instructions
@@ -372,19 +365,26 @@ export default function ExercisePickerModal({
               ) : (
                 <div className={homeStyles.modalEmptyText}>No instructions available.</div>
               )}
-
+              <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
+                Muscles
+              </div>
+              <div className={homeStyles.normalText} style={{ marginBottom: 10 }}>
+                Primary: {(info.primaryMuscles || []).join(", ") || "—"}
+                <br />
+                Secondary: {(info.secondaryMuscles || []).join(", ") || "—"}
+              </div>
               {(() => {
                 const slugs = musclesToSlugs(info.primaryMuscles || [], info.secondaryMuscles || []);
                 return (
-<div className={gymStyles.muscleMapGrid}>
-  <div>
+<div className={gymStyles.infoMuscleMaps}>
+  <div className={gymStyles.infoMuscleMapItem}>
     <div className={homeStyles.modalSectionTitle}>Front</div>
-    <MuscleMap view="front" workedSlugs={slugs} height={260} />
+    <MuscleMap view="front" workedSlugs={slugs} height={250} />
   </div>
 
-  <div>
+  <div className={gymStyles.infoMuscleMapItem}>
     <div className={homeStyles.modalSectionTitle}>Back</div>
-    <MuscleMap view="back" workedSlugs={slugs} height={260} />
+    <MuscleMap view="back" workedSlugs={slugs} height={250} />
   </div>
 </div>
                 );

@@ -108,7 +108,9 @@
   max-height: min(90vh, 720px);
   background: #0b0b0b;
   border-radius: 24px; /* all corners rounded now */
-  overflow: auto;
+    overflow-y: auto;
+  overflow-x: hidden;
+  position: relative; /* important for sticky stability */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -137,12 +139,17 @@
 /* ===== New header that matches your screenshot ===== */
 
 .headerBlock {
+    position: sticky;
+  top: 0;
+    will-change: transform;
+  transform: translateZ(0);
   background: #141416; /* distinct bar color */
   border-radius: 18px 18px 0 0;
   padding: 10px;
   border-left: 1px solid rgba(255, 255, 255, 0.06);
   border-right: 1px solid rgba(255, 255, 255, 0.06);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+  
 }
 
 .headerTopRow {

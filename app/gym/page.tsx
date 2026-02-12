@@ -140,13 +140,7 @@ export default function GymHomePage() {
           </div>
         </div>
 
-        <button
-          className={homeStyles.headerButton}
-          type="button"
-          onClick={() => setPickerOpen(true)}
-        >
-          +
-        </button>
+
       </div>
 
       <div className={homeStyles.scrollArea}>

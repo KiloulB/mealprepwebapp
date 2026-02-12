@@ -1,4 +1,4 @@
-// app/gym/workout/[sessionId]/page.tsx  (or wherever your WorkoutSessionPage lives)
+// app/gym/workout/[sessionId]/page.tsx
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -51,7 +51,6 @@ type WorkoutSession = {
   updatedAt?: any;
 };
 
-
 function formatDateLong(epochMs: number) {
   try {
     return new Date(epochMs).toLocaleDateString(undefined, {
@@ -76,7 +75,10 @@ export default function WorkoutSessionPage() {
   const router = useRouter();
   const params = useParams<{ sessionId?: string | string[] }>();
 
-  const sessionId = useMemo(() => normalizeParam(params?.sessionId), [params?.sessionId]);
+  const sessionId = useMemo(
+    () => normalizeParam(params?.sessionId),
+    [params?.sessionId]
+  );
 
   const [uid, setUid] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -139,14 +141,14 @@ export default function WorkoutSessionPage() {
     return () => unsub();
   }, [sessionId, uid]);
 
-useEffect(() => {
-  if (!session?.startedAt) return;
-  if (session.status === "finished") return;
+  // Stop timer once finished
+  useEffect(() => {
+    if (!session?.startedAt) return;
+    if (session.status === "finished") return;
 
-  const id = setInterval(() => setTick((t) => t + 1), 1000);
-  return () => clearInterval(id);
-}, [session?.startedAt, session?.status]);
-
+    const id = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(id);
+  }, [session?.startedAt, session?.status]);
 
   async function persistExercises(nextExercises: WorkoutExercise[]) {
     if (!sessionId || !uid) return;
@@ -166,12 +168,16 @@ useEffect(() => {
   }
 
   async function toggleSetDone(exerciseId: string, setId: string) {
+    // LOCK: no changes when finished
+    if (session?.status === "finished") return;
     if (!session?.exercises) return;
 
     const nextExercises: WorkoutExercise[] = session.exercises.map((ex) => {
       if (ex.id !== exerciseId) return ex;
 
-      const nextSets = (ex.sets ?? []).map((s) => (s.id === setId ? { ...s, done: !s.done } : s));
+      const nextSets = (ex.sets ?? []).map((s) =>
+        s.id === setId ? { ...s, done: !s.done } : s
+      );
       const allDone = nextSets.length > 0 && nextSets.every((s) => !!s.done);
       return { ...ex, sets: nextSets, done: allDone };
     });
@@ -186,15 +192,23 @@ useEffect(() => {
     field: "targetKg" | "targetReps",
     raw: string
   ) {
+    // LOCK: no changes when finished
+    if (session?.status === "finished") return;
     if (!session?.exercises) return;
 
     const parsed =
-      raw.trim() === "" ? undefined : field === "targetKg" ? Number(raw) : parseInt(raw, 10);
+      raw.trim() === ""
+        ? undefined
+        : field === "targetKg"
+        ? Number(raw)
+        : parseInt(raw, 10);
 
     const nextExercises: WorkoutExercise[] = session.exercises.map((ex) => {
       if (ex.id !== exerciseId) return ex;
 
-      const nextSets = (ex.sets ?? []).map((s) => (s.id === setId ? { ...s, [field]: parsed } : s));
+      const nextSets = (ex.sets ?? []).map((s) =>
+        s.id === setId ? { ...s, [field]: parsed } : s
+      );
       const allDone = nextSets.length > 0 && nextSets.every((s) => !!s.done);
       return { ...ex, sets: nextSets, done: allDone };
     });
@@ -261,73 +275,74 @@ useEffect(() => {
 
   const startedAt = session.startedAt ?? Date.now();
   const topDate = formatDateLong(startedAt);
-  const duration = session.startedAt ? formatDuration(Date.now() - session.startedAt) : "00:00:00";
+  const duration = session.startedAt
+    ? formatDuration(Date.now() - session.startedAt)
+    : "00:00:00";
+
+  const locked = session.status === "finished";
 
   return (
     <div className={styles.screen}>
       <div className={styles.topBar}>
-<button
-  className={styles.ghostCircle}
-  type="button"
-  aria-label="Back to gym"
-onClick={() => {
-  // If already finished, leave silently
-  if (session?.status === "finished") {
-    router.push("/gym");
-    return;
-  }
+        <button
+          className={styles.ghostCircle}
+          type="button"
+          aria-label="Back to gym"
+          onClick={() => {
+            if (locked) {
+              router.push("/gym");
+              return;
+            }
 
-  const ok = window.confirm(
-    "Workout not finished yet.\n\nYour progress will be saved. Leave this workout?"
-  );
-  if (ok) router.push("/gym");
-}}
+            const ok = window.confirm(
+              "Workout not finished yet.\n\nYour progress will be saved. Leave this workout?"
+            );
+            if (ok) router.push("/gym");
+          }}
+        >
+          <FiChevronLeft size={22} />
+        </button>
 
->
-  <FiChevronLeft size={22} />
-</button>
+        <button
+          className={styles.finishBtn}
+          type="button"
+          disabled={saving} // allow finishing even if already finished? keep enabled/disabled as you want
+          onClick={async () => {
+            if (!sessionId || !uid || !session) return;
 
+            const hasUndoneSet = (session.exercises ?? []).some((ex) =>
+              (ex.sets ?? []).some((s) => !s.done)
+            );
 
+            if (hasUndoneSet) {
+              const ok = window.confirm(
+                "Sets are not done.\n\nProgress will be saved and this workout will be marked as unfinished. Finish anyway?"
+              );
+              if (!ok) return;
+            }
 
-<button
-  className={styles.finishBtn}
-  type="button"
-  onClick={async () => {
-    if (!sessionId || !uid || !session) return;
+            setSaving(true);
+            setError("");
+            try {
+              await updateDoc(doc(db, "users", uid, "gymSessions", sessionId), {
+                status: hasUndoneSet ? "unfinished" : "finished",
+                updatedAt: new Date(),
+              });
 
-    const hasUndoneSet = (session.exercises ?? []).some(
-      (ex) => (ex.sets ?? []).some((s) => !s.done)
-    ); // some() returns true if any element matches. [web:47]
-
-    if (hasUndoneSet) {
-      const ok = window.confirm(
-        "Sets are not done.\n\nProgress will be saved and this workout will be marked as unfinished. Finish anyway?"
-      );
-      if (!ok) return;
-    }
-
-    setSaving(true);
-    setError("");
-    try {
-      await updateDoc(doc(db, "users", uid, "gymSessions", sessionId), {
-        status: hasUndoneSet ? "unfinished" : "finished",
-        updatedAt: new Date(),
-      }); // updateDoc can update/add fields on the existing document. [web:35]
-
-      router.push("/gym");
-    } catch (e: any) {
-      setError(e?.message ?? "Failed to finish. Try again.");
-    } finally {
-      setSaving(false);
-    }
-  }}
->
-  Finish
-</button>
+              router.push("/gym");
+            } catch (e: any) {
+              setError(e?.message ?? "Failed to finish. Try again.");
+            } finally {
+              setSaving(false);
+            }
+          }}
+        >
+          Finish
+        </button>
       </div>
 
       <div className={styles.metaRow}>
-                <div className={styles.titleWrap}>
+        <div className={styles.titleWrap}>
           <div className={styles.title}>{session.name ?? "Workout"}</div>
         </div>
         <div className={styles.metaItem}>
@@ -343,8 +358,6 @@ onClick={() => {
           </span>
           <span className={styles.metaText}>{duration}</span>
         </div>
-
-
       </div>
 
       <div className={styles.list}>
@@ -371,18 +384,19 @@ onClick={() => {
                   </div>
                 </div>
 
-                <button
-                  className={styles.infoBtn}
-                  type="button"
-                  aria-label="Exercise info"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setPickerInfoId(ex.ref?.exerciseId ?? null);
-                    setPickerOpen(true);
-                  }}
-                >
-                  i
-                </button>
+<button
+  className={styles.infoBtn}
+  type="button"
+  aria-label="Exercise info"
+  onClick={(e) => {
+    e.stopPropagation();
+    setPickerInfoId(ex.ref?.exerciseId ?? null);
+    setPickerOpen(true);
+  }}
+>
+  i
+</button>
+
               </div>
 
               <div className={styles.setHeaderRow}>
@@ -408,7 +422,9 @@ onClick={() => {
                     return (
                       <div
                         key={set.id ?? setIdx}
-                        className={`${styles.setRow} ${set.done ? styles.setRowDone : ""}`}
+                        className={`${styles.setRow} ${
+                          set.done ? styles.setRowDone : ""
+                        }`}
                       >
                         <div className={styles.setCellSet}>{setIdx + 1}</div>
                         <div className={styles.setCellPrev}>-</div>
@@ -421,9 +437,14 @@ onClick={() => {
                             step="0.5"
                             value={kgValue}
                             onChange={(e) =>
-                              updateSetField(ex.id, set.id, "targetKg", e.target.value)
+                              updateSetField(
+                                ex.id,
+                                set.id,
+                                "targetKg",
+                                e.target.value
+                              )
                             }
-                            disabled={saving}
+                            disabled={saving || locked}
                             aria-label="Target kg"
                           />
                         </div>
@@ -435,9 +456,14 @@ onClick={() => {
                           step="1"
                           value={repsValue}
                           onChange={(e) =>
-                            updateSetField(ex.id, set.id, "targetReps", e.target.value)
+                            updateSetField(
+                              ex.id,
+                              set.id,
+                              "targetReps",
+                              e.target.value
+                            )
                           }
-                          disabled={saving}
+                          disabled={saving || locked}
                           aria-label="Target reps"
                         />
 
@@ -445,11 +471,13 @@ onClick={() => {
                           type="button"
                           className={styles.checkBtn}
                           onClick={() => toggleSetDone(ex.id, set.id)}
-                          disabled={saving}
+                          disabled={saving || locked}
                           aria-label="Toggle set done"
                         >
                           <span
-                            className={`${styles.check} ${set.done ? styles.checkOn : styles.checkOff}`}
+                            className={`${styles.check} ${
+                              set.done ? styles.checkOn : styles.checkOff
+                            }`}
                             aria-hidden="true"
                           >
                             ✓
@@ -463,12 +491,21 @@ onClick={() => {
                 )}
               </div>
 
-              <button className={styles.addSetBtn} type="button">
-                <span className={styles.addPlus} aria-hidden="true">
-                  +
-                </span>
-                Add Set
-              </button>
+{!locked && (
+  <button
+    className={styles.addSetBtn}
+    type="button"
+    onClick={() => {
+      // TODO: your Add Set logic here
+    }}
+  >
+    <span className={styles.addPlus} aria-hidden="true">
+      +
+    </span>
+    Add Set
+  </button>
+)}
+
             </section>
           ))
         ) : (
