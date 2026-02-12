@@ -50,7 +50,7 @@ export default function MuscleMap({
   const viewBox = view === "front" ? "0 0 700 1400" : "700 0 750 1400";
 
   return (
-    <div className={className} style={{ width: "100%", height }}>
+    <div className={className} style={{ width: "100px", height }}>
       <svg
         viewBox={viewBox}
         width="100%"

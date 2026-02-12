@@ -1,0 +1,398 @@
+.screen {
+  min-height: 100vh;
+  background: #0b0b0d;
+  color: #f4f4f5;
+  padding: 18px 16px 28px;
+}
+
+/* Top bar */
+.topBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.ghostCircle {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #d9d9dd;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dots {
+  letter-spacing: 1px;
+  font-weight: 700;
+  transform: translateY(-1px);
+}
+
+.titleWrap {
+  min-width: 0;
+}
+
+.title {
+  font-size: 22px;
+  line-height: 1.05;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.finishBtn {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid #395716;
+  background: #1a2b07;
+  color: #8dcf42;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+
+
+/* Meta row (date, duration, off pill) */
+.metaRow {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
+  color: rgba(246, 246, 250, 0.72);
+  margin:20px 0;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.metaIcon {
+  width: 18px;
+  display: inline-flex;
+  justify-content: center;
+  opacity: 0.9;
+}
+
+.metaText {
+  letter-spacing: 0.1px;
+}
+
+.metaPill {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.metaIconSmall {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* List */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Exercise card */
+.exerciseCard {
+  background: rgba(18, 18, 20, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.exerciseHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.exerciseLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.exerciseThumb {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  flex: 0 0 auto;
+}
+
+.exerciseImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumbFallback {
+  width: 100%;
+  height: 100%;
+}
+
+.exerciseName {
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.infoBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #395716;
+  background: transparent;
+  color: #8dcf42;
+  font-weight: 800;
+}
+
+/* Set header row */
+.setHeaderRow {
+  display: grid;
+  grid-template-columns: 25px 1fr 50px 50px 34px;
+  gap: 10px;
+  padding: 0 6px 6px;
+  color: rgba(235, 235, 245, 0.5);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.setHeaderCell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Set rows */
+.setList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.setRow {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 25px 1fr 50px 50px 34px;
+  gap: 10px;
+  align-items: center;
+
+  padding: 5px 10px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(245, 245, 247, 0.95);
+
+  text-align: left;
+}
+
+
+
+.setRowDone {
+  background: rgba(71, 225, 128, 0.14);
+  border-color: rgba(34, 197, 94, 0.18);
+}
+
+.setCellSet {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.setCellPrev {
+  color: rgba(235, 235, 245, 0.55);
+  font-weight: 700;
+}
+
+.setCellKg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* New: editable inputs */
+.kgInput,
+.repsInput {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: rgba(245, 245, 247, 0.95);
+  font-size: 14px;
+  font-weight: 900;
+  outline: none;
+  text-align: center;
+}
+
+
+.repsInput {
+  text-align: center;
+}
+
+.kgInput:disabled,
+.repsInput:disabled {
+  opacity: 0.75;
+}
+
+.kgChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(235, 235, 245, 0.72);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.setCellCheck {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.checkBtn {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.check {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.checkOff {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(235, 235, 245, 0.26);
+}
+
+.checkOn {
+  background: rgba(34, 197, 94, 0.9);
+  border-color: rgba(34, 197, 94, 0.95);
+  color: #08110b;
+}
+
+/* Add set button */
+.addSetBtn {
+  margin-top: 12px;
+  width: 120px;
+  padding: 5px 5px;
+  border-radius: 14px;
+
+  border: 1px solid #395716;
+  background: #1a2b07;
+  color: #8dcf42;
+
+  font-size: 14px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.addPlus {
+  width: 26px;
+  height: 26px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+/* Utility UI */
+.empty {
+  color: rgba(235, 235, 245, 0.6);
+  padding: 10px 2px;
+}
+
+.noSets {
+  color: rgba(235, 235, 245, 0.55);
+  padding: 10px 6px;
+}
+
+.savingToast {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(245, 245, 247, 0.9);
+  font-weight: 800;
+}
+
+/* Fallback pages */
+.centerCard {
+  max-width: 560px;
+  margin: 28px auto;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(18, 18, 20, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.h2 {
+  font-size: 22px;
+  font-weight: 900;
+  margin: 0 0 10px;
+}
+
+.muted {
+  color: rgba(235, 235, 245, 0.6);
+  margin: 8px 0 0;
+}
+
+.error {
+  color: #ff5a5f;
+  margin: 10px 0 0;
+}
+
+.primaryBtn {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.2);
+  color: rgba(240, 248, 255, 0.95);
+  font-weight: 800;
+}

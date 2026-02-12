@@ -1,10 +1,15 @@
+// app/gym/workout/[sessionId]/page.tsx  (or wherever your WorkoutSessionPage lives)
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { auth, db } from "../../../firebase/config"; // keep this matching your project
+import { auth, db } from "../../../firebase/config";
+import styles from "./workout.module.css";
+import { FiChevronLeft } from "react-icons/fi";
+
+import ExercisePickerModal from "../../../components/gym/ExercisePickerModal";
 
 function normalizeParam(p: string | string[] | undefined): string {
   if (!p) return "";
@@ -41,18 +46,37 @@ type WorkoutSession = {
   musclesWorked?: string[];
   exercises?: WorkoutExercise[];
   startedAt?: number;
+  status?: "unfinished" | "finished";
   createdAt?: any;
   updatedAt?: any;
 };
+
+
+function formatDateLong(epochMs: number) {
+  try {
+    return new Date(epochMs).toLocaleDateString(undefined, {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return "";
+  }
+}
+
+function formatDuration(ms: number) {
+  const totalSec = Math.max(0, Math.floor(ms / 1000));
+  const hh = String(Math.floor(totalSec / 3600)).padStart(2, "0");
+  const mm = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
+  const ss = String(totalSec % 60).padStart(2, "0");
+  return `${hh}:${mm}:${ss}`;
+}
 
 export default function WorkoutSessionPage() {
   const router = useRouter();
   const params = useParams<{ sessionId?: string | string[] }>();
 
-  const sessionId = useMemo(
-    () => normalizeParam(params?.sessionId),
-    [params?.sessionId]
-  );
+  const sessionId = useMemo(() => normalizeParam(params?.sessionId), [params?.sessionId]);
 
   const [uid, setUid] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -60,7 +84,12 @@ export default function WorkoutSessionPage() {
   const [error, setError] = useState<string>("");
   const [session, setSession] = useState<WorkoutSession | null>(null);
 
-  // Wait for Firebase auth
+  const [tick, setTick] = useState(0);
+
+  // modal control
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerInfoId, setPickerInfoId] = useState<string | null>(null);
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       setUid(user?.uid ?? "");
@@ -68,7 +97,6 @@ export default function WorkoutSessionPage() {
     return () => unsub();
   }, []);
 
-  // Subscribe to session doc
   useEffect(() => {
     if (!sessionId) return;
 
@@ -83,7 +111,6 @@ export default function WorkoutSessionPage() {
     setError("");
     setSession(null);
 
-    // Your assumed path (same as earlier):
     const ref = doc(db, "users", uid, "gymSessions", sessionId);
 
     const unsub = onSnapshot(
@@ -96,7 +123,10 @@ export default function WorkoutSessionPage() {
           return;
         }
 
-        setSession({ id: snap.id, ...(snap.data() as Omit<WorkoutSession, "id">) });
+        setSession({
+          id: snap.id,
+          ...(snap.data() as Omit<WorkoutSession, "id">),
+        });
         setLoading(false);
       },
       (e) => {
@@ -109,28 +139,19 @@ export default function WorkoutSessionPage() {
     return () => unsub();
   }, [sessionId, uid]);
 
-  async function toggleSetDone(exerciseId: string, setId: string) {
+useEffect(() => {
+  if (!session?.startedAt) return;
+  if (session.status === "finished") return;
+
+  const id = setInterval(() => setTick((t) => t + 1), 1000);
+  return () => clearInterval(id);
+}, [session?.startedAt, session?.status]);
+
+
+  async function persistExercises(nextExercises: WorkoutExercise[]) {
     if (!sessionId || !uid) return;
-    if (!session?.exercises) return;
-
-    // Optimistic update
-    const nextExercises: WorkoutExercise[] = session.exercises.map((ex) => {
-      if (ex.id !== exerciseId) return ex;
-
-      const nextSets = (ex.sets ?? []).map((s) =>
-        s.id === setId ? { ...s, done: !s.done } : s
-      );
-
-      const allDone = nextSets.length > 0 && nextSets.every((s) => !!s.done);
-
-      return { ...ex, sets: nextSets, done: allDone };
-    });
-
-    setSession((prev) => (prev ? { ...prev, exercises: nextExercises } : prev));
-
     setSaving(true);
     setError("");
-
     try {
       const ref = doc(db, "users", uid, "gymSessions", sessionId);
       await updateDoc(ref, {
@@ -144,153 +165,331 @@ export default function WorkoutSessionPage() {
     }
   }
 
+  async function toggleSetDone(exerciseId: string, setId: string) {
+    if (!session?.exercises) return;
+
+    const nextExercises: WorkoutExercise[] = session.exercises.map((ex) => {
+      if (ex.id !== exerciseId) return ex;
+
+      const nextSets = (ex.sets ?? []).map((s) => (s.id === setId ? { ...s, done: !s.done } : s));
+      const allDone = nextSets.length > 0 && nextSets.every((s) => !!s.done);
+      return { ...ex, sets: nextSets, done: allDone };
+    });
+
+    setSession((prev) => (prev ? { ...prev, exercises: nextExercises } : prev));
+    await persistExercises(nextExercises);
+  }
+
+  async function updateSetField(
+    exerciseId: string,
+    setId: string,
+    field: "targetKg" | "targetReps",
+    raw: string
+  ) {
+    if (!session?.exercises) return;
+
+    const parsed =
+      raw.trim() === "" ? undefined : field === "targetKg" ? Number(raw) : parseInt(raw, 10);
+
+    const nextExercises: WorkoutExercise[] = session.exercises.map((ex) => {
+      if (ex.id !== exerciseId) return ex;
+
+      const nextSets = (ex.sets ?? []).map((s) => (s.id === setId ? { ...s, [field]: parsed } : s));
+      const allDone = nextSets.length > 0 && nextSets.every((s) => !!s.done);
+      return { ...ex, sets: nextSets, done: allDone };
+    });
+
+    setSession((prev) => (prev ? { ...prev, exercises: nextExercises } : prev));
+    await persistExercises(nextExercises);
+  }
+
   if (!sessionId) {
     return (
-      <div className="p-6 text-white">
-        <h2 className="text-xl font-semibold">Missing sessionId</h2>
-        <p className="text-gray-400">
-          URL must be <code>/gym/workout/&lt;sessionId&gt;</code>
-        </p>
-        <button
-          className="mt-4 px-4 py-2 rounded bg-blue-600 hover:bg-blue-700"
-          onClick={() => router.push("/")}
-        >
-          Go home
-        </button>
+      <div className={styles.screen}>
+        <div className={styles.centerCard}>
+          <h2 className={styles.h2}>Missing sessionId</h2>
+          <p className={styles.muted}>
+            URL must be <code>/gym/workout/&lt;sessionId&gt;</code>
+          </p>
+          <button className={styles.primaryBtn} onClick={() => router.push("/")}>
+            Go home
+          </button>
+        </div>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="p-6 text-white">
-        <p>Loading workout...</p>
+      <div className={styles.screen}>
+        <div className={styles.centerCard}>
+          <p className={styles.muted}>Loading workout…</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-6 text-white">
-        <h2 className="text-xl font-semibold">Error</h2>
-        <p className="text-red-400 mt-2">{error}</p>
-        <p className="text-gray-400 mt-2">
-          sessionId: <code>{sessionId}</code>
-        </p>
-        <button
-          className="mt-4 px-4 py-2 rounded bg-blue-600 hover:bg-blue-700"
-          onClick={() => router.push("/")}
-        >
-          Go home
-        </button>
+      <div className={styles.screen}>
+        <div className={styles.centerCard}>
+          <h2 className={styles.h2}>Error</h2>
+          <p className={styles.error}>{error}</p>
+          <p className={styles.muted}>
+            sessionId: <code>{sessionId}</code>
+          </p>
+          <button className={styles.primaryBtn} onClick={() => router.push("/")}>
+            Go home
+          </button>
+        </div>
       </div>
     );
   }
 
   if (!session) {
     return (
-      <div className="p-6 text-white">
-        <h2 className="text-xl font-semibold">Workout not found</h2>
-        <button
-          className="mt-4 px-4 py-2 rounded bg-blue-600 hover:bg-blue-700"
-          onClick={() => router.push("/")}
-        >
-          Go home
-        </button>
+      <div className={styles.screen}>
+        <div className={styles.centerCard}>
+          <h2 className={styles.h2}>Workout not found</h2>
+          <button className={styles.primaryBtn} onClick={() => router.push("/")}>
+            Go home
+          </button>
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="p-6 text-white">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-bold">{session.name ?? "Workout"}</h1>
-          <div className="text-sm text-gray-400 mt-1">
-            {saving ? "Saving..." : " "}
-          </div>
-        </div>
+  const startedAt = session.startedAt ?? Date.now();
+  const topDate = formatDateLong(startedAt);
+  const duration = session.startedAt ? formatDuration(Date.now() - session.startedAt) : "00:00:00";
 
-        <button
-          className="px-3 py-2 rounded bg-gray-800 hover:bg-gray-700"
-          onClick={() => router.push("/")}
-        >
-          Back
-        </button>
+  return (
+    <div className={styles.screen}>
+      <div className={styles.topBar}>
+<button
+  className={styles.ghostCircle}
+  type="button"
+  aria-label="Back to gym"
+onClick={() => {
+  // If already finished, leave silently
+  if (session?.status === "finished") {
+    router.push("/gym");
+    return;
+  }
+
+  const ok = window.confirm(
+    "Workout not finished yet.\n\nYour progress will be saved. Leave this workout?"
+  );
+  if (ok) router.push("/gym");
+}}
+
+>
+  <FiChevronLeft size={22} />
+</button>
+
+
+
+<button
+  className={styles.finishBtn}
+  type="button"
+  onClick={async () => {
+    if (!sessionId || !uid || !session) return;
+
+    const hasUndoneSet = (session.exercises ?? []).some(
+      (ex) => (ex.sets ?? []).some((s) => !s.done)
+    ); // some() returns true if any element matches. [web:47]
+
+    if (hasUndoneSet) {
+      const ok = window.confirm(
+        "Sets are not done.\n\nProgress will be saved and this workout will be marked as unfinished. Finish anyway?"
+      );
+      if (!ok) return;
+    }
+
+    setSaving(true);
+    setError("");
+    try {
+      await updateDoc(doc(db, "users", uid, "gymSessions", sessionId), {
+        status: hasUndoneSet ? "unfinished" : "finished",
+        updatedAt: new Date(),
+      }); // updateDoc can update/add fields on the existing document. [web:35]
+
+      router.push("/gym");
+    } catch (e: any) {
+      setError(e?.message ?? "Failed to finish. Try again.");
+    } finally {
+      setSaving(false);
+    }
+  }}
+>
+  Finish
+</button>
       </div>
 
-      {Array.isArray(session.musclesWorked) && session.musclesWorked.length > 0 && (
-        <div className="mb-6 text-sm text-gray-300">
-          Muscles: {session.musclesWorked.join(", ")}
+      <div className={styles.metaRow}>
+                <div className={styles.titleWrap}>
+          <div className={styles.title}>{session.name ?? "Workout"}</div>
         </div>
-      )}
+        <div className={styles.metaItem}>
+          <span className={styles.metaIcon} aria-hidden="true">
+            ▦
+          </span>
+          <span className={styles.metaText}>{topDate || " "}</span>
+        </div>
 
-      <div className="space-y-6">
+        <div className={styles.metaItem}>
+          <span className={styles.metaIcon} aria-hidden="true">
+            ◷
+          </span>
+          <span className={styles.metaText}>{duration}</span>
+        </div>
+
+
+      </div>
+
+      <div className={styles.list}>
         {Array.isArray(session.exercises) && session.exercises.length > 0 ? (
           session.exercises.map((ex, exIdx) => (
-            <div key={ex.id ?? exIdx} className="bg-gray-900 rounded p-4">
-              <div className="flex items-start gap-4">
-                {ex.ref?.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={ex.ref.image}
-                    alt={ex.ref?.name ?? "Exercise"}
-                    className="w-20 h-20 object-cover rounded"
-                  />
-                ) : null}
-
-                <div className="flex-1">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="font-semibold">
-                      {ex.ref?.name ?? `Exercise ${exIdx + 1}`}
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      {ex.done ? "Exercise done" : ""}
-                    </div>
+            <section key={ex.id ?? exIdx} className={styles.exerciseCard}>
+              <div className={styles.exerciseHeader}>
+                <div className={styles.exerciseLeft}>
+                  <div className={styles.exerciseThumb}>
+                    {ex.ref?.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={ex.ref.image}
+                        alt={ex.ref?.name ?? "Exercise"}
+                        className={styles.exerciseImg}
+                      />
+                    ) : (
+                      <div className={styles.thumbFallback} />
+                    )}
                   </div>
 
-                  {Array.isArray(ex.ref?.equipment) && ex.ref!.equipment!.length > 0 && (
-                    <div className="text-xs text-gray-400 mt-1">
-                      Equipment: {ex.ref!.equipment!.join(", ")}
-                    </div>
-                  )}
+                  <div className={styles.exerciseName}>
+                    {ex.ref?.name ?? `Exercise ${exIdx + 1}`}
+                  </div>
+                </div>
 
-                  {Array.isArray(ex.sets) && ex.sets.length > 0 ? (
-                    <div className="mt-3 space-y-2">
-                      {ex.sets.map((set, setIdx) => (
+                <button
+                  className={styles.infoBtn}
+                  type="button"
+                  aria-label="Exercise info"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPickerInfoId(ex.ref?.exerciseId ?? null);
+                    setPickerOpen(true);
+                  }}
+                >
+                  i
+                </button>
+              </div>
+
+              <div className={styles.setHeaderRow}>
+                <div className={styles.setHeaderCell}>Set</div>
+                <div className={styles.setHeaderCell}>Previous</div>
+                <div className={styles.setHeaderCell}>+kg</div>
+                <div className={styles.setHeaderCell}>Reps</div>
+                <div className={styles.setHeaderCell} />
+              </div>
+
+              <div className={styles.setList}>
+                {(ex.sets ?? []).length > 0 ? (
+                  (ex.sets ?? []).map((set, setIdx) => {
+                    const kgValue =
+                      set.targetKg === 0 || typeof set.targetKg === "number"
+                        ? String(set.targetKg)
+                        : "";
+                    const repsValue =
+                      set.targetReps === 0 || typeof set.targetReps === "number"
+                        ? String(set.targetReps)
+                        : "";
+
+                    return (
+                      <div
+                        key={set.id ?? setIdx}
+                        className={`${styles.setRow} ${set.done ? styles.setRowDone : ""}`}
+                      >
+                        <div className={styles.setCellSet}>{setIdx + 1}</div>
+                        <div className={styles.setCellPrev}>-</div>
+
+                        <div className={styles.setCellKg}>
+                          <input
+                            className={styles.kgInput}
+                            type="text"
+                            inputMode="numeric"
+                            step="0.5"
+                            value={kgValue}
+                            onChange={(e) =>
+                              updateSetField(ex.id, set.id, "targetKg", e.target.value)
+                            }
+                            disabled={saving}
+                            aria-label="Target kg"
+                          />
+                        </div>
+
+                        <input
+                          className={styles.repsInput}
+                          type="text"
+                          inputMode="numeric"
+                          step="1"
+                          value={repsValue}
+                          onChange={(e) =>
+                            updateSetField(ex.id, set.id, "targetReps", e.target.value)
+                          }
+                          disabled={saving}
+                          aria-label="Target reps"
+                        />
+
                         <button
-                          key={set.id ?? setIdx}
                           type="button"
-                          className={`w-full flex items-center justify-between rounded px-3 py-2 text-left ${
-                            set.done ? "bg-green-900/40" : "bg-gray-800"
-                          } hover:bg-gray-700`}
+                          className={styles.checkBtn}
                           onClick={() => toggleSetDone(ex.id, set.id)}
                           disabled={saving}
+                          aria-label="Toggle set done"
                         >
-                          <div className="text-sm">
-                            <span className="text-gray-300">
-                              Set {setIdx + 1}:
-                            </span>{" "}
-                            {set.targetReps ?? "-"} reps @ {set.targetKg ?? 0} kg
-                          </div>
-
-                          <div className="text-sm">
-                            {set.done ? "Done" : "Tap to complete"}
-                          </div>
+                          <span
+                            className={`${styles.check} ${set.done ? styles.checkOn : styles.checkOff}`}
+                            aria-hidden="true"
+                          >
+                            ✓
+                          </span>
                         </button>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="mt-3 text-sm text-gray-400">No sets</div>
-                  )}
-                </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className={styles.noSets}>No sets</div>
+                )}
               </div>
-            </div>
+
+              <button className={styles.addSetBtn} type="button">
+                <span className={styles.addPlus} aria-hidden="true">
+                  +
+                </span>
+                Add Set
+              </button>
+            </section>
           ))
         ) : (
-          <div className="text-gray-400">No exercises in this workout.</div>
+          <div className={styles.empty}>No exercises in this workout.</div>
         )}
       </div>
+
+      {saving ? <div className={styles.savingToast}>Saving…</div> : null}
+
+      <ExercisePickerModal
+        open={pickerOpen}
+        onClose={() => {
+          setPickerOpen(false);
+          setPickerInfoId(null);
+        }}
+        onStart={() => {
+          setPickerOpen(false);
+          setPickerInfoId(null);
+        }}
+        initialInfoExerciseId={pickerInfoId}
+      />
     </div>
   );
 }

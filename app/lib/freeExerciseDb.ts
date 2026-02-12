@@ -79,3 +79,21 @@ export function searchExercises(query: string, tagFilters: string[] = []) {
     })
     .sort((a, b) => normalizeTag(a.name).localeCompare(normalizeTag(b.name)));
 }
+
+let _index: Map<string, FreeExercise> | null = null;
+
+export function getExerciseIndex(): Map<string, FreeExercise> {
+  if (_index) return _index;
+
+  const all = getAllExercises();
+  const m = new Map<string, FreeExercise>();
+  for (const ex of all) m.set(String(ex.id), ex);
+
+  _index = m;
+  return m;
+}
+
+export function getExerciseById(id?: string | null): FreeExercise | null {
+  if (!id) return null;
+  return getExerciseIndex().get(String(id)) ?? null;
+}

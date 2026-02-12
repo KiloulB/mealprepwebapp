@@ -8,10 +8,12 @@ import {
   deleteDoc,
   onSnapshot,
   query,
+  where,
   orderBy,
   limit,
   serverTimestamp,
 } from "firebase/firestore";
+
 
 import type { GymSession, GymTemplate } from "../../app/types/gym";
 
@@ -27,6 +29,7 @@ function safeSession(raw: any, id: string): GymSession {
     exercises,
   };
 }
+
 
 export const subscribeToRecentGymSessions = (
   userId: string,
@@ -51,6 +54,37 @@ export const subscribeToRecentGymSessions = (
     () => callback([])
   );
 };
+
+export const subscribeToGymSessionsInRange = (
+  userId: string,
+  startMs: number,
+  endMs: number,
+  callback: (sessions: GymSession[]) => void
+) => {
+  if (!userId) {
+    callback([]);
+    return () => {};
+  }
+
+  const ref = collection(db, "users", userId, "gymSessions");
+  const qy = query(
+    ref,
+    where("startedAt", ">=", startMs),
+    where("startedAt", "<", endMs),
+    orderBy("startedAt", "desc")
+  );
+
+  return onSnapshot(
+    qy,
+    (snap) => {
+      const sessions: GymSession[] = [];
+      snap.forEach((d) => sessions.push(safeSession(d.data(), d.id)));
+      callback(sessions);
+    },
+    () => callback([])
+  );
+};
+
 
 export const getGymSessionById = async (userId: string, sessionId: string) => {
   if (!userId) throw new Error("Missing userId");

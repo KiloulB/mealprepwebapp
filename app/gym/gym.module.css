@@ -98,38 +98,33 @@
   background: rgba(0, 0, 0, 0.7);
   z-index: 120;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
+  padding: 16px; /* gives breathing room on small screens */
 }
 
 .sheet {
-  width: 100%;
-  max-height: 90vh;
+  width: min(520px, 100%);
+  max-height: min(90vh, 720px);
   background: #0b0b0b;
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
-  padding: 10px 14px 16px;
+  border-radius: 24px; /* all corners rounded now */
   overflow: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
 
 .sheet::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
 
-.sheetHandle {
-  width: 42px;
-  height: 4px;
-  border-radius: 9999px;
-  background: #333;
-  margin: 6px auto 10px;
-}
+
 
 /* Search input (new version uses it too) */
 .searchInput {
   flex: 1;
-  width:100%;
+  width: 100%;
   height: 44px;
   border-radius: 14px;
   border: 1px solid #2a2a2a;
@@ -146,8 +141,8 @@
   border-radius: 18px 18px 0 0;
   padding: 10px;
   border-left: 1px solid rgba(255, 255, 255, 0.06);
-border-right: 1px solid rgba(255, 255, 255, 0.06);
-border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .headerTopRow {
@@ -164,10 +159,16 @@ border-top: 1px solid rgba(255, 255, 255, 0.06);
   border: 1px solid #2a2a2a;
   background: #1c1c1e;
   color: #fff;
-  font-size: 22px;
+
+  /* add/adjust these */
+  display: grid;
+  place-items: center;
   line-height: 1;
+
+  font-size: 20px;
   cursor: pointer;
 }
+
 
 .addBtn {
   height: 40px;
@@ -186,7 +187,7 @@ border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .searchRow {
-  padding-top: 10px;
+margin: 15px 0;
 }
 
 /* ===== Chips ===== */
@@ -195,7 +196,6 @@ border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-top: 10px;
 }
 
 .chipBtn {
@@ -291,7 +291,7 @@ border-top: 1px solid rgba(255, 255, 255, 0.06);
 .sheetExercise {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 10px;
   padding-top: 4px;
   background: #141416; /* distinct bar color */
 }
@@ -300,9 +300,18 @@ border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 12px;
-  background: transparent;
-  border-radius: 0;
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.exerciseRow2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  background: #2c2c2c;
+  border-radius: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
 }
@@ -368,3 +377,150 @@ border-top: 1px solid rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 150, 0, 0.55);
   background: rgba(255, 150, 0, 0.12);
 }
+
+.muscleMaps {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  gap: 0px;
+  align-items: start;
+}
+
+.muscleMapItem {
+  position: relative; /* containing block for absolute children */
+  min-width: 150px;
+  height: 250px; /* matches your MuscleMap height prop */
+  overflow: hidden; /* optional, prevents spill */
+}
+
+.muscleMapItem svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ===== New: Week selector (moved from inline) ===== */
+
+.weekHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.weekLabel {
+  color: #97969b;
+  font-size: 13px;
+}
+
+/* Full-width segmented control */
+.weekSegWrap {
+  margin-top: 10px;
+  display: flex;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Base for all three buttons */
+.weekSegBtn {
+  border: none;
+  background: transparent;
+  color: #fff;
+  padding: 10px 12px;
+  cursor: pointer;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+/* dividers */
+.weekSegBtnMid,
+.weekSegBtnRight {
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Width ratios: 1 / 2 / 1 */
+.weekSegBtnLeft {
+  flex: 1;
+}
+
+.weekSegBtnMid {
+  flex: 2;
+  font-weight: 600;
+}
+
+.weekSegBtnRight {
+  flex: 1;
+}
+
+.weekSegBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Little layout helpers for workout row */
+.weekRowRight {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rowChevron {
+  color: #97969b;
+}
+
+/* If you don't have a deleteBtn yet, add it */
+.deleteBtn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid #2a2a2a;
+  background: #1c1c1e;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.deleteBtn:hover {
+  border-color: rgba(255, 45, 45, 0.55);
+}
+
+.infoContainer{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding:20px;
+}
+
+.infoStepImg {
+  width: 100%;
+  height: 260px;     /* choose your size */
+  object-fit: cover; /* or contain */
+  border-radius: 14px;
+  display: block;
+}
+
+.infoMuscleMaps {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.infoMuscleMapItem {
+  flex: 1 1 0;
+  min-width: 0;     /* important for flex shrink */
+  height: 260px;    /* match the height prop */
+  overflow: hidden;
+}
+
+
