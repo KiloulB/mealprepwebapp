@@ -26,6 +26,13 @@ function toRef(ex: FreeExercise): GymExerciseRef {
   };
 }
 
+function niceSlugLabel(slug: string) {
+  // Optional: make slugs nicer without needing a mapping file
+  return slug
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (m) => m.toUpperCase());
+}
+
 export default function ExercisePickerModal({
   open,
   onClose,
@@ -39,14 +46,16 @@ export default function ExercisePickerModal({
   const [selected, setSelected] = useState<Record<string, GymExerciseRef>>({});
   const [info, setInfo] = useState<FreeExercise | null>(null);
 
-  // Dropdown filter state
+  // Filter UX: popover + search + selected options
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [muscleFilters, setMuscleFilters] = useState<Set<string>>(new Set());
+  const [muscleFilterQ, setMuscleFilterQ] = useState("");
 
   const filterBtnRef = useRef<HTMLButtonElement | null>(null);
   const filterMenuRef = useRef<HTMLDivElement | null>(null);
+  const muscleSearchRef = useRef<HTMLInputElement | null>(null);
 
-  // Close dropdown on outside click (common pattern: document mousedown + ref.contains) [web:16]
+  // Close popover on outside click (document mousedown + contains) [web:16]
   useEffect(() => {
     function onDown(e: MouseEvent) {
       const t = e.target as Node;
@@ -58,19 +67,29 @@ export default function ExercisePickerModal({
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
-  // Close dropdown on Escape
+  // ESC closes and restores focus to trigger (basic keyboard UX) [web:53]
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setFiltersOpen(false);
+      if (e.key !== "Escape") return;
+      if (filtersOpen) {
+        setFiltersOpen(false);
+        filterBtnRef.current?.focus();
+      }
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, []);
+  }, [filtersOpen]);
 
-  // Base search results
+  // Focus the muscle search when opening
+  useEffect(() => {
+    if (filtersOpen) {
+      setMuscleFilterQ("");
+      setTimeout(() => muscleSearchRef.current?.focus(), 0);
+    }
+  }, [filtersOpen]);
+
   const items = useMemo(() => searchExercises(q), [q]);
 
-  // Available muscles from current results (keeps the menu relevant)
   const availableMuscleSlugs = useMemo(() => {
     const s = new Set<string>();
     for (const ex of items) {
@@ -79,7 +98,15 @@ export default function ExercisePickerModal({
     return [...s].sort();
   }, [items]);
 
-  // Apply instant muscle filtering
+  const filteredMuscleOptions = useMemo(() => {
+    const t = muscleFilterQ.trim().toLowerCase();
+    if (!t) return availableMuscleSlugs;
+    return availableMuscleSlugs.filter((slug) => {
+      const label = niceSlugLabel(slug).toLowerCase();
+      return slug.toLowerCase().includes(t) || label.includes(t);
+    });
+  }, [availableMuscleSlugs, muscleFilterQ]);
+
   const filteredItems = useMemo(() => {
     if (muscleFilters.size === 0) return items;
     return items.filter((ex) => {
@@ -98,6 +125,16 @@ export default function ExercisePickerModal({
     return [...slugs];
   }, [selectedArr]);
 
+  const toggleMuscle = (slug: string) => {
+    setMuscleFilters((prev) => {
+      const next = new Set(prev);
+      next.has(slug) ? next.delete(slug) : next.add(slug);
+      return next;
+    });
+  };
+
+  const clearMuscles = () => setMuscleFilters(new Set());
+
   if (!open) return null;
 
   return (
@@ -113,32 +150,33 @@ export default function ExercisePickerModal({
             onChange={(e) => setQ(e.target.value)}
           />
 
-          {/* Filter dropdown trigger (left of Add) */}
+          {/* Filter popover trigger (left of Add) */}
           <div style={{ position: "relative" }}>
             <button
               ref={filterBtnRef}
               className={gymStyles.iconBtn}
               type="button"
               onClick={() => setFiltersOpen((v) => !v)}
-              aria-haspopup="menu"
               aria-expanded={filtersOpen}
+              aria-haspopup="dialog"
               title="Filters"
             >
-              Filters ({muscleFilters.size})
+              Filters {muscleFilters.size ? `(${muscleFilters.size})` : ""}
             </button>
 
             {filtersOpen ? (
               <div
                 ref={filterMenuRef}
-                role="menu"
+                role="dialog"
+                aria-label="Muscle filters"
                 style={{
                   position: "absolute",
                   top: "calc(100% + 8px)",
                   right: 0,
                   zIndex: 60,
-                  width: 320,
+                  width: 340,
                   maxWidth: "calc(100vw - 24px)",
-                  padding: 10,
+                  padding: 12,
                   borderRadius: 12,
                   background: "rgba(16,16,16,0.98)",
                   border: "1px solid rgba(255,255,255,0.14)",
@@ -146,54 +184,57 @@ export default function ExercisePickerModal({
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className={homeStyles.modalInfoText} style={{ marginBottom: 8 }}>
-                  Click muscles to instantly filter (primary + secondary).
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+
+
                 </div>
 
-                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+
+                <div style={{ display: "flex", gap: 8, marginTop: 0, alignItems: "center" }}>
                   <button
                     className={gymStyles.secondaryBtn}
                     type="button"
-                    onClick={() => setMuscleFilters(new Set())}
+                    onClick={clearMuscles}
                     disabled={muscleFilters.size === 0}
-                    role="menuitem"
+                    title="Clear all muscle filters"
                   >
-                    Clear
+                    Clear all
                   </button>
 
-                  <button
-                    className={gymStyles.secondaryBtn}
-                    type="button"
-                    onClick={() => setFiltersOpen(false)}
-                    role="menuitem"
-                  >
-                    Close
-                  </button>
+      
                 </div>
 
-                <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {availableMuscleSlugs.map((slug) => {
+                <div
+                  style={{
+                    marginTop: 10,
+                    maxHeight: 260,
+                    overflow: "auto",
+                    paddingRight: 4,
+                    display: "grid",
+                    gap: 6,
+                  }}
+                >
+                  {filteredMuscleOptions.map((slug) => {
                     const active = muscleFilters.has(slug);
                     return (
                       <button
                         key={slug}
                         type="button"
                         className={active ? gymStyles.primaryBtn : gymStyles.secondaryBtn}
-                        onClick={() => {
-                          setMuscleFilters((prev) => {
-                            const next = new Set(prev);
-                            next.has(slug) ? next.delete(slug) : next.add(slug);
-                            return next;
-                          });
-                        }}
-                        role="menuitem"
+                        onClick={() => toggleMuscle(slug)}
                         aria-pressed={active}
+                        style={{ justifyContent: "space-between", display: "flex" }}
                         title={slug}
                       >
-                        {slug}
+                        <span>{niceSlugLabel(slug)}</span>
+                        <span style={{ opacity: 0.85 }}>{active ? "On" : "Off"}</span>
                       </button>
                     );
                   })}
+
+                  {filteredMuscleOptions.length === 0 ? (
+                    <div className={homeStyles.modalEmptyText}>No muscles match your search.</div>
+                  ) : null}
                 </div>
               </div>
             ) : null}
@@ -202,15 +243,33 @@ export default function ExercisePickerModal({
           <button
             className={gymStyles.iconBtn}
             type="button"
-            onClick={() => {
-              onStart({ exercises: selectedArr, musclesWorked: allMusclesWorked });
-            }}
+            onClick={() => onStart({ exercises: selectedArr, musclesWorked: allMusclesWorked })}
             disabled={selectedArr.length === 0}
             title="Add selected"
           >
             Add ({selectedArr.length})
           </button>
         </div>
+
+        {/* Active filter chips (visible state + quick remove) [web:44] */}
+        {muscleFilters.size ? (
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", padding: "0px 0 4px 0" }}>
+            {[...muscleFilters].sort().map((slug) => (
+              <button
+                key={slug}
+                type="button"
+                className={gymStyles.secondaryBtn}
+                onClick={() => toggleMuscle(slug)}
+                title="Remove filter"
+              >
+                {niceSlugLabel(slug)} ×
+              </button>
+            ))}
+            <button className={gymStyles.secondaryBtn} type="button" onClick={clearMuscles}>
+              Clear all
+            </button>
+          </div>
+        ) : null}
 
         <div className={gymStyles.sheetExercise}>
           {filteredItems.slice(0, 200).map((ex) => {
@@ -230,9 +289,7 @@ export default function ExercisePickerModal({
                     return next;
                   });
                 }}
-                style={{
-                  border: isSel ? "1px solid #ff2d2d" : "1px solid transparent",
-                }}
+                style={{ border: isSel ? "1px solid #ff2d2d" : "1px solid transparent" }}
               >
                 {img ? (
                   <img className={gymStyles.exerciseImg} alt="" src={img} />
@@ -254,17 +311,6 @@ export default function ExercisePickerModal({
                       ? ` • +${(ref.primaryMuscles!.length + ref.secondaryMuscles!.length) - 4} more`
                       : ""}
                   </div>
-
-                  {/* Tags are still available if you want them back */}
-                  {/* {ref.tags?.length ? (
-                    <div className={gymStyles.tagRow}>
-                      {ref.tags.slice(0, 6).map((t) => (
-                        <span key={t} className={gymStyles.tagChip}>
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  ) : null} */}
                 </div>
 
                 <button
@@ -285,6 +331,12 @@ export default function ExercisePickerModal({
           {filteredItems.length > 200 ? (
             <div className={homeStyles.modalInfoText} style={{ padding: "12px 0" }}>
               Showing first 200 results. Narrow your search/filters.
+            </div>
+          ) : null}
+
+          {filteredItems.length === 0 ? (
+            <div className={homeStyles.modalEmptyText} style={{ padding: "12px 0" }}>
+              No exercises match your filters.
             </div>
           ) : null}
         </div>
