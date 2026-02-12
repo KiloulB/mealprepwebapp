@@ -1,9 +1,11 @@
+/* ===== Legacy / shared buttons & text ===== */
+
 .timerRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 8px;
-  color: #97969B;
+  color: #97969b;
   font-size: 14px;
 }
 
@@ -21,10 +23,10 @@
 
 .secondaryBtn {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 12px;
   padding: 12px 14px;
   border-radius: 16px;
-  border: 1px solid #333;
+  border: 1px solid #2a2a2a;
   background: transparent;
   color: #fff;
   font-weight: 600;
@@ -41,41 +43,37 @@
   cursor: pointer;
 }
 
-.exerciseRow {
+/* Old generic header row (kept for other components) */
+.sheetHeaderRow {
   display: flex;
-  gap: 12px;
   align-items: center;
-  background: #2a2a2a;
-  border-radius: 16px;
-  padding: 12px;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Old generic icon button (kept) */
+.iconBtn {
+  width: 100px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid #2a2a2a;
+  background: #111;
+  color: #fff;
   cursor: pointer;
 }
 
-.exerciseImg {
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
-  object-fit: cover;
+/* Old generic info button (kept) */
+.infoBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid #2a2a2a;
   background: #111;
-}
-
-.exerciseMain {
-  flex: 1;
-}
-
-.exerciseName {
-  font-size: 14px;
-  font-weight: 600;
   color: #fff;
+  cursor: pointer;
 }
 
-.exerciseMeta {
-  font-size: 12px;
-  margin-top: 6px;
-  color: #97969B;
-    text-transform: capitalize;
-}
-
+/* Tags (kept) */
 .tagRow {
   display: flex;
   flex-wrap: wrap;
@@ -92,20 +90,15 @@
   color: #cfcfcf;
 }
 
+/* ===== Sheet / modal base ===== */
+
 .sheetOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 120;
   display: flex;
   align-items: flex-end;
-}
-
-.sheetExercise{
-  display:flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-top:12px;
 }
 
 .sheet {
@@ -114,13 +107,16 @@
   background: #0b0b0b;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
-  padding: 14px 14px 18px;
+  padding: 10px 14px 16px;
   overflow: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-.sheet::-webkit-scrollbar { width: 0; height: 0; }
+.sheet::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
 
 .sheetHandle {
   width: 42px;
@@ -130,40 +126,245 @@
   margin: 6px auto 10px;
 }
 
-.sheetHeaderRow {
+/* Search input (new version uses it too) */
+.searchInput {
+  flex: 1;
+  width:100%;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid #2a2a2a;
+  background: #1c1c1e;
+  color: #fff;
+  padding: 0 12px;
+  outline: none;
+}
+
+/* ===== New header that matches your screenshot ===== */
+
+.headerBlock {
+  background: #141416; /* distinct bar color */
+  border-radius: 18px 18px 0 0;
+  padding: 10px;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+border-right: 1px solid rgba(255, 255, 255, 0.06);
+border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.headerTopRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
 
-.searchInput {
-  flex: 1;
-  height: 44px;
-  border-radius: 14px;
+.closeX {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
   border: 1px solid #2a2a2a;
-  background: #111;
+  background: #1c1c1e;
   color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.addBtn {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  border: 1px solid #2a2a2a;
+  background: #2c2c2e;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.addBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.searchRow {
+  padding-top: 10px;
+}
+
+/* ===== Chips ===== */
+
+.chipRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.chipBtn {
+  height: 34px;
   padding: 0 12px;
-  outline: none;
-}
-
-.iconBtn {
-  width: 100px;
-  height: 44px;
-  border-radius: 14px;
+  border-radius: 9999px;
   border: 1px solid #2a2a2a;
-  background: #111;
+  background: #1c1c1e;
   color: #fff;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.infoBtn {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  border: 1px solid #2a2a2a;
-  background: #111;
+.chipBtnActive {
+  border-color: #395716;
+  background: #1a2b07;
+  color: #8dcf42;
+}
+
+/* ===== Popover ===== */
+
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 60;
+  width: min(360px, calc(100vw - 24px));
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(28, 28, 30, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.55);
+}
+
+.popoverHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.popoverTitle {
   color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.popoverLinkBtn {
+  border: none;
+  background: transparent;
+  color: #8dcf42;
+  font-weight: 600;
   cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 10px;
+}
+
+.popoverLinkBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.popoverGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 280px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.popoverOption {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid #2a2a2a;
+  background: #1c1c1e;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.popoverOptionActive {
+  border-color: #395716;
+  background: #1a2b07;
+  color: #8dcf42;
+}
+
+/* ===== Exercise list (flat, iOS-like) ===== */
+
+.sheetExercise {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-top: 4px;
+  background: #141416; /* distinct bar color */
+}
+
+.exerciseRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px;
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.exerciseRow[data-selected="true"] {
+  background: #1a2b07;
+}
+
+.exerciseImg {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  object-fit: cover;
+  background: #fff;
+}
+
+.exerciseMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.exerciseName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.exerciseMeta {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #8e8e93;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: none;
+}
+
+/* Trailing actions (info + star) */
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rowIconBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 1px solid #2a2a2a;
+  background: #1c1c1e;
+  color: #c7c7cc;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.rowIconBtnActive {
+  color: #ff9f0a;
+  border-color: rgba(255, 150, 0, 0.55);
+  background: rgba(255, 150, 0, 0.12);
 }

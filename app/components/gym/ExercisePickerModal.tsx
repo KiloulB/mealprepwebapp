@@ -1,15 +1,11 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gymStyles from "../../gym/gym.module.css";
 import homeStyles from "../../home.module.css";
 import MuscleMap from "./muscle-map/MuscleMap";
 import type { FreeExercise } from "../../lib/freeExerciseDb";
-import {
-  buildExerciseTags,
-  getExerciseImageUrl,
-  searchExercises,
-} from "../../lib/freeExerciseDb";
+import { buildExerciseTags, getExerciseImageUrl, searchExercises } from "../../lib/freeExerciseDb";
 import { musclesToSlugs } from "../../lib/muscleSlugMap";
 import type { GymExerciseRef } from "../../types/gym";
 
@@ -26,12 +22,99 @@ function toRef(ex: FreeExercise): GymExerciseRef {
   };
 }
 
-function niceSlugLabel(slug: string) {
-  // Optional: make slugs nicer without needing a mapping file
-  return slug
-    .replace(/[-_]/g, " ")
-    .replace(/\b\w/g, (m) => m.toUpperCase());
+function niceLabel(s: string) {
+  return (s || "").replace(/[-_]/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
 }
+
+function muscleToCategory(primaryMuscles: string[] = []) {
+  const raw = primaryMuscles[0] || "";
+  const m = raw.toLowerCase();
+
+  if (m.includes("ab") || m.includes("core") || m.includes("rectus") || m.includes("oblique"))
+    return "Core";
+  if (m.includes("back") || m.includes("lat") || m.includes("trap") || m.includes("rhombo"))
+    return "Back";
+  if (m.includes("chest") || m.includes("pec")) return "Chest";
+  if (m.includes("shoulder") || m.includes("delt")) return "Shoulder";
+  if (m.includes("bicep") || m.includes("tricep") || m.includes("forearm")) return "Arms";
+  if (m.includes("quad") || m.includes("ham") || m.includes("glute") || m.includes("calf") || m.includes("leg"))
+    return "Legs";
+  if (m.includes("cardio")) return "Cardio";
+
+  return raw ? niceLabel(raw) : "Other";
+}
+
+function equipmentToType(equipmentArr: string[] = []) {
+  const raw = equipmentArr[0] || "";
+  const e = raw.toLowerCase();
+
+  if (!raw) return "";
+  if (e.includes("bodyweight")) return "Bodyweight";
+  if (e.includes("dumbbell")) return "Dumbbell";
+  if (e.includes("barbell")) return "Barbell";
+  if (e.includes("kettlebell")) return "Kettlebell";
+  if (e.includes("machine")) return "Machine";
+  if (e.includes("cable")) return "Cable";
+  if (e.includes("band")) return "Band";
+  if (e.includes("smith")) return "Machine";
+
+  return niceLabel(raw);
+}
+
+function buildSubtitle(ref: GymExerciseRef) {
+  const a = muscleToCategory(ref.primaryMuscles || []);
+  const b = equipmentToType(ref.equipment || []);
+  return b ? `${a} • ${b}` : a;
+}
+
+type RowModel = {
+  ex: FreeExercise;
+  ref: GymExerciseRef;
+  subtitle: string;
+};
+
+const ExerciseRow = memo(function ExerciseRow(props: {
+  model: RowModel;
+  selected: boolean;
+  onToggleSelect: (id: string, ref: GymExerciseRef) => void;
+  onInfo: (ex: FreeExercise) => void;
+}) {
+  const { model, selected, onToggleSelect, onInfo } = props;
+
+  return (
+    <div
+      className={gymStyles.exerciseRow}
+      data-selected={selected ? "true" : "false"}
+      onClick={() => onToggleSelect(model.ref.exerciseId, model.ref)}
+    >
+      {model.ref.image ? (
+        <img className={gymStyles.exerciseImg} alt="" src={model.ref.image} />
+      ) : (
+        <div className={gymStyles.exerciseImg} />
+      )}
+
+      <div className={gymStyles.exerciseMain}>
+        <div className={gymStyles.exerciseName}>{model.ref.name}</div>
+        <div className={gymStyles.exerciseMeta}>{model.subtitle}</div>
+      </div>
+
+      <div className={gymStyles.rowActions}>
+        <button
+          className={gymStyles.rowIconBtn}
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onInfo(model.ex);
+          }}
+          aria-label="Info"
+          title="Info"
+        >
+          i
+        </button>
+      </div>
+    </div>
+  );
+});
 
 export default function ExercisePickerModal({
   open,
@@ -43,19 +126,26 @@ export default function ExercisePickerModal({
   onStart: (payload: { exercises: GymExerciseRef[]; musclesWorked: string[] }) => void;
 }) {
   const [q, setQ] = useState("");
-  const [selected, setSelected] = useState<Record<string, GymExerciseRef>>({});
   const [info, setInfo] = useState<FreeExercise | null>(null);
 
-  // Filter UX: popover + search + selected options
+  // Selection (fast)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [selectedRefs, setSelectedRefs] = useState<Map<string, GymExerciseRef>>(new Map());
+
+  // Filters
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [muscleFilters, setMuscleFilters] = useState<Set<string>>(new Set());
-  const [muscleFilterQ, setMuscleFilterQ] = useState("");
+
+  // Selected chip (UI)
+  const [selectedOnly, setSelectedOnly] = useState(false);
+
+  // “Type” chip purely UI (visual)
+  const [typeChipOn, setTypeChipOn] = useState(false);
 
   const filterBtnRef = useRef<HTMLButtonElement | null>(null);
   const filterMenuRef = useRef<HTMLDivElement | null>(null);
-  const muscleSearchRef = useRef<HTMLInputElement | null>(null);
 
-  // Close popover on outside click (document mousedown + contains) [web:16]
+  // Click outside closes popover
   useEffect(() => {
     function onDown(e: MouseEvent) {
       const t = e.target as Node;
@@ -67,25 +157,15 @@ export default function ExercisePickerModal({
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
-  // ESC closes and restores focus to trigger (basic keyboard UX) [web:53]
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key !== "Escape") return;
-      if (filtersOpen) {
+      if (e.key === "Escape" && filtersOpen) {
         setFiltersOpen(false);
         filterBtnRef.current?.focus();
       }
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [filtersOpen]);
-
-  // Focus the muscle search when opening
-  useEffect(() => {
-    if (filtersOpen) {
-      setMuscleFilterQ("");
-      setTimeout(() => muscleSearchRef.current?.focus(), 0);
-    }
   }, [filtersOpen]);
 
   const items = useMemo(() => searchExercises(q), [q]);
@@ -98,24 +178,35 @@ export default function ExercisePickerModal({
     return [...s].sort();
   }, [items]);
 
-  const filteredMuscleOptions = useMemo(() => {
-    const t = muscleFilterQ.trim().toLowerCase();
-    if (!t) return availableMuscleSlugs;
-    return availableMuscleSlugs.filter((slug) => {
-      const label = niceSlugLabel(slug).toLowerCase();
-      return slug.toLowerCase().includes(t) || label.includes(t);
-    });
-  }, [availableMuscleSlugs, muscleFilterQ]);
-
   const filteredItems = useMemo(() => {
-    if (muscleFilters.size === 0) return items;
-    return items.filter((ex) => {
-      const exSlugs = musclesToSlugs(ex.primaryMuscles || [], ex.secondaryMuscles || []);
-      return exSlugs.some((s) => muscleFilters.has(s));
-    });
-  }, [items, muscleFilters]);
+    let base = items;
 
-  const selectedArr = useMemo(() => Object.values(selected), [selected]);
+    if (muscleFilters.size > 0) {
+      base = base.filter((ex) => {
+        const exSlugs = musclesToSlugs(ex.primaryMuscles || [], ex.secondaryMuscles || []);
+        return exSlugs.some((s) => muscleFilters.has(s));
+      });
+    }
+
+    if (selectedOnly) {
+      base = base.filter((ex) => selectedIds.has(String(ex.id)));
+    }
+
+    return base;
+  }, [items, muscleFilters, selectedOnly, selectedIds]);
+
+  // Build row models only when filters/search change (NOT on selection)
+  const rows: RowModel[] = useMemo(() => {
+    const arr = [...filteredItems].sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    return arr.slice(0, 100).map((ex) => {
+      const ref = toRef(ex);
+      return { ex, ref, subtitle: buildSubtitle(ref) };
+    });
+  }, [filteredItems]);
+
+  const selectedCount = selectedIds.size;
+
+  const selectedArr = useMemo(() => Array.from(selectedRefs.values()), [selectedRefs]);
 
   const allMusclesWorked = useMemo(() => {
     const slugs = new Set<string>();
@@ -125,15 +216,29 @@ export default function ExercisePickerModal({
     return [...slugs];
   }, [selectedArr]);
 
-  const toggleMuscle = (slug: string) => {
+  const onToggleSelect = useCallback((id: string, ref: GymExerciseRef) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+
+    setSelectedRefs((prev) => {
+      const next = new Map(prev);
+      next.has(id) ? next.delete(id) : next.set(id, ref);
+      return next;
+    });
+  }, []);
+
+  const toggleMuscle = useCallback((slug: string) => {
     setMuscleFilters((prev) => {
       const next = new Set(prev);
       next.has(slug) ? next.delete(slug) : next.add(slug);
       return next;
     });
-  };
+  }, []);
 
-  const clearMuscles = () => setMuscleFilters(new Set());
+  const clearMuscles = useCallback(() => setMuscleFilters(new Set()), []);
 
   if (!open) return null;
 
@@ -142,199 +247,122 @@ export default function ExercisePickerModal({
       <div className={gymStyles.sheet} onClick={(e) => e.stopPropagation()}>
         <div className={gymStyles.sheetHandle} />
 
-        <div className={gymStyles.sheetHeaderRow}>
-          <input
-            className={gymStyles.searchInput}
-            placeholder="Zoek oefeningen..."
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
+        {/* Header */}
+        <div className={gymStyles.headerBlock}>
+          <div className={gymStyles.headerTopRow}>
+            <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Close">
+              ×
+            </button>
 
-          {/* Filter popover trigger (left of Add) */}
-          <div style={{ position: "relative" }}>
             <button
-              ref={filterBtnRef}
-              className={gymStyles.iconBtn}
+              className={gymStyles.addBtn}
               type="button"
-              onClick={() => setFiltersOpen((v) => !v)}
-              aria-expanded={filtersOpen}
-              aria-haspopup="dialog"
-              title="Filters"
+              onClick={() => onStart({ exercises: selectedArr, musclesWorked: allMusclesWorked })}
+              disabled={selectedCount === 0}
+              title="Add selected"
             >
-              Filters {muscleFilters.size ? `(${muscleFilters.size})` : ""}
+              Add ({selectedCount})
             </button>
-
-            {filtersOpen ? (
-              <div
-                ref={filterMenuRef}
-                role="dialog"
-                aria-label="Muscle filters"
-                style={{
-                  position: "absolute",
-                  top: "calc(100% + 8px)",
-                  right: 0,
-                  zIndex: 60,
-                  width: 340,
-                  maxWidth: "calc(100vw - 24px)",
-                  padding: 12,
-                  borderRadius: 12,
-                  background: "rgba(16,16,16,0.98)",
-                  border: "1px solid rgba(255,255,255,0.14)",
-                  boxShadow: "0 12px 28px rgba(0,0,0,0.45)",
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
-
-
-                </div>
-
-
-                <div style={{ display: "flex", gap: 8, marginTop: 0, alignItems: "center" }}>
-                  <button
-                    className={gymStyles.secondaryBtn}
-                    type="button"
-                    onClick={clearMuscles}
-                    disabled={muscleFilters.size === 0}
-                    title="Clear all muscle filters"
-                  >
-                    Clear all
-                  </button>
-
-      
-                </div>
-
-                <div
-                  style={{
-                    marginTop: 10,
-                    maxHeight: 260,
-                    overflow: "auto",
-                    paddingRight: 4,
-                    display: "grid",
-                    gap: 6,
-                  }}
-                >
-                  {filteredMuscleOptions.map((slug) => {
-                    const active = muscleFilters.has(slug);
-                    return (
-                      <button
-                        key={slug}
-                        type="button"
-                        className={active ? gymStyles.primaryBtn : gymStyles.secondaryBtn}
-                        onClick={() => toggleMuscle(slug)}
-                        aria-pressed={active}
-                        style={{ justifyContent: "space-between", display: "flex" }}
-                        title={slug}
-                      >
-                        <span>{niceSlugLabel(slug)}</span>
-                        <span style={{ opacity: 0.85 }}>{active ? "On" : "Off"}</span>
-                      </button>
-                    );
-                  })}
-
-                  {filteredMuscleOptions.length === 0 ? (
-                    <div className={homeStyles.modalEmptyText}>No muscles match your search.</div>
-                  ) : null}
-                </div>
-              </div>
-            ) : null}
           </div>
 
-          <button
-            className={gymStyles.iconBtn}
-            type="button"
-            onClick={() => onStart({ exercises: selectedArr, musclesWorked: allMusclesWorked })}
-            disabled={selectedArr.length === 0}
-            title="Add selected"
-          >
-            Add ({selectedArr.length})
-          </button>
-        </div>
+          <div className={gymStyles.searchRow}>
+            <input
+              className={gymStyles.searchInput}
+              placeholder="Search"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </div>
 
-        {/* Active filter chips (visible state + quick remove) [web:44] */}
-        {muscleFilters.size ? (
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", padding: "0px 0 4px 0" }}>
-            {[...muscleFilters].sort().map((slug) => (
+          <div className={gymStyles.chipRow}>
+            <div style={{ position: "relative" }}>
               <button
-                key={slug}
+                ref={filterBtnRef}
                 type="button"
-                className={gymStyles.secondaryBtn}
-                onClick={() => toggleMuscle(slug)}
-                title="Remove filter"
+                className={`${gymStyles.chipBtn} ${muscleFilters.size ? gymStyles.chipBtnActive : ""}`}
+                onClick={() => setFiltersOpen((v) => !v)}
+                aria-expanded={filtersOpen}
+                aria-haspopup="dialog"
               >
-                {niceSlugLabel(slug)} ×
+                Body
               </button>
-            ))}
-            <button className={gymStyles.secondaryBtn} type="button" onClick={clearMuscles}>
-              Clear all
-            </button>
-          </div>
-        ) : null}
 
-        <div className={gymStyles.sheetExercise}>
-          {filteredItems.slice(0, 200).map((ex) => {
-            const ref = toRef(ex);
-            const isSel = Boolean(selected[ref.exerciseId]);
-            const img = ref.image || "";
+              {filtersOpen ? (
+                <div
+                  ref={filterMenuRef}
+                  className={gymStyles.popover}
+                  role="dialog"
+                  aria-label="Body filters"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className={gymStyles.popoverHeader}>
+                    <div className={gymStyles.popoverTitle}>Body</div>
+                    <button
+                      className={gymStyles.popoverLinkBtn}
+                      type="button"
+                      onClick={clearMuscles}
+                      disabled={muscleFilters.size === 0}
+                    >
+                      Clear
+                    </button>
+                  </div>
 
-            return (
-              <div
-                key={ref.exerciseId}
-                className={gymStyles.exerciseRow}
-                onClick={() => {
-                  setSelected((prev) => {
-                    const next = { ...prev };
-                    if (next[ref.exerciseId]) delete next[ref.exerciseId];
-                    else next[ref.exerciseId] = ref;
-                    return next;
-                  });
-                }}
-                style={{ border: isSel ? "1px solid #ff2d2d" : "1px solid transparent" }}
-              >
-                {img ? (
-                  <img className={gymStyles.exerciseImg} alt="" src={img} />
-                ) : (
-                  <div className={gymStyles.exerciseImg} />
-                )}
-
-                <div className={gymStyles.exerciseMain}>
-                  <div className={gymStyles.exerciseName}>{ref.name}</div>
-
-                  <div className={gymStyles.exerciseMeta}>
-                    {[
-                      ...(ref.primaryMuscles || []),
-                      ...(ref.secondaryMuscles || []),
-                    ]
-                      .slice(0, 4)
-                      .join(" • ")}
-                    {((ref.primaryMuscles?.length || 0) + (ref.secondaryMuscles?.length || 0)) > 4
-                      ? ` • +${(ref.primaryMuscles!.length + ref.secondaryMuscles!.length) - 4} more`
-                      : ""}
+                  <div className={gymStyles.popoverGrid}>
+                    {availableMuscleSlugs.map((slug) => {
+                      const active = muscleFilters.has(slug);
+                      return (
+                        <button
+                          key={slug}
+                          type="button"
+                          className={`${gymStyles.popoverOption} ${
+                            active ? gymStyles.popoverOptionActive : ""
+                          }`}
+                          onClick={() => toggleMuscle(slug)}
+                          aria-pressed={active}
+                          title={slug}
+                        >
+                          {niceLabel(slug)}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
+              ) : null}
+            </div>
 
-                <button
-                  className={gymStyles.infoBtn}
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setInfo(ex);
-                  }}
-                  title="Info"
-                >
-                  i
-                </button>
-              </div>
-            );
-          })}
 
-          {filteredItems.length > 200 ? (
-            <div className={homeStyles.modalInfoText} style={{ padding: "12px 0" }}>
-              Showing first 200 results. Narrow your search/filters.
+
+            <button
+              type="button"
+              className={`${gymStyles.chipBtn} ${selectedOnly ? gymStyles.chipBtnActive : ""}`}
+              onClick={() => setSelectedOnly((v) => !v)}
+              aria-pressed={selectedOnly}
+              title="Selected"
+            >
+              Selected ({selectedCount})
+            </button>
+          </div>
+        </div>
+
+        {/* List */}
+        <div className={gymStyles.sheetExercise}>
+          {rows.map((model) => (
+            <ExerciseRow
+              key={model.ref.exerciseId}
+              model={model}
+              selected={selectedIds.has(model.ref.exerciseId)}
+              onToggleSelect={onToggleSelect}
+              onInfo={(ex) => setInfo(ex)}
+            />
+          ))}
+
+          {filteredItems.length > 250 ? (
+            <div className={homeStyles.modalInfoText} style={{ padding: "10px 0 0" }}>
+              Showing first 250 results. Narrow your search.
             </div>
           ) : null}
 
-          {filteredItems.length === 0 ? (
+          {rows.length === 0 ? (
             <div className={homeStyles.modalEmptyText} style={{ padding: "12px 0" }}>
               No exercises match your filters.
             </div>
