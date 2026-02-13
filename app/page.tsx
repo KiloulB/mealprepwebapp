@@ -5,17 +5,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "./context/UserContext";
 import { useFont } from "./context/FontContext";
 
-import FoodScreen from "./screens/FoodScreen";
-import RecipeScreen from "./screens/RecipeScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import GymScreen from "./screens/GymScreen";
 
-import {
-  IoPersonOutline,
-  IoAdd,
-  IoCheckmark,
-  IoCloseCircleOutline,
-} from "react-icons/io5";
+import dynamic from "next/dynamic";
+const FoodScreen = dynamic(() => import("./screens/FoodScreen"), { ssr: false });
+const RecipeScreen = dynamic(() => import("./screens/RecipeScreen"), { ssr: false });
+const ProfileScreen = dynamic(() => import("./screens/ProfileScreen"), { ssr: false });
+const GymScreen = dynamic(() => import("./screens/GymScreen"), { ssr: false });
+
+const IoPersonOutline = dynamic(() => import("react-icons/io5").then(mod => mod.IoPersonOutline), { ssr: false });
+const IoAdd = dynamic(() => import("react-icons/io5").then(mod => mod.IoAdd), { ssr: false });
+const IoCheckmark = dynamic(() => import("react-icons/io5").then(mod => mod.IoCheckmark), { ssr: false });
+const IoCloseCircleOutline = dynamic(() => import("react-icons/io5").then(mod => mod.IoCloseCircleOutline), { ssr: false });
 
 import {
   subscribeToDailyLog,
@@ -198,26 +198,24 @@ export default function HomeScreen() {
     return selectedDate;
   }, [selectedDayIndex, weekOffset]);
 
-  useEffect(() => {
-    if (!authUser) return;
 
+  // Only subscribe to daily log and recipes when on the home tab
+  useEffect(() => {
+    if (!authUser || activeTab !== "home") return;
     const date = getSelectedDate();
     const unsubscribe = subscribeToDailyLog(authUser.uid, date, (log) => {
       setDailyLog(log);
     });
-
     return () => unsubscribe();
-  }, [authUser, getSelectedDate]);
+  }, [authUser, getSelectedDate, activeTab]);
 
   useEffect(() => {
-    if (!authUser) return;
-
+    if (!authUser || activeTab !== "home") return;
     const unsubscribe = subscribeToRecipes(authUser.uid, (fetchedRecipes) => {
       setRecipes(fetchedRecipes);
     });
-
     return () => unsubscribe();
-  }, [authUser]);
+  }, [authUser, activeTab]);
 
   const currentIntake = useMemo(() => {
     if (!dailyLog?.foods) return { kcal: 0, protein: 0, fat: 0, carbs: 0 };
