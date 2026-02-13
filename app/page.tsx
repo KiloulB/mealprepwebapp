@@ -30,6 +30,7 @@ import type { DailyLog, LoggedFood, Recipe, MealType } from "./types/user";
 import BottomNav from "./components/BottomNav/BottomNav";
 import styles from "./home.module.css";
 
+
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -165,6 +166,24 @@ export default function HomeScreen() {
 
   const { macroTargets, authUser, loading } = useUser();
   useFont();
+
+  const ANIM_MS = 180;
+
+const [displayedTab, setDisplayedTab] = useState(activeTab);
+const [isExiting, setIsExiting] = useState(false);
+
+useEffect(() => {
+  if (activeTab === displayedTab) return;
+
+  setIsExiting(true);
+  const t = setTimeout(() => {
+    setDisplayedTab(activeTab);
+    setIsExiting(false);
+  }, ANIM_MS);
+
+  return () => clearTimeout(t);
+}, [activeTab, displayedTab]);
+
 
   const [weekOffset, setWeekOffset] = useState<number>(0);
   const [selectedDayIndex, setSelectedDayIndex] = useState<number>(-1);
@@ -377,7 +396,8 @@ export default function HomeScreen() {
 
   return (
     <div className={styles.screen}>
-      {activeTab === "home" ? (
+    <div className={cx(styles.tabPage, isExiting && styles.tabPageExit)}>
+      {displayedTab === "home" ? (
         <>
           <div className={styles.headerRow}>
             <div className={styles.headerDivider}>
@@ -652,17 +672,17 @@ export default function HomeScreen() {
               </div>
             </div>
           )}
-        </>
-      ) : activeTab === "food" ? (
+       </>
+      ) : displayedTab === "food" ? (
         <FoodScreen />
-      ) : activeTab === "recepten" ? (
+      ) : displayedTab === "recepten" ? (
         <RecipeScreen />
-      ) : activeTab === "gym" ? (
+      ) : displayedTab === "gym" ? (
         <GymScreen />
       ) : (
         <ProfileScreen />
-        
       )}
+    </div>
 
       <BottomNav value={activeTab} onChange={handleTabChange} />
 

@@ -6,13 +6,15 @@ import { useRouter } from "next/navigation";
 import homeStyles from "../home.module.css";
 import gymStyles from "../gym/gym.module.css";
 import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
+import {
+  IoAdd
+} from "react-icons/io5";
 
 import MuscleMap from "../components/gym/muscle-map/MuscleMap";
 import ExercisePickerModal from "../components/gym/ExercisePickerModal";
 
 import { auth } from "../firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
-
 
 import {
   createGymSession,
@@ -63,6 +65,9 @@ export default function GymHomePage() {
 
   const [uid, setUid] = useState<string>("");
   const [authReady, setAuthReady] = useState(false);
+
+  // ✅ FAB menu (copied behavior from your RecipeScreen)
+  const [fabMenuOpen, setFabMenuOpen] = useState(false);
 
   // Week selection
   const [weekStartMs, setWeekStartMs] = useState(() => startOfWeekMs(new Date()));
@@ -130,12 +135,30 @@ export default function GymHomePage() {
     await deleteGymSession(uid, sessionId);
   }
 
+  const fabMenuItems = useMemo(
+    () => [
+      {
+        id: "start",
+        label: "Start workout",
+        icon: <FaPlus size={18} />,
+      },
+    ],
+    []
+  );
+
+  const handleFabItemPress = (actionId: string) => {
+    setFabMenuOpen(false);
+    if (actionId === "start") setPickerOpen(true);
+  };
+
   return (
     <div className={homeStyles.screen}>
       <div className={homeStyles.headerRow}>
         <div>
           <div className={homeStyles.headerTitle}>Gym</div>
-          <div className={homeStyles.headerSubtitle}>Track workouts & progressive overload</div>
+          <div className={homeStyles.headerSubtitle}>
+            Track workouts & progressive overload
+          </div>
         </div>
       </div>
 
@@ -143,11 +166,9 @@ export default function GymHomePage() {
         <div className={homeStyles.section}>
           {/* Week selector card */}
           <div className={homeStyles.card}>
-<div className={gymStyles.weekHeader}>
-  <div className={homeStyles.cardTitle}>{weekLabel}</div>
-
-</div>
-
+            <div className={gymStyles.weekHeader}>
+              <div className={homeStyles.cardTitle}>{weekLabel}</div>
+            </div>
 
             <div className={gymStyles.weekSegWrap} role="group" aria-label="Week navigation">
               <button
@@ -205,17 +226,17 @@ export default function GymHomePage() {
             <div className={gymStyles.cardHeaderRow}>
               <div className={homeStyles.cardTitle}>Workouts (selected week)</div>
 
-<button
-  type="button"
-  onClick={() => setPickerOpen(true)}
-  disabled={!uid}
-  className={gymStyles.addWorkoutBtn}
-  aria-label="Start workout"
-  title={!uid ? "Sign in to start a workout" : "Start workout"}
->
-  <FaPlus size={16} />
-</button>
-
+              {/* Keep your existing header + button if you want */}
+              <button
+                type="button"
+                onClick={() => setPickerOpen(true)}
+                disabled={!uid}
+                className={gymStyles.addWorkoutBtn}
+                aria-label="Start workout"
+                title={!uid ? "Sign in to start a workout" : "Start workout"}
+              >
+                <FaPlus size={16} />
+              </button>
             </div>
 
             <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
@@ -283,9 +304,45 @@ export default function GymHomePage() {
             </div>
           </div>
 
-          <div className={homeStyles.bottomSpacer} />
+         
         </div>
       </div>
+
+      {/* ✅ FAB overlay/menu (CSS must match your provided snippet) */}
+      {fabMenuOpen && (
+        <button
+          className={gymStyles.fabOverlay}
+          onClick={() => setFabMenuOpen(false)}
+          type="button"
+          aria-label="Close menu"
+        />
+      )}
+
+      {fabMenuOpen && (
+        <div className={gymStyles.fabMenu}>
+          {fabMenuItems.map((item) => (
+            <button
+              key={item.id}
+              className={gymStyles.fabMenuItem}
+              onClick={() => handleFabItemPress(item.id)}
+              type="button"
+            >
+              <span className={gymStyles.fabIcon}>{item.icon}</span>
+              <span className={gymStyles.fabLabel}>{item.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      <button
+        className={gymStyles.fab}
+        onClick={() => setFabMenuOpen((v) => !v)}
+        type="button"
+        aria-label="Open actions"
+        title="Actions"
+      >
+        <IoAdd size={26} color="#000" />
+      </button>
 
       <ExercisePickerModal
         open={pickerOpen}

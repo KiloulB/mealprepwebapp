@@ -926,3 +926,15 @@ box-sizing: border-box;
 .normalText {
   color: #FFFFFF;
 }
+
+.tabPage {
+  height: 100%;
+  transition: opacity 180ms ease, transform 180ms ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tabPageExit {
+  opacity: 0;
+  transform: translateY(-8px);
+}
