@@ -5,16 +5,16 @@ import styles from "./BottomNav.module.css";
 import { HiHome } from "react-icons/hi2";
 import { ImSpoonKnife } from "react-icons/im";
 import { IoPersonCircleSharp, IoBookSharp } from "react-icons/io5";
+import { IoBarbellSharp } from "react-icons/io5"; // <-- add
 
 export default function BottomNav({
-  value = "home", // <-- controlled
+  value = "home",
   onChange,
   className = "",
 }) {
   const navRef = useRef(null);
   const previousOptionRef = useRef("1");
 
-  // Update the animated "previous" attribute whenever value changes
   useEffect(() => {
     const el = navRef.current;
     if (!el) return;
@@ -99,17 +99,17 @@ export default function BottomNav({
           className={styles["switcher__input"]}
           type="radio"
           name="nav"
-          value="profile"
+          value="gym"
           c-option="4"
-          checked={value === "profile"}
+          checked={value === "gym"}
           onChange={handleNavChange}
         />
         <span className={styles["switcher__content"]}>
-          <IoPersonCircleSharp
+          <IoBarbellSharp
             className={styles["switcher__icon"]}
             aria-hidden="true"
           />
-          <span className={styles["switcher__text"]}>Profile</span>
+          <span className={styles["switcher__text"]}>Gym</span>
         </span>
       </label>
 

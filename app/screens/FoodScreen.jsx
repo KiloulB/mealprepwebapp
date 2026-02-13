@@ -8,6 +8,7 @@ import { useUser } from "../context/UserContext";
 import { useFont } from "../context/FontContext";
 import { addFoodToLog } from "../firebase/dataService";
 import { FiPlus } from "react-icons/fi";
+import CameraBarcodeModal from "../components/CameraBarcodeModal";
 
 function cx(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -370,23 +371,22 @@ export default function FoodScreen() {
           </p>
         </div>
 
-        <button
-          className={homeStyles.headerButton}
-          onClick={handleOpenScanner}
-          type="button"
-          aria-label="Barcode-invoer openen"
-          title="Barcode"
-        >
-          <span className={foodStyles.headerBtnIcon} aria-hidden="true">
-            ▦
-          </span>
-        </button>
+        {/* remove this button from here */}
       </div>
 
       <div className={homeStyles.scrollArea}>
         <div className={homeStyles.section}>
           <div className={homeStyles.card}>
             <div className={foodStyles.searchRow}>
+              <button
+                className={foodStyles.barcodeBtn}
+                onClick={handleOpenScanner}
+                type="button"
+                aria-label="Barcode-invoer openen"
+                title="Barcode"
+              >
+                ▦
+              </button>
               <input
                 className={foodStyles.searchInput}
                 placeholder="Zoek producten..."
@@ -407,6 +407,8 @@ export default function FoodScreen() {
                   ✕
                 </button>
               )}
+
+              {/* barcode button moved here */}
             </div>
 
             <button
@@ -853,6 +855,13 @@ export default function FoodScreen() {
             )}
           </div>
         </div>
+      )}
+      {scannerVisible && (
+        <CameraBarcodeModal
+          open={scannerVisible}
+          onClose={() => setScannerVisible(false)}
+          onDetected={(code) => fetchProductByBarcode(code)}
+        />
       )}
     </div>
   );

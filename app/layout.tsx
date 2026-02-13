@@ -3,6 +3,7 @@ import "./globals.css";
 import { UserProvider } from "./context/UserContext";
 import { FontProvider } from "./context/FontContext";
 import NoZoom from "./NoZoom";
+import BottomNav from "./components/BottomNav/BottomNav";
 
 export const viewport = {
   width: "device-width",
@@ -29,8 +30,10 @@ export default function RootLayout({
         <UserProvider>
           <FontProvider>
             {children}
+             
           </FontProvider>
         </UserProvider>
+        
       </body>
     </html>
   );

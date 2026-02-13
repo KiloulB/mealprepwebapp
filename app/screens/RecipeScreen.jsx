@@ -240,15 +240,6 @@ export default function RecipeScreen() {
             Maak, bewerk en bekijk je recepten
           </p>
         </div>
-
-        <button
-          className={homeStyles.headerButton}
-          onClick={() => router.push("/settings")}
-          type="button"
-          aria-label="Settings"
-        >
-          <IoPersonOutline size={24} color="#9CA3AF" />
-        </button>
       </div>
 
       <div className={homeStyles.scrollArea}>

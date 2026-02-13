@@ -290,14 +290,14 @@ export default function WorkoutSessionPage() {
           aria-label="Back to gym"
           onClick={() => {
             if (locked) {
-              router.push("/gym");
+              router.push("/?tab=gym");
               return;
             }
 
             const ok = window.confirm(
               "Workout not finished yet.\n\nYour progress will be saved. Leave this workout?"
             );
-            if (ok) router.push("/gym");
+            if (ok) router.push("/?tab=gym");
           }}
         >
           <FiChevronLeft size={22} />
@@ -329,7 +329,7 @@ export default function WorkoutSessionPage() {
                 updatedAt: new Date(),
               });
 
-              router.push("/gym");
+              router.push("/?tab=gym");
             } catch (e: any) {
               setError(e?.message ?? "Failed to finish. Try again.");
             } finally {

@@ -4,14 +4,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import homeStyles from "../home.module.css";
-import gymStyles from "./gym.module.css";
-import { FaRegTrashAlt } from "react-icons/fa";
+import gymStyles from "../gym/gym.module.css";
+import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
 
 import MuscleMap from "../components/gym/muscle-map/MuscleMap";
 import ExercisePickerModal from "../components/gym/ExercisePickerModal";
 
 import { auth } from "../firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
+
 
 import {
   createGymSession,
@@ -85,7 +86,6 @@ export default function GymHomePage() {
     const fmt = new Intl.DateTimeFormat("en-US", options);
     const anyFmt = fmt as any;
 
-    // formatRange formats ranges concisely (and smartly includes year when needed) [web:110]
     if (typeof anyFmt.formatRange === "function") {
       return anyFmt.formatRange(start, endInclusive);
     }
@@ -135,28 +135,21 @@ export default function GymHomePage() {
       <div className={homeStyles.headerRow}>
         <div>
           <div className={homeStyles.headerTitle}>Gym</div>
-          <div className={homeStyles.headerSubtitle}>
-            Track workouts & progressive overload
-          </div>
+          <div className={homeStyles.headerSubtitle}>Track workouts & progressive overload</div>
         </div>
-
-
       </div>
 
       <div className={homeStyles.scrollArea}>
         <div className={homeStyles.section}>
           {/* Week selector card */}
           <div className={homeStyles.card}>
-            <div className={gymStyles.weekHeader}>
-              <div className={homeStyles.cardTitle}>Select week</div>
-              <div className={gymStyles.weekLabel}>{weekLabel}</div>
-            </div>
+<div className={gymStyles.weekHeader}>
+  <div className={homeStyles.cardTitle}>{weekLabel}</div>
 
-            <div
-              className={gymStyles.weekSegWrap}
-              role="group"
-              aria-label="Week navigation"
-            >
+</div>
+
+
+            <div className={gymStyles.weekSegWrap} role="group" aria-label="Week navigation">
               <button
                 type="button"
                 onClick={() => setWeekStartMs((v) => addDaysMs(v, -7))}
@@ -209,7 +202,21 @@ export default function GymHomePage() {
 
           {/* Workouts list card */}
           <div className={homeStyles.card}>
-            <div className={homeStyles.cardTitle}>Workouts (selected week)</div>
+            <div className={gymStyles.cardHeaderRow}>
+              <div className={homeStyles.cardTitle}>Workouts (selected week)</div>
+
+<button
+  type="button"
+  onClick={() => setPickerOpen(true)}
+  disabled={!uid}
+  className={gymStyles.addWorkoutBtn}
+  aria-label="Start workout"
+  title={!uid ? "Sign in to start a workout" : "Start workout"}
+>
+  <FaPlus size={16} />
+</button>
+
+            </div>
 
             <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
               {!authReady ? (
@@ -255,21 +262,19 @@ export default function GymHomePage() {
                       </div>
 
                       <div className={gymStyles.weekRowRight}>
-<button
-  type="button"
-  onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleDelete(s.id);
-  }}
-  className={gymStyles.iconDangerBtn}
-  aria-label="Delete workout"
-  title="Delete workout"
->
-  <FaRegTrashAlt size={16} />
-</button>
-
-
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDelete(s.id);
+                          }}
+                          className={gymStyles.iconDangerBtn}
+                          aria-label="Delete workout"
+                          title="Delete workout"
+                        >
+                          <FaRegTrashAlt size={16} />
+                        </button>
                       </div>
                     </div>
                   );
@@ -278,18 +283,8 @@ export default function GymHomePage() {
             </div>
           </div>
 
-          <button
-            className={gymStyles.primaryBtn}
-            type="button"
-            onClick={() => setPickerOpen(true)}
-            disabled={!uid}
-            style={!uid ? { opacity: 0.6, cursor: "not-allowed" } : undefined}
-          >
-            Start workout
-          </button>
+          <div className={homeStyles.bottomSpacer} />
         </div>
-
-        <div className={homeStyles.bottomSpacer} />
       </div>
 
       <ExercisePickerModal

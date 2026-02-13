@@ -99,7 +99,7 @@ export default function RecentWorkouts() {
         <h2 className="text-white font-semibold">Recent workouts</h2>
         <button
           className="text-sm text-blue-400 hover:text-blue-300"
-          onClick={() => router.push("/gym")}
+          onClick={() => router.push("/?tab=gym")}
         >
           View all
         </button>

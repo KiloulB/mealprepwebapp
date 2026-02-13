@@ -8,6 +8,7 @@ import { useFont } from "./context/FontContext";
 import FoodScreen from "./screens/FoodScreen";
 import RecipeScreen from "./screens/RecipeScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import GymScreen from "./screens/GymScreen";
 
 import {
   IoPersonOutline,
@@ -658,8 +659,11 @@ export default function HomeScreen() {
         <FoodScreen />
       ) : activeTab === "recepten" ? (
         <RecipeScreen />
+      ) : activeTab === "gym" ? (
+        <GymScreen />
       ) : (
         <ProfileScreen />
+        
       )}
 
       <BottomNav value={activeTab} onChange={handleTabChange} />
