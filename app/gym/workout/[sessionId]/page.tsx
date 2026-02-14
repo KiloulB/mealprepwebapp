@@ -10,6 +10,7 @@ import styles from "./workout.module.css";
 import { FiChevronLeft } from "react-icons/fi";
 
 import ExercisePickerModal from "../../../components/gym/ExercisePickerModal";
+import { getPreviousSessionForTemplate } from "../../../firebase/gymSessionQueries";
 
 function normalizeParam(p: string | string[] | undefined): string {
   if (!p) return "";
@@ -21,6 +22,7 @@ type WorkoutSet = {
   targetReps?: number;
   targetKg?: number;
   done?: boolean;
+  templateSetId?: string;
 };
 
 type WorkoutExerciseRef = {
@@ -36,6 +38,7 @@ type WorkoutExerciseRef = {
 type WorkoutExercise = {
   id: string;
   done?: boolean;
+  templateExerciseId?: string;
   ref?: WorkoutExerciseRef;
   sets?: WorkoutSet[];
 };
@@ -49,6 +52,7 @@ type WorkoutSession = {
   status?: "unfinished" | "finished";
   createdAt?: any;
   updatedAt?: any;
+  templateId?: string;
 };
 
 function formatDateLong(epochMs: number) {
@@ -75,10 +79,7 @@ export default function WorkoutSessionPage() {
   const router = useRouter();
   const params = useParams<{ sessionId?: string | string[] }>();
 
-  const sessionId = useMemo(
-    () => normalizeParam(params?.sessionId),
-    [params?.sessionId]
-  );
+  const sessionId = useMemo(() => normalizeParam(params?.sessionId), [params?.sessionId]);
 
   const [uid, setUid] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -91,6 +92,25 @@ export default function WorkoutSessionPage() {
   // modal control
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerInfoId, setPickerInfoId] = useState<string | null>(null);
+
+  // previous session (only used when templateId exists)
+  const [prevSession, setPrevSession] = useState<WorkoutSession | null>(null);
+
+  // ✅ HOOK FIX: useMemo must be above all early returns (unconditional)
+  const prevByTemplateSetId = useMemo(() => {
+    const m = new Map<string, { kg?: number; reps?: number }>();
+    if (!prevSession?.exercises) return m;
+
+    for (const ex of prevSession.exercises) {
+      const exId = ex.ref?.exerciseId ?? "";
+      (ex.sets ?? []).forEach((s, idx) => {
+        const key = s.templateSetId || (exId ? `${exId}:${idx}` : `ex-${ex.id}:${idx}`);
+        m.set(key, { kg: s.targetKg, reps: s.targetReps });
+      });
+    }
+
+    return m;
+  }, [prevSession]);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -141,6 +161,24 @@ export default function WorkoutSessionPage() {
     return () => unsub();
   }, [sessionId, uid]);
 
+  // Load previous session for template workouts
+  useEffect(() => {
+    async function run() {
+      if (!uid || !sessionId || !session?.templateId) {
+        setPrevSession(null);
+        return;
+      }
+
+      try {
+        const prev = await getPreviousSessionForTemplate(uid, session.templateId, sessionId);
+        setPrevSession(prev as any);
+      } catch {
+        setPrevSession(null);
+      }
+    }
+    run();
+  }, [uid, sessionId, session?.templateId]);
+
   // Stop timer once finished
   useEffect(() => {
     if (!session?.startedAt) return;
@@ -168,16 +206,13 @@ export default function WorkoutSessionPage() {
   }
 
   async function toggleSetDone(exerciseId: string, setId: string) {
-    // LOCK: no changes when finished
     if (session?.status === "finished") return;
     if (!session?.exercises) return;
 
     const nextExercises: WorkoutExercise[] = session.exercises.map((ex) => {
       if (ex.id !== exerciseId) return ex;
 
-      const nextSets = (ex.sets ?? []).map((s) =>
-        s.id === setId ? { ...s, done: !s.done } : s
-      );
+      const nextSets = (ex.sets ?? []).map((s) => (s.id === setId ? { ...s, done: !s.done } : s));
       const allDone = nextSets.length > 0 && nextSets.every((s) => !!s.done);
       return { ...ex, sets: nextSets, done: allDone };
     });
@@ -192,7 +227,6 @@ export default function WorkoutSessionPage() {
     field: "targetKg" | "targetReps",
     raw: string
   ) {
-    // LOCK: no changes when finished
     if (session?.status === "finished") return;
     if (!session?.exercises) return;
 
@@ -206,9 +240,7 @@ export default function WorkoutSessionPage() {
     const nextExercises: WorkoutExercise[] = session.exercises.map((ex) => {
       if (ex.id !== exerciseId) return ex;
 
-      const nextSets = (ex.sets ?? []).map((s) =>
-        s.id === setId ? { ...s, [field]: parsed } : s
-      );
+      const nextSets = (ex.sets ?? []).map((s) => (s.id === setId ? { ...s, [field]: parsed } : s));
       const allDone = nextSets.length > 0 && nextSets.every((s) => !!s.done);
       return { ...ex, sets: nextSets, done: allDone };
     });
@@ -275,11 +307,10 @@ export default function WorkoutSessionPage() {
 
   const startedAt = session.startedAt ?? Date.now();
   const topDate = formatDateLong(startedAt);
-  const duration = session.startedAt
-    ? formatDuration(Date.now() - session.startedAt)
-    : "00:00:00";
+  const duration = session.startedAt ? formatDuration(Date.now() - session.startedAt) : "00:00:00";
 
   const locked = session.status === "finished";
+  const fromTemplate = !!session.templateId;
 
   return (
     <div className={styles.screen}>
@@ -306,7 +337,7 @@ export default function WorkoutSessionPage() {
         <button
           className={styles.finishBtn}
           type="button"
-          disabled={saving} // allow finishing even if already finished? keep enabled/disabled as you want
+          disabled={saving}
           onClick={async () => {
             if (!sessionId || !uid || !session) return;
 
@@ -345,6 +376,7 @@ export default function WorkoutSessionPage() {
         <div className={styles.titleWrap}>
           <div className={styles.title}>{session.name ?? "Workout"}</div>
         </div>
+
         <div className={styles.metaItem}>
           <span className={styles.metaIcon} aria-hidden="true">
             ▦
@@ -384,24 +416,23 @@ export default function WorkoutSessionPage() {
                   </div>
                 </div>
 
-<button
-  className={styles.infoBtn}
-  type="button"
-  aria-label="Exercise info"
-  onClick={(e) => {
-    e.stopPropagation();
-    setPickerInfoId(ex.ref?.exerciseId ?? null);
-    setPickerOpen(true);
-  }}
->
-  i
-</button>
-
+                <button
+                  className={styles.infoBtn}
+                  type="button"
+                  aria-label="Exercise info"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPickerInfoId(ex.ref?.exerciseId ?? null);
+                    setPickerOpen(true);
+                  }}
+                >
+                  i
+                </button>
               </div>
 
               <div className={styles.setHeaderRow}>
                 <div className={styles.setHeaderCell}>Set</div>
-                <div className={styles.setHeaderCell}>Previous</div>
+                {fromTemplate ? <div className={styles.setHeaderCell}>Previous</div> : null}
                 <div className={styles.setHeaderCell}>+kg</div>
                 <div className={styles.setHeaderCell}>Reps</div>
                 <div className={styles.setHeaderCell} />
@@ -411,23 +442,34 @@ export default function WorkoutSessionPage() {
                 {(ex.sets ?? []).length > 0 ? (
                   (ex.sets ?? []).map((set, setIdx) => {
                     const kgValue =
-                      set.targetKg === 0 || typeof set.targetKg === "number"
-                        ? String(set.targetKg)
-                        : "";
+                      set.targetKg === 0 || typeof set.targetKg === "number" ? String(set.targetKg) : "";
                     const repsValue =
-                      set.targetReps === 0 || typeof set.targetReps === "number"
-                        ? String(set.targetReps)
-                        : "";
+                      set.targetReps === 0 || typeof set.targetReps === "number" ? String(set.targetReps) : "";
+
+                    const prevKey =
+                      set.templateSetId ||
+                      ((ex.ref?.exerciseId ?? "")
+                        ? `${ex.ref?.exerciseId}:${setIdx}`
+                        : `ex-${ex.id}:${setIdx}`);
+
+                    const prev = fromTemplate ? prevByTemplateSetId.get(prevKey) : undefined;
 
                     return (
                       <div
                         key={set.id ?? setIdx}
-                        className={`${styles.setRow} ${
-                          set.done ? styles.setRowDone : ""
-                        }`}
+                        className={`${styles.setRow} ${set.done ? styles.setRowDone : ""}`}
                       >
                         <div className={styles.setCellSet}>{setIdx + 1}</div>
-                        <div className={styles.setCellPrev}>-</div>
+
+                        {fromTemplate ? (
+                          <div className={styles.setCellPrev}>
+                            {prev
+                              ? `${typeof prev.kg === "number" ? prev.kg : "-"}kg × ${
+                                  typeof prev.reps === "number" ? prev.reps : "-"
+                                }`
+                              : "-"}
+                          </div>
+                        ) : null}
 
                         <div className={styles.setCellKg}>
                           <input
@@ -436,14 +478,7 @@ export default function WorkoutSessionPage() {
                             inputMode="numeric"
                             step="0.5"
                             value={kgValue}
-                            onChange={(e) =>
-                              updateSetField(
-                                ex.id,
-                                set.id,
-                                "targetKg",
-                                e.target.value
-                              )
-                            }
+                            onChange={(e) => updateSetField(ex.id, set.id, "targetKg", e.target.value)}
                             disabled={saving || locked}
                             aria-label="Target kg"
                           />
@@ -455,14 +490,7 @@ export default function WorkoutSessionPage() {
                           inputMode="numeric"
                           step="1"
                           value={repsValue}
-                          onChange={(e) =>
-                            updateSetField(
-                              ex.id,
-                              set.id,
-                              "targetReps",
-                              e.target.value
-                            )
-                          }
+                          onChange={(e) => updateSetField(ex.id, set.id, "targetReps", e.target.value)}
                           disabled={saving || locked}
                           aria-label="Target reps"
                         />
@@ -475,9 +503,7 @@ export default function WorkoutSessionPage() {
                           aria-label="Toggle set done"
                         >
                           <span
-                            className={`${styles.check} ${
-                              set.done ? styles.checkOn : styles.checkOff
-                            }`}
+                            className={`${styles.check} ${set.done ? styles.checkOn : styles.checkOff}`}
                             aria-hidden="true"
                           >
                             ✓
@@ -491,21 +517,20 @@ export default function WorkoutSessionPage() {
                 )}
               </div>
 
-{!locked && (
-  <button
-    className={styles.addSetBtn}
-    type="button"
-    onClick={() => {
-      // TODO: your Add Set logic here
-    }}
-  >
-    <span className={styles.addPlus} aria-hidden="true">
-      +
-    </span>
-    Add Set
-  </button>
-)}
-
+              {!locked && (
+                <button
+                  className={styles.addSetBtn}
+                  type="button"
+                  onClick={() => {
+                    // Optional: implement add set here if you want.
+                  }}
+                >
+                  <span className={styles.addPlus} aria-hidden="true">
+                    +
+                  </span>
+                  Add Set
+                </button>
+              )}
             </section>
           ))
         ) : (

@@ -177,7 +177,7 @@ box-sizing: border-box;
 .section {
         display: flex;
     flex-direction: column;
-    gap:12px;
+    gap:15px;
 }
 
 .card {

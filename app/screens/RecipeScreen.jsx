@@ -13,9 +13,6 @@ import {
   IoClose,
   IoCreateOutline,
   IoImageOutline,
-  IoNutritionOutline,
-  IoPersonOutline,
-  IoRestaurantOutline,
   IoTrashOutline,
 } from "react-icons/io5";
 
@@ -52,7 +49,9 @@ export default function RecipeScreen() {
   const { authUser } = useUser();
 
   const [recipes, setRecipes] = useState([]);
-  const [fabMenuOpen, setFabMenuOpen] = useState(false);
+
+  // Header menu (replaces FAB)
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectRecipeModalVisible, setSelectRecipeModalVisible] =
@@ -67,14 +66,22 @@ export default function RecipeScreen() {
     return () => unsub && unsub();
   }, [authUser]);
 
-  const fabMenuItems = useMemo(
+  // Close header menu on Escape (nice UX + matches common menu-button behavior)
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
+  const menuItems = useMemo(
     () => [
-      {
-        id: "recipes",
-        label: "New Recipes",
-        icon: <IoBookOutline size={18} />,
-      },
-      { id: "edit", label: "Edit Recipe", icon: <IoCreateOutline size={18} /> },
+      { id: "recipes", label: "New recipe", icon: <IoBookOutline size={18} /> },
+      { id: "edit", label: "Edit recipe", icon: <IoCreateOutline size={18} /> },
     ],
     [],
   );
@@ -90,8 +97,8 @@ export default function RecipeScreen() {
     setSelectRecipeModalVisible(true);
   };
 
-  const handleFabItemPress = (id) => {
-    setFabMenuOpen(false);
+  const handleMenuItemPress = (id) => {
+    setMenuOpen(false);
     if (id === "recipes") openAddModal();
     if (id === "edit") openSelectToEdit();
   };
@@ -232,13 +239,59 @@ export default function RecipeScreen() {
 
   return (
     <div className={homeStyles.screen}>
-      {/* Header (same as Food) */}
+      {/* Header + action button */}
       <div className={homeStyles.headerRow}>
-        <div>
-          <h1 className={homeStyles.headerTitle}>Recepten</h1>
-          <p className={homeStyles.headerSubtitle}>
-            Maak, bewerk en bekijk je recepten
-          </p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            width: "100%",
+          }}
+        >
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <h1 className={homeStyles.headerTitle}>Recepten</h1>
+            <p className={homeStyles.headerSubtitle}>
+              Maak, bewerk en bekijk je recepten
+            </p>
+          </div>
+
+          <div className={recipeStyles.headerMenuWrap}>
+            <button
+              className={homeStyles.headerButton}
+              onClick={() => setMenuOpen((v) => !v)}
+              type="button"
+              aria-label="Open recipe actions"
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              aria-controls="recipe-actions-menu"
+              title={!authUser ? "Sign in to use actions" : "Actions"}
+              disabled={!authUser}
+            >
+              <IoAdd size={24} color="#9CA3AF" />
+            </button>
+
+            {menuOpen && (
+              <div
+                className={recipeStyles.headerMenu}
+                id="recipe-actions-menu"
+                role="menu"
+              >
+                {menuItems.map((item) => (
+                  <button
+                    key={item.id}
+                    className={recipeStyles.fabMenuItem}
+                    onClick={() => handleMenuItemPress(item.id)}
+                    type="button"
+                    role="menuitem"
+                  >
+                    <span className={recipeStyles.fabIcon}>{item.icon}</span>
+                    <span className={recipeStyles.fabLabel}>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -303,42 +356,17 @@ export default function RecipeScreen() {
         </div>
       </div>
 
-      {/* FAB overlay/menu (keep your current behavior, but use recipeStyles colors) */}
-      {fabMenuOpen && (
+      {/* Overlay closes header menu */}
+      {menuOpen && (
         <button
           className={recipeStyles.fabOverlay}
-          onClick={() => setFabMenuOpen(false)}
+          onClick={() => setMenuOpen(false)}
           type="button"
           aria-label="Close menu"
         />
       )}
 
-      {fabMenuOpen && (
-        <div className={recipeStyles.fabMenu}>
-          {fabMenuItems.map((item) => (
-            <button
-              key={item.id}
-              className={recipeStyles.fabMenuItem}
-              onClick={() => handleFabItemPress(item.id)}
-              type="button"
-            >
-              <span className={recipeStyles.fabIcon}>{item.icon}</span>
-              <span className={recipeStyles.fabLabel}>{item.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-
-      <button
-        className={recipeStyles.fab}
-        onClick={() => setFabMenuOpen((v) => !v)}
-        type="button"
-        aria-label="Add"
-      >
-        <IoAdd size={26} color="#000" />
-      </button>
-
-      {/* Add/Edit modal: reuse home modal wrapper + card like Food */}
+      {/* Add/Edit modal */}
       {modalVisible && (
         <div
           className={homeStyles.modalOverlay}
@@ -395,6 +423,7 @@ export default function RecipeScreen() {
                     </div>
                   </div>
                 )}
+
                 <input
                   type="file"
                   accept="image/*"
@@ -448,6 +477,7 @@ export default function RecipeScreen() {
                   <div className={recipeStyles.boxTitle}>
                     Nutrition per serving
                   </div>
+
                   <div className={recipeStyles.nutriRow}>
                     {[
                       ["Kcal", "kcal"],
@@ -494,7 +524,6 @@ export default function RecipeScreen() {
                   </div>
                 </div>
 
-                {/* NOW these are also grid items, so gap becomes consistent */}
                 <div className={recipeStyles.box}>
                   <div className={recipeStyles.boxHeader}>
                     <div className={recipeStyles.boxTitle}>Ingredients</div>
@@ -586,7 +615,7 @@ export default function RecipeScreen() {
         </div>
       )}
 
-      {/* Select-to-edit modal (reuse home modal wrapper) */}
+      {/* Select-to-edit modal */}
       {selectRecipeModalVisible && (
         <div
           className={homeStyles.modalOverlay}

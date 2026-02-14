@@ -416,6 +416,7 @@ useEffect(() => {
 
           <div className={styles.scrollArea}>
             <div className={styles.section}>
+              {/*}
               <div className={styles.card}>
                 <div className={cx(styles.flexBetween, styles.cardRowBottom)}>
                   <span className={cx(styles.cardTitle, styles.cardTitleActivity)}>
@@ -428,6 +429,7 @@ useEffect(() => {
                   <span className={cx(styles.unitText, styles.unitTextStrong)}>stappen</span>
                 </div>
               </div>
+              */}
 
               <div className={styles.card}>
                 <div className={cx(styles.flexBetween, styles.cardRowBottom)}>

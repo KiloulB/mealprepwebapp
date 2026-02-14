@@ -1,3 +1,4 @@
+// app/gym/page.tsx
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -5,22 +6,26 @@ import { useRouter } from "next/navigation";
 
 import homeStyles from "../home.module.css";
 import gymStyles from "../gym/gym.module.css";
+
 import { FaRegTrashAlt, FaPlus } from "react-icons/fa";
+
 import {
-  IoAdd
+  IoPlayCircleOutline,
+  IoCreateOutline,
+  IoDuplicateOutline,
+  IoAdd,
 } from "react-icons/io5";
 
 import MuscleMap from "../components/gym/muscle-map/MuscleMap";
 import ExercisePickerModal from "../components/gym/ExercisePickerModal";
+import TemplateMakerModal from "../components/gym/TemplateMakerModal";
+import TemplateStartModal from "../components/gym/TemplateStartModal";
 
 import { auth } from "../firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
 
-import {
-  createGymSession,
-  deleteGymSession,
-  subscribeToGymSessionsInRange,
-} from "../firebase/gymService";
+import { createGymSession, deleteGymSession, subscribeToGymSessionsInRange } from "../firebase/gymService";
+
 import type { GymSession, GymSessionExercise, GymSet } from "../types/gym";
 import { startOfWeekMs, formatDateTime } from "../lib/dateUtils";
 
@@ -66,8 +71,12 @@ export default function GymHomePage() {
   const [uid, setUid] = useState<string>("");
   const [authReady, setAuthReady] = useState(false);
 
-  // ✅ FAB menu (copied behavior from your RecipeScreen)
-  const [fabMenuOpen, setFabMenuOpen] = useState(false);
+  // Header actions menu
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Modals
+  const [templateMakerOpen, setTemplateMakerOpen] = useState(false);
+  const [templateStartOpen, setTemplateStartOpen] = useState(false);
 
   // Week selection
   const [weekStartMs, setWeekStartMs] = useState(() => startOfWeekMs(new Date()));
@@ -81,8 +90,7 @@ export default function GymHomePage() {
     const startYear = start.getFullYear();
     const endYear = endInclusive.getFullYear();
 
-    const shouldShowYear =
-      startYear !== currentYear || endYear !== currentYear || startYear !== endYear;
+    const shouldShowYear = startYear !== currentYear || endYear !== currentYear || startYear !== endYear;
 
     const options: Intl.DateTimeFormatOptions = shouldShowYear
       ? { month: "short", day: "numeric", year: "numeric" }
@@ -94,11 +102,9 @@ export default function GymHomePage() {
     if (typeof anyFmt.formatRange === "function") {
       return anyFmt.formatRange(start, endInclusive);
     }
-
     return `${fmt.format(start)} - ${fmt.format(endInclusive)}`;
   }, [weekStartMs, weekEndMs]);
 
-  // Disable future weeks
   const thisWeekStartMs = useMemo(() => startOfWeekMs(new Date()), []);
   const isCurrentWeek = weekStartMs === thisWeekStartMs;
   const disableNext = isCurrentWeek;
@@ -111,7 +117,6 @@ export default function GymHomePage() {
     return () => unsub();
   }, []);
 
-  // Subscribe to workouts in selected week
   useEffect(() => {
     if (!uid) {
       setSessions([]);
@@ -128,6 +133,16 @@ export default function GymHomePage() {
     return [...slugs];
   }, [sessions]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
   async function handleDelete(sessionId: string) {
     if (!uid) return;
     const ok = window.confirm("Delete this workout? This can’t be undone.");
@@ -135,36 +150,73 @@ export default function GymHomePage() {
     await deleteGymSession(uid, sessionId);
   }
 
-  const fabMenuItems = useMemo(
-    () => [
-      {
-        id: "start",
-        label: "Start workout",
-        icon: <FaPlus size={18} />,
-      },
-    ],
-    []
-  );
+const fabMenuItems = useMemo(
+  () => [
+    { id: "start", label: "Start workout", icon: <IoPlayCircleOutline size={18} /> },
+    { id: "makeTemplate", label: "Make template", icon: <IoCreateOutline size={18} /> },
+    { id: "startFromTemplate", label: "Start workout from template", icon: <IoDuplicateOutline  size={18} /> },
+  ],
+  []
+);
 
-  const handleFabItemPress = (actionId: string) => {
-    setFabMenuOpen(false);
+
+
+  const handleMenuPress = (actionId: string) => {
+    setMenuOpen(false);
     if (actionId === "start") setPickerOpen(true);
+    if (actionId === "makeTemplate") setTemplateMakerOpen(true);
+    if (actionId === "startFromTemplate") setTemplateStartOpen(true);
   };
 
   return (
     <div className={homeStyles.screen}>
+      {/* Header with action button (same style as your other header buttons) */}
       <div className={homeStyles.headerRow}>
-        <div>
-          <div className={homeStyles.headerTitle}>Gym</div>
-          <div className={homeStyles.headerSubtitle}>
-            Track workouts & progressive overload
+        <div style={{ display: "flex", alignItems: "center", gap: 12, width: "100%" }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className={homeStyles.headerTitle}>Gym</div>
+            <div className={homeStyles.headerSubtitle}>Track workouts & progressive overload</div>
+          </div>
+
+          <div className={gymStyles.headerMenuWrap}>
+            <button
+              className={homeStyles.headerButton}
+              onClick={() => setMenuOpen((v) => !v)}
+              type="button"
+              disabled={!uid}
+              aria-label="Open actions"
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              aria-controls="gym-actions-menu"
+              title={!uid ? "Sign in to use actions" : "Actions"}
+            >
+              <IoAdd size={24} color="#9CA3AF" />
+            </button>
+
+{menuOpen && (
+  <div className={gymStyles.headerMenu} id="gym-actions-menu" role="menu">
+    {fabMenuItems.map((item) => (
+      <button
+        key={item.id}
+        type="button"
+        role="menuitem"
+        className={gymStyles.fabMenuItem}
+        onClick={() => handleMenuPress(item.id)}
+      >
+        <span className={gymStyles.fabIcon}>{item.icon}</span>
+        <span className={gymStyles.fabLabel}>{item.label}</span>
+      </button>
+    ))}
+  </div>
+)}
+
           </div>
         </div>
       </div>
 
       <div className={homeStyles.scrollArea}>
         <div className={homeStyles.section}>
-          {/* Week selector card */}
+          {/* Week selector */}
           <div className={homeStyles.card}>
             <div className={gymStyles.weekHeader}>
               <div className={homeStyles.cardTitle}>{weekLabel}</div>
@@ -205,7 +257,7 @@ export default function GymHomePage() {
             </div>
           </div>
 
-          {/* Muscles worked card */}
+          {/* Muscles worked */}
           <div className={homeStyles.card}>
             <div className={homeStyles.cardTitle} style={{ textAlign: "center" }}>
               Muscles worked on this week
@@ -221,22 +273,12 @@ export default function GymHomePage() {
             </div>
           </div>
 
-          {/* Workouts list card */}
+          {/* Workouts list */}
           <div className={homeStyles.card}>
             <div className={gymStyles.cardHeaderRow}>
               <div className={homeStyles.cardTitle}>Workouts (selected week)</div>
 
-              {/* Keep your existing header + button if you want */}
-              <button
-                type="button"
-                onClick={() => setPickerOpen(true)}
-                disabled={!uid}
-                className={gymStyles.addWorkoutBtn}
-                aria-label="Start workout"
-                title={!uid ? "Sign in to start a workout" : "Start workout"}
-              >
-                <FaPlus size={16} />
-              </button>
+
             </div>
 
             <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
@@ -303,47 +345,20 @@ export default function GymHomePage() {
               )}
             </div>
           </div>
-
-         
         </div>
       </div>
 
-      {/* ✅ FAB overlay/menu (CSS must match your provided snippet) */}
-      {fabMenuOpen && (
+      {/* Overlay for outside click */}
+      {menuOpen && (
         <button
           className={gymStyles.fabOverlay}
-          onClick={() => setFabMenuOpen(false)}
+          onClick={() => setMenuOpen(false)}
           type="button"
           aria-label="Close menu"
         />
       )}
 
-      {fabMenuOpen && (
-        <div className={gymStyles.fabMenu}>
-          {fabMenuItems.map((item) => (
-            <button
-              key={item.id}
-              className={gymStyles.fabMenuItem}
-              onClick={() => handleFabItemPress(item.id)}
-              type="button"
-            >
-              <span className={gymStyles.fabIcon}>{item.icon}</span>
-              <span className={gymStyles.fabLabel}>{item.label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-
-      <button
-        className={gymStyles.fab}
-        onClick={() => setFabMenuOpen((v) => !v)}
-        type="button"
-        aria-label="Open actions"
-        title="Actions"
-      >
-        <IoAdd size={26} color="#000" />
-      </button>
-
+      {/* Existing start workout picker */}
       <ExercisePickerModal
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
@@ -368,6 +383,15 @@ export default function GymHomePage() {
           const sessionId = await createGymSession(uid, newSession);
           router.push(`/gym/workout/${sessionId}`);
         }}
+      />
+
+      <TemplateMakerModal open={templateMakerOpen} uid={uid} onClose={() => setTemplateMakerOpen(false)} />
+
+      <TemplateStartModal
+        open={templateStartOpen}
+        uid={uid}
+        onClose={() => setTemplateStartOpen(false)}
+        onStarted={(sessionId) => router.push(`/gym/workout/${sessionId}`)}
       />
     </div>
   );
