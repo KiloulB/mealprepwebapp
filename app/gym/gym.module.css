@@ -298,7 +298,6 @@ margin: 15px 0;
 .sheetExercise {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   padding-top: 4px;
   background: #141416; /* distinct bar color */
 }

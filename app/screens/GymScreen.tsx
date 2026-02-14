@@ -96,7 +96,7 @@ export default function GymHomePage() {
       ? { month: "short", day: "numeric", year: "numeric" }
       : { month: "short", day: "numeric" };
 
-    const fmt = new Intl.DateTimeFormat("en-US", options);
+    const fmt = new Intl.DateTimeFormat("nl-NL", options);
     const anyFmt = fmt as any;
 
     if (typeof anyFmt.formatRange === "function") {
@@ -145,16 +145,16 @@ export default function GymHomePage() {
 
   async function handleDelete(sessionId: string) {
     if (!uid) return;
-    const ok = window.confirm("Delete this workout? This can’t be undone.");
+    const ok = window.confirm("Verwijder deze workout? Dit kan niet ongedaan worden gemaakt.");
     if (!ok) return;
     await deleteGymSession(uid, sessionId);
   }
 
 const fabMenuItems = useMemo(
   () => [
-    { id: "start", label: "Start workout", icon: <IoPlayCircleOutline size={18} /> },
-    { id: "makeTemplate", label: "Make template", icon: <IoCreateOutline size={18} /> },
-    { id: "startFromTemplate", label: "Start workout from template", icon: <IoDuplicateOutline  size={18} /> },
+    { id: "start", label: "Workout starten", icon: <IoPlayCircleOutline size={18} /> },
+    { id: "makeTemplate", label: "Template maken", icon: <IoCreateOutline size={18} /> },
+    { id: "startFromTemplate", label: "Workout starten vanuit template", icon: <IoDuplicateOutline  size={18} /> },
   ],
   []
 );
@@ -170,12 +170,12 @@ const fabMenuItems = useMemo(
 
   return (
     <div className={homeStyles.screen}>
-      {/* Header with action button (same style as your other header buttons) */}
+      {/* Header met actieknop */}
       <div className={homeStyles.headerRow}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, width: "100%" }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div className={homeStyles.headerTitle}>Gym</div>
-            <div className={homeStyles.headerSubtitle}>Track workouts & progressive overload</div>
+            <div className={homeStyles.headerSubtitle}>Maak, bewerk en volg je workouts</div>
           </div>
 
           <div className={gymStyles.headerMenuWrap}>
@@ -184,11 +184,11 @@ const fabMenuItems = useMemo(
               onClick={() => setMenuOpen((v) => !v)}
               type="button"
               disabled={!uid}
-              aria-label="Open actions"
+              aria-label="Acties openen"
               aria-haspopup="menu"
               aria-expanded={menuOpen}
               aria-controls="gym-actions-menu"
-              title={!uid ? "Sign in to use actions" : "Actions"}
+              title={!uid ? "Log in om acties te gebruiken" : "Acties"}
             >
               <IoAdd size={24} color="#9CA3AF" />
             </button>
@@ -222,13 +222,13 @@ const fabMenuItems = useMemo(
               <div className={homeStyles.cardTitle}>{weekLabel}</div>
             </div>
 
-            <div className={gymStyles.weekSegWrap} role="group" aria-label="Week navigation">
+            <div className={gymStyles.weekSegWrap} role="group" aria-label="Week navigatie">
               <button
                 type="button"
                 onClick={() => setWeekStartMs((v) => addDaysMs(v, -7))}
                 className={`${gymStyles.weekSegBtn} ${gymStyles.weekSegBtnLeft}`}
-                aria-label="Previous week"
-                title="Previous week"
+                aria-label="Vorige week"
+                title="Vorige week"
               >
                 ‹
               </button>
@@ -238,10 +238,10 @@ const fabMenuItems = useMemo(
                 onClick={() => setWeekStartMs(startOfWeekMs(new Date()))}
                 disabled={isCurrentWeek}
                 className={`${gymStyles.weekSegBtn} ${gymStyles.weekSegBtnMid}`}
-                aria-label="Go to this week"
-                title={isCurrentWeek ? "Already on this week" : "This week"}
+                aria-label="Ga naar deze week"
+                title={isCurrentWeek ? "Je bent al op deze week" : "Deze week"}
               >
-                This week
+                Deze week
               </button>
 
               <button
@@ -249,18 +249,18 @@ const fabMenuItems = useMemo(
                 onClick={() => setWeekStartMs((v) => addDaysMs(v, 7))}
                 disabled={disableNext}
                 className={`${gymStyles.weekSegBtn} ${gymStyles.weekSegBtnRight}`}
-                aria-label="Next week"
-                title={disableNext ? "Can’t go to future weeks" : "Next week"}
+                aria-label="Volgende week"
+                title={disableNext ? "Kan niet naar toekomstige weken" : "Volgende week"}
               >
                 ›
               </button>
             </div>
           </div>
 
-          {/* Muscles worked */}
+          {/* Spieren gewerkt */}
           <div className={homeStyles.card}>
             <div className={homeStyles.cardTitle} style={{ textAlign: "center" }}>
-              Muscles worked on this week
+              Spieren getraind deze week
             </div>
 
             <div className={gymStyles.muscleMaps}>
@@ -273,23 +273,23 @@ const fabMenuItems = useMemo(
             </div>
           </div>
 
-          {/* Workouts list */}
+          {/* Workouts lijst */}
           <div className={homeStyles.card}>
             <div className={gymStyles.cardHeaderRow}>
-              <div className={homeStyles.cardTitle}>Workouts (selected week)</div>
+              <div className={homeStyles.cardTitle}>Workouts (geselecteerde week)</div>
 
 
             </div>
 
             <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
               {!authReady ? (
-                <div className={homeStyles.modalEmptyText}>Loading account…</div>
+                <div className={homeStyles.modalEmptyText}>Account laden…</div>
               ) : !uid ? (
                 <div className={homeStyles.modalEmptyText}>
-                  You’re not signed in. Go to <code>/auth</code>.
+                  Je bent niet ingelogd. Ga naar <code>/auth</code>.
                 </div>
               ) : sessions.length === 0 ? (
-                <div className={homeStyles.modalEmptyText}>No workouts in this week.</div>
+                <div className={homeStyles.modalEmptyText}>Geen workouts deze week.</div>
               ) : (
                 sessions.map((s) => {
                   const unfinished = isSessionUnfinished(s);
@@ -313,14 +313,14 @@ const fabMenuItems = useMemo(
                         <div className={gymStyles.exerciseName}>
                           {s.name || "Workout"}{" "}
                           {unfinished ? (
-                            <span className={homeStyles.overTarget}>(unfinished)</span>
+                            <span className={homeStyles.overTarget}>(niet afgerond)</span>
                           ) : (
-                            <span style={{ color: "#7EE2A8" }}>(finished)</span>
+                            <span style={{ color: "#7EE2A8" }}>(afgerond)</span>
                           )}
                         </div>
 
                         <div className={gymStyles.exerciseMeta}>
-                          {formatDateTime(s.startedAt)} • {(s.exercises || []).length} exercises
+                          {formatDateTime(s.startedAt)} • {(s.exercises || []).length} oefeningen
                         </div>
                       </div>
 
@@ -333,8 +333,8 @@ const fabMenuItems = useMemo(
                             handleDelete(s.id);
                           }}
                           className={gymStyles.iconDangerBtn}
-                          aria-label="Delete workout"
-                          title="Delete workout"
+                          aria-label="Workout verwijderen"
+                          title="Workout verwijderen"
                         >
                           <FaRegTrashAlt size={16} />
                         </button>
@@ -348,17 +348,17 @@ const fabMenuItems = useMemo(
         </div>
       </div>
 
-      {/* Overlay for outside click */}
+      {/* Overlay voor buiten klik */}
       {menuOpen && (
         <button
           className={gymStyles.fabOverlay}
           onClick={() => setMenuOpen(false)}
           type="button"
-          aria-label="Close menu"
+          aria-label="Menu sluiten"
         />
       )}
 
-      {/* Existing start workout picker */}
+      {/* Workout starten picker */}
       <ExercisePickerModal
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}

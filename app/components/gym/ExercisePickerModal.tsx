@@ -6,7 +6,7 @@ import gymStyles from "../../gym/gym.module.css";
 import homeStyles from "../../home.module.css";
 import MuscleMap from "./muscle-map/MuscleMap";
 import { FiX } from "react-icons/fi";
-import { FiChevronLeft } from "react-icons/fi";
+import { FiChevronLeft, FiCheck } from "react-icons/fi";
 import type { FreeExercise } from "../../lib/freeExerciseDb";
 import {
   buildExerciseTags,
@@ -147,18 +147,24 @@ const ExerciseRow = memo(function ExerciseRow(props: {
       </div>
 
       <div className={gymStyles.rowActions}>
-        <button
-          className={gymStyles.rowIconBtn}
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onInfo(model.ex);
-          }}
-          aria-label="Info"
-          title="Info"
-        >
-          i
-        </button>
+        {selected ? (
+          <span className={gymStyles.rowIconBtn} aria-label="Geselecteerd" title="Geselecteerd" style={{ border: 'none', background: 'transparent', color: '#22c55e', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <FiCheck size={18} />
+          </span>
+        ) : (
+          <button
+            className={gymStyles.rowIconBtn}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onInfo(model.ex);
+            }}
+            aria-label="Info"
+            title="Info"
+          >
+            i
+          </button>
+        )}
       </div>
     </div>
   );
@@ -497,10 +503,14 @@ export default function ExercisePickerModal({
 
             <button
               type="button"
-              className={`${gymStyles.chipBtn} ${selectedOnly ? gymStyles.chipBtnActive : ""}`}
+              className={
+                `${gymStyles.chipBtn} ${selectedOnly ? gymStyles.chipBtnActive : ""}` +
+                (selectedCount > 0 ? ` ${gymStyles.chipBtnSelected}` : "")
+              }
               onClick={() => setSelectedOnly((v) => !v)}
               aria-pressed={selectedOnly}
               title="Selected"
+              style={selectedCount > 0 ? { color: '#8dcf42', background: '#1a2b07', borderColor: '#395716' } : {}}
             >
               Selected ({selectedCount})
             </button>
@@ -531,9 +541,6 @@ export default function ExercisePickerModal({
             </div>
           ) : null}
 
-          <button className={gymStyles.secondaryBtn} type="button" onClick={onClose}>
-            Sluiten
-          </button>
         </div>
       </div>
 

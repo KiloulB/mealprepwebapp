@@ -74,14 +74,14 @@ body::-webkit-scrollbar {
 }
 
 .headerTitle {
-  font-size: 36px;
+  font-size: 34px;
   font-weight: 700;
   color: #fff;
   height: 45px;
 }
 
 .headerSubtitle {
-  font-size: 17px;
+  font-size: 16px;
   margin-top: 8px;
   color: #717172;
 }
