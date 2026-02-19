@@ -41,10 +41,10 @@ function muscleToCategory(primaryMuscles: string[] = []) {
   if (m.includes("ab") || m.includes("core") || m.includes("rectus") || m.includes("oblique"))
     return "Core";
   if (m.includes("back") || m.includes("lat") || m.includes("trap") || m.includes("rhombo"))
-    return "Back";
-  if (m.includes("chest") || m.includes("pec")) return "Chest";
-  if (m.includes("shoulder") || m.includes("delt")) return "Shoulder";
-  if (m.includes("bicep") || m.includes("tricep") || m.includes("forearm")) return "Arms";
+    return "Rug";
+  if (m.includes("chest") || m.includes("pec")) return "Borst";
+  if (m.includes("shoulder") || m.includes("delt")) return "Schouder";
+  if (m.includes("bicep") || m.includes("tricep") || m.includes("forearm")) return "Armen";
   if (
     m.includes("quad") ||
     m.includes("ham") ||
@@ -52,10 +52,10 @@ function muscleToCategory(primaryMuscles: string[] = []) {
     m.includes("calf") ||
     m.includes("leg")
   )
-    return "Legs";
+    return "Benen";
   if (m.includes("cardio")) return "Cardio";
 
-  return raw ? niceLabel(raw) : "Other";
+  return raw ? niceLabel(raw) : "Overig";
 }
 
 function ExerciseStepPlayer({
@@ -97,13 +97,13 @@ function equipmentToType(equipmentArr: string[] = []) {
   const e = raw.toLowerCase();
 
   if (!raw) return "";
-  if (e.includes("bodyweight")) return "Bodyweight";
+  if (e.includes("bodyweight")) return "Eigen lichaamsgewicht";
   if (e.includes("dumbbell")) return "Dumbbell";
   if (e.includes("barbell")) return "Barbell";
   if (e.includes("kettlebell")) return "Kettlebell";
   if (e.includes("machine")) return "Machine";
   if (e.includes("cable")) return "Cable";
-  if (e.includes("band")) return "Band";
+  if (e.includes("band")) return "Weerstandsband";
   if (e.includes("smith")) return "Machine";
 
   return niceLabel(raw);
@@ -340,7 +340,7 @@ export default function ExercisePickerModal({
 
           <div className={gymStyles.headerBlock}>
             <div className={gymStyles.headerTopRow}>
-              <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Close">
+              <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Sluiten">
                 <FiX size={20} />
               </button>
             </div>
@@ -355,7 +355,7 @@ export default function ExercisePickerModal({
 
 
               <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
-                Instructions
+                Instructies
               </div>
                             <ExerciseStepPlayer
   images={info.images}
@@ -369,27 +369,27 @@ export default function ExercisePickerModal({
                   </div>
                 ))
               ) : (
-                <div className={homeStyles.modalEmptyText}>No instructions available.</div>
+                <div className={homeStyles.modalEmptyText}>Geen instructies beschikbaar.</div>
               )}
               <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
-                Muscles
+                Spieren
               </div>
               <div className={homeStyles.normalText} style={{ marginBottom: 10 }}>
-                Primary: {(info.primaryMuscles || []).join(", ") || "—"}
+                Primair: {(info.primaryMuscles || []).join(", ") || "—"}
                 <br />
-                Secondary: {(info.secondaryMuscles || []).join(", ") || "—"}
+                Secundair: {(info.secondaryMuscles || []).join(", ") || "—"}
               </div>
               {(() => {
                 const slugs = musclesToSlugs(info.primaryMuscles || [], info.secondaryMuscles || []);
                 return (
 <div className={gymStyles.infoMuscleMaps}>
   <div className={gymStyles.infoMuscleMapItem}>
-    <div className={homeStyles.modalSectionTitle}>Front</div>
+    <div className={homeStyles.modalSectionTitle}>Voorkant</div>
     <MuscleMap view="front" workedSlugs={slugs} height={250} />
   </div>
 
   <div className={gymStyles.infoMuscleMapItem}>
-    <div className={homeStyles.modalSectionTitle}>Back</div>
+    <div className={homeStyles.modalSectionTitle}>Achterkant</div>
     <MuscleMap view="back" workedSlugs={slugs} height={250} />
   </div>
 </div>
@@ -398,12 +398,12 @@ export default function ExercisePickerModal({
             </div>
           ) : (
             <div style={{ padding: 16 }}>
-              <div className={homeStyles.modalTitle}>Exercise not found</div>
+              <div className={homeStyles.modalTitle}>Oefening niet gevonden</div>
               <div className={homeStyles.modalEmptyText} style={{ padding: "12px 0" }}>
-                This workout exerciseId is not in exercises.json.
+                Dit workout exerciseId staat niet in exercises.json.
               </div>
               <button className={gymStyles.secondaryBtn} type="button" onClick={onClose}>
-                Close
+                Sluiten
               </button>
             </div>
           )}
@@ -421,7 +421,7 @@ export default function ExercisePickerModal({
         {/* Header */}
         <div className={gymStyles.headerBlock}>
           <div className={gymStyles.headerTopRow}>
-            <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Close">
+            <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Sluiten">
               <FiX size={20} />
             </button>
 
@@ -430,16 +430,16 @@ export default function ExercisePickerModal({
               type="button"
               onClick={() => onStart({ exercises: selectedArr, musclesWorked: allMusclesWorked })}
               disabled={selectedCount === 0}
-              title="Add selected"
+              title="Voeg geselecteerde toe"
             >
-              Add ({selectedCount})
+              Toevoegen ({selectedCount})
             </button>
           </div>
 
           <div className={gymStyles.searchRow}>
             <input
               className={gymStyles.searchInput}
-              placeholder="Search"
+              placeholder="Zoeken"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
@@ -455,7 +455,7 @@ export default function ExercisePickerModal({
                 aria-expanded={filtersOpen}
                 aria-haspopup="dialog"
               >
-                Body
+                Lichaam
               </button>
 
               {filtersOpen ? (
@@ -463,18 +463,18 @@ export default function ExercisePickerModal({
                   ref={filterMenuRef}
                   className={gymStyles.popover}
                   role="dialog"
-                  aria-label="Body filters"
+                  aria-label="Lichaamsfilters"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className={gymStyles.popoverHeader}>
-                    <div className={gymStyles.popoverTitle}>Body</div>
+                    <div className={gymStyles.popoverTitle}>Lichaam</div>
                     <button
                       className={gymStyles.popoverLinkBtn}
                       type="button"
                       onClick={clearMuscles}
                       disabled={muscleFilters.size === 0}
                     >
-                      Clear
+                      Wissen
                     </button>
                   </div>
 
@@ -512,7 +512,7 @@ export default function ExercisePickerModal({
               title="Selected"
               style={selectedCount > 0 ? { color: '#8dcf42', background: '#1a2b07', borderColor: '#395716' } : {}}
             >
-              Selected ({selectedCount})
+              Geselecteerd ({selectedCount})
             </button>
           </div>
         </div>
@@ -531,13 +531,13 @@ export default function ExercisePickerModal({
 
           {filteredItems.length > 100 ? (
             <div className={homeStyles.modalInfoText} style={{ padding: "25px 0 15px" }}>
-              Showing first 100 results. Narrow your search.
+              Alleen de eerste 100 resultaten worden getoond. Verfijn je zoekopdracht.
             </div>
           ) : null}
 
           {rows.length === 0 ? (
             <div className={homeStyles.modalEmptyText} style={{ padding: "12px 0" }}>
-              No exercises match your filters.
+              Geen oefeningen gevonden met deze filters.
             </div>
           ) : null}
 
@@ -557,8 +557,8 @@ export default function ExercisePickerModal({
                   className={gymStyles.closeX}
                   type="button"
                   onClick={() => setInfo(null)}
-                  aria-label="Back"
-                  title="Back"
+                  aria-label="Terug"
+                  title="Terug"
                 >
                   <FiChevronLeft size={22} />
                 </button>
@@ -583,7 +583,7 @@ export default function ExercisePickerModal({
 
 
               <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
-                Instructions
+                Instructies
               </div>
                                           <ExerciseStepPlayer
   images={info.images}
@@ -597,27 +597,27 @@ export default function ExercisePickerModal({
                   </div>
                 ))
               ) : (
-                <div className={homeStyles.modalEmptyText}>No instructions available.</div>
+                <div className={homeStyles.modalEmptyText}>Geen instructies beschikbaar.</div>
               )}
               <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
-                Muscles
+                Spieren
               </div>
               <div className={homeStyles.normalText} style={{ marginBottom: 10 }}>
-                Primary: {(info.primaryMuscles || []).join(", ") || "—"}
+                Primair: {(info.primaryMuscles || []).join(", ") || "—"}
                 <br />
-                Secondary: {(info.secondaryMuscles || []).join(", ") || "—"}
+                Secundair: {(info.secondaryMuscles || []).join(", ") || "—"}
               </div>
               {(() => {
                 const slugs = musclesToSlugs(info.primaryMuscles || [], info.secondaryMuscles || []);
                 return (
 <div className={gymStyles.infoMuscleMaps}>
   <div className={gymStyles.infoMuscleMapItem}>
-    <div className={homeStyles.modalSectionTitle}>Front</div>
+    <div className={homeStyles.modalSectionTitle}>Voorkant</div>
     <MuscleMap view="front" workedSlugs={slugs} height={250} />
   </div>
 
   <div className={gymStyles.infoMuscleMapItem}>
-    <div className={homeStyles.modalSectionTitle}>Back</div>
+    <div className={homeStyles.modalSectionTitle}>Achterkant</div>
     <MuscleMap view="back" workedSlugs={slugs} height={250} />
   </div>
 </div>
@@ -627,7 +627,7 @@ export default function ExercisePickerModal({
               })()}
 
               <button className={gymStyles.secondaryBtn} type="button" onClick={() => setInfo(null)}>
-                Back to list
+                Terug naar lijst
               </button>
             </div>
           </div>

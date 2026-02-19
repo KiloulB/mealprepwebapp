@@ -182,7 +182,7 @@ export default function TemplateStartModal({
                   if (e.key === "Enter" || e.key === " ") startFromTemplate(t);
                 }}
                 aria-disabled={!!busyId}
-                style={{ opacity: busyId && busyId !== t.id ? 0.5 : 1 }}
+                style={{ paddingTop: 22, paddingBottom: 22, margin: "0 0 20px 0", background: "#ffffff0f", opacity: busyId && busyId !== t.id ? 0.5 : 1 }}
               >
                 <div className={gymStyles.exerciseMain}>
                   <div className={gymStyles.exerciseName}>{t.name}</div>

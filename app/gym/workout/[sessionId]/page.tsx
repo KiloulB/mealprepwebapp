@@ -430,7 +430,8 @@ export default function WorkoutSessionPage() {
                 </button>
               </div>
 
-              <div className={styles.setHeaderRow}>
+              <div className={fromTemplate ? styles.setHeaderRow : styles.setHeaderRow2}>
+
                 <div className={styles.setHeaderCell}>Set</div>
                 {fromTemplate ? <div className={styles.setHeaderCell}>Previous</div> : null}
                 <div className={styles.setHeaderCell}>+kg</div>
@@ -457,7 +458,9 @@ export default function WorkoutSessionPage() {
                     return (
                       <div
                         key={set.id ?? setIdx}
-                        className={`${styles.setRow} ${set.done ? styles.setRowDone : ""}`}
+                        className={`${fromTemplate ? styles.setRow : styles.setRow2} ${
+  set.done ? styles.setRowDone : ""
+}`}
                       >
                         <div className={styles.setCellSet}>{setIdx + 1}</div>
 
