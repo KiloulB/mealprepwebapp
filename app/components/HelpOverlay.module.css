@@ -1,0 +1,139 @@
+﻿.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 500;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.sheet {
+  width: 100%;
+  max-width: 480px;
+  background: #232325;
+  border-radius: 24px;
+  padding: 22px 24px 28px;
+  margin: 0 12px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.counter {
+  font-size: 13px;
+  color: #666;
+  font-weight: 600;
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2e2e30;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  cursor: pointer;
+}
+
+.content {
+  margin-bottom: 20px;
+  max-height: 52vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.content::-webkit-scrollbar { display: none; }
+
+.stepTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.stepDesc {
+  font-size: 15px;
+  color: #A1A1A1;
+  line-height: 1.7;
+}
+
+.stepDesc p {
+  margin: 0 0 10px;
+}
+
+.stepDesc p:last-child {
+  margin-bottom: 0;
+}
+
+.stepDesc strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.dot {
+  height: 6px;
+  width: 6px;
+  border-radius: 999px;
+  background: #2C2C2E;
+  transition: width 0.2s, background 0.2s;
+}
+
+.dotActive {
+  background: #FC9158;
+  width: 20px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prevBtn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 0;
+}
+
+.nextBtn {
+  background: #FC9158;
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 12px 28px;
+  cursor: pointer;
+}
+
+.doneBtn {
+  background: #8DCF42;
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 12px 28px;
+  cursor: pointer;
+}

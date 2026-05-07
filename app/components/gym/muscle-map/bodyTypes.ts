@@ -5,7 +5,7 @@ export type BodyPathGroup =
   | { right: string | string[] };
 
 export type BodyPart = {
-  name: string;
+  name?: string;
   slug: string;
   color?: string;
   path: BodyPathGroup;

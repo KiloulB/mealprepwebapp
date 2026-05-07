@@ -1,134 +1,76 @@
+﻿
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&display=swap");
 
-/* Component-level defaults (safe to override globally) */
-:global(:root) {
-  --c-glass: #818181;
-  --c-light: #fff;
-  --c-dark: #000;
-
-  --c-content: #e1e1e1;
-  --c-action: #8dcf42;
-
-  --glass-reflex-dark: 2;
-  --glass-reflex-light: 0.2;
-
-  --saturation: 150%;
-}
-
-/* Bottom navigation positioning */
 .switcher {
   position: fixed;
-  z-index: 50;
-  left: 50%;
-  bottom: 18px;
-  translate: -50% 0;
-  font-weight:600;
-
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 78px;
+  background: #18181A;
+  border: none;
+  border-radius: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-
-  width: 244px;
-  max-width: 244px;
-  height: 60px;
-
-  box-sizing: border-box;
-  padding: 8px 12px 10px;
-  margin: 0 auto;
-
-  border: none;
-  border-radius: 99em;
-
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+border-top: 1.5px solid #2e2e30;
   font-family: "DM Sans", sans-serif;
-
-  background-color: color-mix(in srgb, var(--c-glass) 12%, transparent);
-  backdrop-filter: blur(8px) url(#switcher) saturate(var(--saturation));
-  -webkit-backdrop-filter: blur(8px) saturate(var(--saturation));
-
-  box-shadow: inset 0 0 0 1px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 10%),
-        transparent
-      ),
-    inset 1.8px 3px 0px -2px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 90%),
-        transparent
-      ),
-    inset -2px -2px 0px -2px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 80%),
-        transparent
-      ),
-    inset -3px -8px 1px -6px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 60%),
-        transparent
-      ),
-    inset -0.3px -1px 4px 0px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 12%),
-        transparent
-      ),
-    inset -1.5px 2.5px 0px -2px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 20%),
-        transparent
-      ),
-    inset 0px 3px 4px -2px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 20%),
-        transparent
-      ),
-    inset 2px -6.5px 1px -4px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 10%),
-        transparent
-      ),
-    0px 1px 5px 0px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 10%),
-        transparent
-      ),
-    0px 6px 16px 0px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 8%),
-        transparent
-      );
-
-  transition: background-color 300ms cubic-bezier(1, 0, 0.4, 1),
-    box-shadow 300ms cubic-bezier(1, 0, 0.4, 1);
+  font-weight: 600;
 }
 
-.switcher__content {
-  display: grid;
-  justify-items: center;
-  gap: 0.35rem;
+.switcher__option {
+  --c: #e1e1e1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 122px;
+  max-width: 88px;
+  min-width: 60px;
+  margin: 0 8px;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 0;
+  opacity: 1;
+  transition: all 160ms;
+  background: none;
+  padding: 0;
 }
 
-/* Reuse your existing .switcher__icon class, but make sure it styles react-icons too */
+.switcher__option:hover {
+  cursor: pointer;
+}
+
 .switcher__icon {
   color: var(--c);
   width: 1.5rem;
   height: 1.5rem;
+  margin-bottom: 2px;
+  display: block;
+  transition: color 0.2s;
+}
+
+.switcher__option:has(input:checked) {
+  --c: #FC9158;
+  cursor: auto;
+}
+
+.switcher__option:has(input:checked) .switcher__icon {
+  color: #FC9158;
 }
 
 .switcher__text {
   font-size: 0.75rem;
   line-height: 1;
   color: var(--c);
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  margin-top: 2px;
 }
-
 
 .switcher__legend {
   position: absolute;
@@ -153,12 +95,6 @@
   white-space: nowrap;
 }
 
-.switcher__icon {
-  display: block;
-  width: 100%;
-  transition: scale 200ms cubic-bezier(0.5, 0, 0, 1);
-}
-
 .switcher__filter {
   position: absolute;
   width: 0;
@@ -166,97 +102,6 @@
   z-index: -1;
 }
 
-.switcher__option {
-  --c: var(--c-content);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 0 16px;
-  width: 68px;
-  height: 100%;
-
-  box-sizing: border-box;
-  border-radius: 99em;
-  opacity: 1;
-  transition: all 160ms;
-}
-
-.switcher__option:hover {
-  cursor: pointer;
-}
-
-.switcher__option:hover .switcher__icon {
-  scale: 1.2;
-}
-
-.switcher__option:has(input:checked) {
-  --c: var(--c-action);
-  cursor: auto;
-}
-
-.switcher__option:has(input:checked) .switcher__icon {
-  scale: 1;
-}
-
-.switcher::after {
-  content: "";
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  display: block;
-
-  width: 84px;
-  height: calc(100% - 10px);
-  border-radius: 99em;
-
-  background-color: color-mix(in srgb, var(--c-glass) 26%, transparent);
-  z-index: -1;
-
-  box-shadow: inset 0 0 0 1px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 10%),
-        transparent
-      ),
-    inset 2px 1px 0px -1px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 90%),
-        transparent
-      ),
-    inset -1.5px -1px 0px -1px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 80%),
-        transparent
-      ),
-    inset -2px -6px 1px -5px
-      color-mix(
-        in srgb,
-        var(--c-light) calc(var(--glass-reflex-light) * 60%),
-        transparent
-      ),
-    inset -1px 2px 3px -1px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 20%),
-        transparent
-      ),
-    inset 0px -4px 1px -2px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 10%),
-        transparent
-      ),
-    0px 3px 6px 0px
-      color-mix(
-        in srgb,
-        var(--c-dark) calc(var(--glass-reflex-dark) * 8%),
-        transparent
-      );
-}
 
 .switcher:has(input[c-option="1"]:checked)::after {
   translate: 0 0;
@@ -268,7 +113,7 @@
 }
 
 .switcher:has(input[c-option="2"]:checked)::after {
-  translate: 76px 0;
+  translate: 72px 0;
   transition: background-color 300ms cubic-bezier(1, 0, 0.4, 1),
     box-shadow 300ms cubic-bezier(1, 0, 0.4, 1),
     translate 300ms cubic-bezier(1, 0, 0.4, 1);
@@ -284,7 +129,7 @@
 }
 
 .switcher:has(input[c-option="3"]:checked)::after {
-  translate: 152px 0;
+  translate: 144px 0;
   transform-origin: left;
   transition: background-color 300ms cubic-bezier(1, 0, 0.4, 1),
     box-shadow 300ms cubic-bezier(1, 0, 0.4, 1),
@@ -292,14 +137,19 @@
   animation: scaleToggle3 440ms ease;
 }
 
-/* 4th tab (Recepten) */
 .switcher:has(input[c-option="4"]:checked)::after {
-  translate: 228px 0; /* 76px * 3 */
+  translate: 216px 0;
   transform-origin: left;
   transition: background-color 300ms cubic-bezier(1, 0, 0.4, 1),
     box-shadow 300ms cubic-bezier(1, 0, 0.4, 1),
     translate 300ms cubic-bezier(1, 0, 0.4, 1);
   animation: scaleToggle4 440ms ease;
+}
+
+/* Tighten tab spacing when 4th tab is visible */
+.switcher:has(input[c-option="4"]) .switcher__option {
+  max-width: 76px;
+  margin: 0 3px;
 }
 
 @keyframes scaleToggle4 {

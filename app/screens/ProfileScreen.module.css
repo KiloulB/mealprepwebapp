@@ -1,0 +1,835 @@
+﻿/* ── Shared ──────────────────────────────────────────────────────────────── */
+
+.profilePage {
+  min-height: 100vh;
+  background: #18181A;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  padding: 0 0 120px;
+}
+
+.navHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 52px 20px 16px;
+}
+
+.navBackBtn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  min-width: 36px;
+}
+
+.navTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.navAction {
+  background: none;
+  border: none;
+  color: #FC9158;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px;
+  min-width: 36px;
+  text-align: right;
+}
+
+.navActionIcon {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  min-width: 36px;
+  justify-content: flex-end;
+}
+
+/* ── Goal card ───────────────────────────────────────────────────────────── */
+
+.goalCard {
+  background: #232325;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  margin: 0 20px 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.goalCardRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.goalCardTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+  min-width: 0;
+}
+
+.goalCardBadge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.goalCardDate {
+  font-size: 12px;
+  color: #666;
+}
+
+.goalProgressWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.goalProgressBar {
+  flex: 1;
+  height: 5px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.goalProgressFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.goalProgressLabel {
+  font-size: 12px;
+  color: #A1A1A1;
+  font-weight: 600;
+  min-width: 30px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.goalCardStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.goalCardStat {
+  background: #2C2C2E;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #A1A1A1;
+}
+
+/* ── Workout-data card ───────────────────────────────────────────────────── */
+
+.infoCard {
+  background: #232325;
+  border-radius: 18px;
+  padding: 18px;
+  margin: 0 20px 18px;
+}
+
+.infoCardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.infoCardRow {
+  font-size: 14px;
+  color: #A1A1A1;
+  margin-bottom: 4px;
+}
+
+.infoCardRow:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Settings ────────────────────────────────────────────────────────────── */
+
+.settingsList {
+  background: #232325;
+  border-radius: 18px;
+  margin: 0 20px;
+  overflow: hidden;
+}
+
+.settingsRow {
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid #2e2e30;
+  cursor: pointer;
+  gap: 12px;
+}
+
+.settingsRow:last-child {
+  border-bottom: none;
+}
+
+.settingsRowIcon {
+  color: #FC9158;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.settingsRowLabel {
+  font-size: 15px;
+  color: #fff;
+  flex: 1;
+}
+
+.settingsRowArrow {
+  color: #555;
+}
+
+/* ── Account ─────────────────────────────────────────────────────────────── */
+
+.accountContent {
+  padding: 0 20px;
+}
+
+.accountSection {
+  margin-bottom: 24px;
+}
+
+.accountSectionTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.accountList {
+  background: #232325;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.accountRow {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #2e2e30;
+  cursor: pointer;
+}
+
+.accountRow:last-child {
+  border-bottom: none;
+}
+
+.accountRowLabel {
+  font-size: 15px;
+  color: #fff;
+  flex: 1;
+}
+
+.accountRowValue {
+  font-size: 15px;
+  color: #A1A1A1;
+  margin-right: 8px;
+}
+
+.accountRowArrow {
+  color: #555;
+}
+
+/* ── Edit field ──────────────────────────────────────────────────────────── */
+
+.editContent {
+  padding: 8px 20px 0;
+}
+
+.editInputWrap {
+  background: #232325;
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+}
+
+.editInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 16px;
+}
+
+.editInput::placeholder {
+  color: #555;
+}
+
+.editVisibilityBtn {
+  background: none;
+  border: none;
+  color: #FC9158;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.editPickerWrap {
+  background: #232325;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.editPickerOption {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #2e2e30;
+  cursor: pointer;
+  gap: 12px;
+}
+
+.editPickerOption:last-child {
+  border-bottom: none;
+}
+
+.editPickerOptionLabel {
+  font-size: 15px;
+  color: #fff;
+  flex: 1;
+}
+
+.editPickerCheck {
+  color: #FC9158;
+}
+
+/* ── Plan ────────────────────────────────────────────────────────────────── */
+
+.planContent {
+  padding: 0 20px;
+}
+
+.progressCard {
+  background: #232325;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.progressHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.progressTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+}
+
+.progressHeaderBtn {
+  background: none;
+  border: none;
+  color: #A1A1A1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  margin-left: 4px;
+}
+
+.progressCurrentRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.progressCurrentWeight {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.progressCurrentLabel {
+  font-size: 13px;
+  color: #A1A1A1;
+}
+
+.chartWrap {
+  width: 100%;
+  overflow: hidden;
+}
+
+.chartEmpty {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.planCalorieValue {
+  font-size: 36px;
+  font-weight: 700;
+  color: #FC9158;
+  margin-bottom: 2px;
+}
+
+.planCalorieLabel {
+  font-size: 14px;
+  color: #A1A1A1;
+  margin-bottom: 16px;
+}
+
+.planTypeTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.planDescription {
+  font-size: 14px;
+  color: #A1A1A1;
+  line-height: 1.6;
+}
+
+/* ── WeekProgressCard ────────────────────────────────────────────────────── */
+
+.onTrackCard {
+  background: #232325;
+  border-radius: 18px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+}
+
+.onTrackHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.onTrackTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.onTrackStatus {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.onTrackRow {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 14px;
+}
+
+.onTrackItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.onTrackItemLabel {
+  font-size: 12px;
+  color: #A1A1A1;
+}
+
+.onTrackItemVal {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.onTrackDivider {
+  width: 1px;
+  background: #2e2e30;
+  margin: 0 8px;
+}
+
+.onTrackBar {
+  height: 6px;
+  background: #2e2e30;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.onTrackBarFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.onTrackBarLabel {
+  font-size: 12px;
+  color: #A1A1A1;
+  text-align: right;
+}
+
+/* ── Toggle button ────────────────────────────────────────────────────────── */
+
+.toggleBtnOn,
+.toggleBtnOff {
+  position: relative;
+  width: 46px;
+  height: 26px;
+  border-radius: 13px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+  padding: 0;
+}
+
+.toggleBtnOn {
+  background: #FC9158;
+}
+
+.toggleBtnOff {
+  background: #444;
+}
+
+.toggleKnob {
+  position: absolute;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  transition: left 0.2s ease;
+}
+
+.toggleBtnOn .toggleKnob {
+  left: 23px;
+}
+
+.toggleBtnOff .toggleKnob {
+  left: 3px;
+}
+
+/* ── Add weight modal ────────────────────────────────────────────────────── */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modalSheet {
+  width: 100%;
+  max-width: 380px;
+  background: #2C2C2E;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modalTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.modalCloseBtn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.modalInputWrap {
+  background: #2C2C2E;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modalInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 16px;
+}
+
+.modalInput::placeholder {
+  color: #666;
+}
+
+.modalUnit {
+  font-size: 14px;
+  color: #A1A1A1;
+}
+
+.modalSaveBtn {
+  width: 100%;
+  padding: 14px 0;
+  background: #FC9158;
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modalSaveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Plan edit ────────────────────────────────────────────────────────────── */
+
+.planEditSheet {
+  width: 100%;
+  max-width: 420px;
+  background: #2C2C2E;
+  border-radius: 18px;
+  padding: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.planEditSheet::-webkit-scrollbar { display: none; }
+
+.planFormGroup {
+  margin-bottom: 14px;
+}
+
+.planFormLabel {
+  display: block;
+  font-size: 13px;
+  color: #A1A1A1;
+  margin-bottom: 6px;
+}
+
+.planFormInput {
+  width: 100%;
+  background: #2C2C2E;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.planFormInput::placeholder { color: #666; }
+
+.planFormTextarea {
+  width: 100%;
+  background: #2C2C2E;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  min-height: 80px;
+  resize: none;
+}
+
+.planFormTextarea::placeholder { color: #666; }
+
+.helpBtn {
+  position: fixed;
+  bottom: 96px;
+  right: 20px;
+  z-index: 90;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #232325;
+  border: 1.5px solid #2C2C2E;
+  color: #FC9158;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Theme editor ─────────────────────────────────────────────────────────── */
+
+.themeContent {
+  padding: 0 20px;
+}
+
+.themeSection {
+  background: #232325;
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.themeRow {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #2e2e30;
+  gap: 14px;
+}
+
+.themeRow:last-child {
+  border-bottom: none;
+}
+
+.themeRowLabel {
+  font-size: 15px;
+  color: #fff;
+  flex: 1;
+}
+
+.themeRowSub {
+  font-size: 12px;
+  color: #A1A1A1;
+  margin-top: 2px;
+}
+
+.themeSwatchWrap {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+}
+
+.themeSwatchWrap input[type="color"] {
+  position: absolute;
+  inset: -4px;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.themeSwatchColor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.themeActions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.themeSaveBtn {
+  flex: 1;
+  padding: 15px 0;
+  background: #FC9158;
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.themeSaveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.themeResetBtn {
+  padding: 15px 20px;
+  background: #232325;
+  border: 1px solid #2e2e30;
+  border-radius: 14px;
+  color: #A1A1A1;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.themePresetRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.themePresetBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #232325;
+  border: 1.5px solid #2e2e30;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.themePresetDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.themeSectionTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #A1A1A1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}

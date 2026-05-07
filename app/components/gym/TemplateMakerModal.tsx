@@ -1,10 +1,8 @@
-// components/gym/TemplateMakerModal.tsx
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import gymStyles from "../../gym/gym.module.css";
-import homeStyles from "../../home.module.css";
-import { FiX } from "react-icons/fi";
+import { useCallback, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import { FiChevronLeft } from "react-icons/fi";
 import { FaRegTrashAlt } from "react-icons/fa";
 
 import ExercisePickerModal from "./ExercisePickerModal";
@@ -14,134 +12,111 @@ import type { GymExerciseRef, GymTemplate, GymTemplateExercise, GymTemplateSet }
 import { musclesToSlugs } from "../../lib/muscleSlugMap";
 import { saveGymTemplate } from "../../firebase/gymService";
 
-function id() {
+import styles from "../food/RecipeAddModal.module.css";
+import gymStyles from "../../gym/gym.module.css";
+
+function uid() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function defaultTemplateSets(): GymTemplateSet[] {
-  // Example default for first time. User can edit per set.
+function defaultSets(): GymTemplateSet[] {
   return [
-    { id: id(), targetReps: 12, targetKg: 0 },
-    { id: id(), targetReps: 10, targetKg: 0 },
-    { id: id(), targetReps: 8, targetKg: 0 },
+    { id: uid(), targetReps: 12, targetKg: 0 },
+    { id: uid(), targetReps: 10, targetKg: 0 },
+    { id: uid(), targetReps: 8, targetKg: 0 },
   ];
 }
 
 function toTemplateExercises(refs: GymExerciseRef[]): GymTemplateExercise[] {
-  return refs.map((ref) => ({
-    id: id(),
-    ref,
-    sets: defaultTemplateSets(),
-  }));
+  return refs.map((ref) => ({ id: uid(), ref, sets: defaultSets() }));
 }
 
 export default function TemplateMakerModal({
   open,
-  uid,
+  uid: firebaseUid,
   onClose,
   onSaved,
 }: {
   open: boolean;
   uid: string;
   onClose: () => void;
-  onSaved?: (templateId: string) => void;
+  onSaved?: (id: string) => void;
 }) {
+  const [step, setStep] = useState(1);
   const [name, setName] = useState("");
-  const [editing, setEditing] = useState<GymTemplateExercise[]>([]);
+  const [exercises, setExercises] = useState<GymTemplateExercise[]>([]);
   const [busy, setBusy] = useState(false);
-
-  // internal picker
   const [pickerOpen, setPickerOpen] = useState(false);
 
-  // Reset when opening
-  useEffect(() => {
-    if (!open) return;
+  function handleClose() {
+    setStep(1);
     setName("");
-    setEditing([]);
+    setExercises([]);
     setBusy(false);
     setPickerOpen(false);
-  }, [open]);
-
-  const selectedCount = editing.length;
+    onClose();
+  }
 
   const musclesWorked = useMemo(() => {
     const slugs = new Set<string>();
-    for (const ex of editing) {
+    for (const ex of exercises) {
       musclesToSlugs(ex.ref.primaryMuscles || [], ex.ref.secondaryMuscles || []).forEach((s) => slugs.add(s));
     }
     return [...slugs];
-  }, [editing]);
+  }, [exercises]);
 
+  const canNext = name.trim().length > 0 && exercises.length > 0;
   const canSave =
-    !!uid &&
-    name.trim().length > 0 &&
-    editing.length > 0 &&
-    editing.every((ex) => Array.isArray(ex.sets) && ex.sets.length > 0);
+    canNext &&
+    exercises.every((ex) => Array.isArray(ex.sets) && ex.sets.length > 0) &&
+    !busy;
 
   const updateSetField = useCallback(
-    (templateExerciseId: string, templateSetId: string, field: "targetKg" | "targetReps", raw: string) => {
-      const parsed =
-        raw.trim() === ""
-          ? 0
-          : field === "targetKg"
-          ? Number(raw)
-          : parseInt(raw, 10);
-
-      setEditing((prev) =>
-        prev.map((ex) => {
-          if (ex.id !== templateExerciseId) return ex;
-          return {
-            ...ex,
-            sets: (ex.sets || []).map((s) => (s.id === templateSetId ? { ...s, [field]: parsed } : s)),
-          };
-        })
+    (exId: string, setId: string, field: "targetKg" | "targetReps", raw: string) => {
+      const parsed = raw.trim() === "" ? 0 : field === "targetKg" ? Number(raw) : parseInt(raw, 10);
+      setExercises((prev) =>
+        prev.map((ex) =>
+          ex.id !== exId ? ex : { ...ex, sets: ex.sets.map((s) => (s.id === setId ? { ...s, [field]: parsed } : s)) }
+        )
       );
     },
     []
   );
 
-  const addSet = useCallback((templateExerciseId: string) => {
-    setEditing((prev) =>
+  const addSet = useCallback((exId: string) => {
+    setExercises((prev) =>
       prev.map((ex) => {
-        if (ex.id !== templateExerciseId) return ex;
-        const last = ex.sets?.[ex.sets.length - 1];
-        const nextSet: GymTemplateSet = {
-          id: id(),
-          targetReps: typeof last?.targetReps === "number" ? last.targetReps : 8,
-          targetKg: typeof last?.targetKg === "number" ? last.targetKg : 0,
-        };
-        return { ...ex, sets: [...(ex.sets || []), nextSet] };
+        if (ex.id !== exId) return ex;
+        const last = ex.sets[ex.sets.length - 1];
+        return { ...ex, sets: [...ex.sets, { id: uid(), targetReps: last?.targetReps ?? 8, targetKg: last?.targetKg ?? 0 }] };
       })
     );
   }, []);
 
-  const deleteSet = useCallback((templateExerciseId: string, templateSetId: string) => {
-    setEditing((prev) =>
-      prev.map((ex) => {
-        if (ex.id !== templateExerciseId) return ex;
-        const nextSets = (ex.sets || []).filter((s) => s.id !== templateSetId);
-        return { ...ex, sets: nextSets };
-      })
+  const deleteSet = useCallback((exId: string, setId: string) => {
+    setExercises((prev) =>
+      prev.map((ex) =>
+        ex.id !== exId ? ex : { ...ex, sets: ex.sets.filter((s) => s.id !== setId) }
+      )
     );
   }, []);
 
-  const removeExercise = useCallback((templateExerciseId: string) => {
-    setEditing((prev) => prev.filter((ex) => ex.id !== templateExerciseId));
+  const removeExercise = useCallback((exId: string) => {
+    setExercises((prev) => prev.filter((ex) => ex.id !== exId));
   }, []);
 
   async function handleSave() {
-    if (!canSave || busy) return;
+    if (!canSave) return;
     setBusy(true);
     try {
       const payload: Omit<GymTemplate, "id"> = {
         name: name.trim(),
         createdAt: Date.now(),
         musclesWorked,
-        exercises: editing,
+        exercises,
       };
-
-      const templateId = await saveGymTemplate(uid, payload as any);
-      onClose();
+      const templateId = await saveGymTemplate(firebaseUid, payload as any);
+      handleClose();
       onSaved?.(templateId);
     } finally {
       setBusy(false);
@@ -150,201 +125,211 @@ export default function TemplateMakerModal({
 
   if (!open) return null;
 
-  return (
-    <div className={gymStyles.sheetOverlay} onClick={onClose}>
-      <div
-        className={gymStyles.sheet}
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Make template"
-      >
-        <div className={gymStyles.sheetHandle} />
+  return createPortal(
+    <div className={styles.overlay}>
+      {/* Top bar */}
+      <div className={styles.topBar}>
+        {step === 1 ? (
+          <button className={styles.cancelBtn} onClick={handleClose}>
+            Annuleren
+          </button>
+        ) : (
+          <button className={styles.backBtn} onClick={() => setStep(1)}>
+            <FiChevronLeft size={16} style={{ verticalAlign: "middle" }} /> Terug
+          </button>
+        )}
 
-        <div className={gymStyles.headerBlock}>
-          <div className={gymStyles.headerTopRow}>
-            <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Close">
-              <FiX size={20} />
-            </button>
+        <span className={styles.topTitle}>
+          {step === 1 ? "Nieuw template" : "Sets instellen"}
+        </span>
 
-            <button
-              className={gymStyles.addBtn}
-              type="button"
-              onClick={handleSave}
-              disabled={!canSave || busy}
-              title={!uid ? "Sign in to save templates" : "Save template"}
-            >
-              {busy ? "Saving…" : "Save"}
-            </button>
-          </div>
+        {step === 1 ? (
+          <button className={styles.nextBtn} disabled={!canNext} onClick={() => setStep(2)}>
+            Volgende →
+          </button>
+        ) : (
+          <button className={styles.saveBtn} disabled={!canSave} onClick={handleSave}>
+            {busy ? "Opslaan…" : "Opslaan"}
+          </button>
+        )}
+      </div>
 
-          <div className={gymStyles.searchRow}>
+      {/* Step dots */}
+      <div className={styles.stepDots}>
+        <div className={`${styles.dot} ${step === 1 ? styles.dotActive : ""}`} />
+        <div className={`${styles.dot} ${step === 2 ? styles.dotActive : ""}`} />
+      </div>
+
+      {/* Body */}
+      <div className={styles.body}>
+
+        {/* ── Step 1 ── */}
+        {step === 1 && (
+          <>
             <input
-              className={gymStyles.searchInput}
-              placeholder="Template name (e.g. Workout A, PPL)"
+              className={styles.nameInput}
+              placeholder="Template naam (bijv. Push, Pull, Benen)"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              disabled={busy}
+              autoFocus
             />
-          </div>
 
-          <div className={gymStyles.chipRow}>
-            <button
-              type="button"
-              className={gymStyles.chipBtn}
-              onClick={() => setPickerOpen(true)}
-              disabled={!uid || busy}
-              title={!uid ? "Sign in to pick exercises" : "Pick exercises"}
-            >
-              Pick exercises ({selectedCount})
-            </button>
-          </div>
-        </div>
+            <div className={styles.sectionLabel}>Oefeningen</div>
+            <p className={styles.sectionHint}>
+              Kies de oefeningen voor dit template.
+            </p>
 
-        <div className={gymStyles.sheetExercise}>
-          {editing.length === 0 ? (
-            <div className={homeStyles.modalEmptyText} style={{ padding: "12px 15px" }}>
-              No exercises yet. Tap “Pick exercises”.
+            <div className={styles.chipGrid}>
+              <button
+                className={`${styles.chip} ${exercises.length > 0 ? styles.chipActive : ""}`}
+                onClick={() => setPickerOpen(true)}
+              >
+                <span className={styles.chipEmoji}>💪</span>
+                <span className={styles.chipLabel}>
+                  {exercises.length > 0 ? `${exercises.length} oefeningen gekozen` : "Oefeningen kiezen"}
+                </span>
+                {exercises.length > 0 && <span className={styles.chipCheck}>✓</span>}
+              </button>
             </div>
-          ) : (
-            <>
-              {/* Optional: show muscles for the template */}
-              <div className={homeStyles.modalSectionTitle} style={{ padding: "10px 15px 0" }}>
-                Muscles (template)
-              </div>
-              <div className={gymStyles.muscleMaps}>
-                <div className={gymStyles.muscleMapItem}>
-                  <MuscleMap view="front" workedSlugs={musclesWorked} height={260} />
-                </div>
-                <div className={gymStyles.muscleMapItem}>
-                  <MuscleMap view="back" workedSlugs={musclesWorked} height={260} />
-                </div>
-              </div>
 
-              <div className={homeStyles.modalSectionTitle} style={{ padding: "10px 15px 0" }}>
-                Exercises & sets
-              </div>
-
-              {editing.map((ex, exIdx) => (
-                <div key={ex.id} style={{ padding: "10px 15px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                    <div style={{ minWidth: 0 }}>
-                      <div className={gymStyles.exerciseName}>
-                        {ex.ref?.name || `Exercise ${exIdx + 1}`}
-                      </div>
-                      <div className={gymStyles.exerciseMeta}>
-                        {(ex.sets || []).length} sets
-                      </div>
+            {exercises.length > 0 && (
+              <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
+                {exercises.map((ex) => (
+                  <div key={ex.id} style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    background: "#2C2C2E",
+                    borderRadius: 14,
+                    padding: "10px 12px",
+                  }}>
+                    <div style={{
+                      width: 42, height: 42, borderRadius: 10,
+                      overflow: "hidden", background: "rgba(255,255,255,0.06)",
+                      flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                      {ex.ref.image
+                        ? <img src={ex.ref.image} alt={ex.ref.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                        : <span style={{ fontSize: 18 }}>💪</span>
+                      }
                     </div>
-
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {ex.ref.name}
+                      </div>
+                      {(ex.ref.primaryMuscles || []).length > 0 && (
+                        <div style={{ fontSize: 12, color: "#666", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {(ex.ref.primaryMuscles || []).join(", ")}
+                        </div>
+                      )}
+                    </div>
                     <button
-                      type="button"
-                      className={gymStyles.rowIconBtn}
                       onClick={() => removeExercise(ex.id)}
-                      disabled={busy}
-                      aria-label="Remove exercise"
-                      title="Remove exercise"
+                      style={{ background: "none", border: "none", color: "#555", cursor: "pointer", padding: 4, flexShrink: 0, display: "flex", alignItems: "center" }}
+                      aria-label="Verwijder"
                     >
-                      ×
+                      <FaRegTrashAlt size={14} />
                     </button>
                   </div>
+                ))}
 
-                  {/* Set header */}
-                  <div style={{ display: "grid", gridTemplateColumns: "40px 1fr 1fr 44px", gap: 10, marginTop: 10 }}>
-                    <div className={gymStyles.exerciseMeta}>Set</div>
-                    <div className={gymStyles.exerciseMeta}>Kg</div>
-                    <div className={gymStyles.exerciseMeta}>Reps</div>
-                    <div />
-                  </div>
+                <button
+                  style={{
+                    width: "100%", background: "none", border: "1px dashed #3a3a3c",
+                    borderRadius: 12, padding: "10px", color: "#A1A1A1",
+                    fontSize: 13, fontWeight: 600, cursor: "pointer", marginTop: 2,
+                  }}
+                  onClick={() => setPickerOpen(true)}
+                >
+                  + Oefeningen aanpassen
+                </button>
+              </div>
+            )}
+          </>
+        )}
 
-                  {/* Sets */}
-                  {(ex.sets || []).map((s, idx) => {
-                    const kgValue =
-                      s.targetKg === 0 || typeof s.targetKg === "number" ? String(s.targetKg) : "";
-                    const repsValue =
-                      s.targetReps === 0 || typeof s.targetReps === "number" ? String(s.targetReps) : "";
+        {/* ── Step 2 ── */}
+        {step === 2 && (
+          <>
+            {/* Muscle map */}
+            <div className={gymStyles.muscleMaps} style={{ marginBottom: 20 }}>
+              <div className={gymStyles.muscleMapItem}>
+                <MuscleMap view="front" workedSlugs={musclesWorked} height={200} />
+              </div>
+              <div className={gymStyles.muscleMapItem}>
+                <MuscleMap view="back" workedSlugs={musclesWorked} height={200} />
+              </div>
+            </div>
 
-                    return (
-                      <div
-                        key={s.id}
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "40px 1fr 1fr 44px",
-                          gap: 10,
-                          alignItems: "center",
-                          marginTop: 8,
-                        }}
-                      >
-                        <div className={gymStyles.exerciseName} style={{ fontSize: 14 }}>
-                          {idx + 1}
-                        </div>
-
-                        <input
-                          className={gymStyles.searchInput}
-                          style={{ height: 40, borderRadius: 12 }}
-                          type="text"
-                          inputMode="numeric"
-                          step="0.5"
-                          value={kgValue}
-                          onChange={(e) => updateSetField(ex.id, s.id, "targetKg", e.target.value)}
-                          disabled={busy}
-                          aria-label="Template kg"
-                        />
-
-                        <input
-                          className={gymStyles.searchInput}
-                          style={{ height: 40, borderRadius: 12 }}
-                          type="text"
-                          inputMode="numeric"
-                          step="1"
-                          value={repsValue}
-                          onChange={(e) => updateSetField(ex.id, s.id, "targetReps", e.target.value)}
-                          disabled={busy}
-                          aria-label="Template reps"
-                        />
-
-                        <button
-                          type="button"
-                          className={gymStyles.rowIconBtn}
-                          onClick={() => deleteSet(ex.id, s.id)}
-                          disabled={busy || (ex.sets?.length ?? 0) <= 1}
-                          aria-label="Delete set"
-                          title={(ex.sets?.length ?? 0) <= 1 ? "At least 1 set required" : "Delete set"}
-                        >
-                          <FaRegTrashAlt size={16} />
-                        </button>
-                      </div>
-                    );
-                  })}
-
-                  <button
-                    type="button"
-                    className={gymStyles.secondaryBtn}
-                    onClick={() => addSet(ex.id)}
-                    disabled={busy}
-                    style={{ marginTop: 10 }}
-                  >
-                    Add set
-                  </button>
+            {exercises.map((ex, exIdx) => (
+              <div key={ex.id} style={{ marginBottom: 24 }}>
+                <div style={{ marginBottom: 10 }}>
+                  <div className={gymStyles.exerciseName}>{ex.ref?.name || `Oefening ${exIdx + 1}`}</div>
+                  <div className={gymStyles.exerciseMeta}>{ex.sets.length} sets</div>
                 </div>
-              ))}
-            </>
-          )}
 
+                {/* Set header */}
+                <div style={{ display: "grid", gridTemplateColumns: "36px 1fr 1fr 40px", gap: 8, marginBottom: 6 }}>
+                  <span style={{ fontSize: 12, color: "#A1A1A1" }}>Set</span>
+                  <span style={{ fontSize: 12, color: "#A1A1A1" }}>Kg</span>
+                  <span style={{ fontSize: 12, color: "#A1A1A1" }}>Reps</span>
+                  <span />
+                </div>
 
-        </div>
+                {ex.sets.map((s, idx) => (
+                  <div key={s.id} style={{ display: "grid", gridTemplateColumns: "36px 1fr 1fr 40px", gap: 8, alignItems: "center", marginBottom: 8 }}>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{idx + 1}</span>
+                    <input
+                      style={{ background: "#2C2C2E", border: "1px solid #3a3a3c", borderRadius: 10, color: "#fff", fontSize: 14, padding: "8px", textAlign: "center", outline: "none", width: "100%" }}
+                      type="text"
+                      inputMode="numeric"
+                      value={typeof s.targetKg === "number" ? String(s.targetKg) : ""}
+                      onChange={(e) => updateSetField(ex.id, s.id, "targetKg", e.target.value)}
+                      disabled={busy}
+                      aria-label="Kg"
+                    />
+                    <input
+                      style={{ background: "#2C2C2E", border: "1px solid #3a3a3c", borderRadius: 10, color: "#fff", fontSize: 14, padding: "8px", textAlign: "center", outline: "none", width: "100%" }}
+                      type="text"
+                      inputMode="numeric"
+                      value={typeof s.targetReps === "number" ? String(s.targetReps) : ""}
+                      onChange={(e) => updateSetField(ex.id, s.id, "targetReps", e.target.value)}
+                      disabled={busy}
+                      aria-label="Reps"
+                    />
+                    <button
+                      style={{ background: "none", border: "none", color: ex.sets.length <= 1 ? "#444" : "#A1A1A1", cursor: ex.sets.length <= 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                      onClick={() => deleteSet(ex.id, s.id)}
+                      disabled={busy || ex.sets.length <= 1}
+                      aria-label="Verwijder set"
+                    >
+                      <FaRegTrashAlt size={14} />
+                    </button>
+                  </div>
+                ))}
 
-        {/* Exercise picker */}
-        <ExercisePickerModal
-          open={pickerOpen}
-          onClose={() => setPickerOpen(false)}
-          onStart={({ exercises }) => {
-            setPickerOpen(false);
-            // Replace current selection with new selection (simple/clear)
-            setEditing(toTemplateExercises(exercises));
-          }}
-        />
+                <button
+                  style={{ width: "100%", background: "none", border: "1px dashed #3a3a3c", borderRadius: 10, color: "#FC9158", fontSize: 13, fontWeight: 600, padding: "8px", marginTop: 4, cursor: "pointer" }}
+                  onClick={() => addSet(ex.id)}
+                  disabled={busy}
+                >
+                  + Set toevoegen
+                </button>
+              </div>
+            ))}
+          </>
+        )}
       </div>
-    </div>
+
+      <ExercisePickerModal
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onStart={({ exercises: picked }) => {
+          setPickerOpen(false);
+          setExercises(toTemplateExercises(picked));
+        }}
+      />
+    </div>,
+    document.body
   );
 }

@@ -1,0 +1,591 @@
+﻿/* ── Global box-sizing for all children ──────────────────────── */
+.overlay *,
+.overlay *::before,
+.overlay *::after {
+  box-sizing: border-box;
+}
+
+/* ── Full-screen overlay ─────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #18181A;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* ── Top bar ─────────────────────────────────────────────────── */
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 52px 20px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.topTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+  text-align: center;
+}
+
+.cancelBtn {
+  background: none;
+  border: none;
+  color: #A1A1A1;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px;
+  width: 80px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  color: #FC9158;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  width: 80px;
+  white-space: nowrap;
+}
+
+.nextBtn {
+  background: none;
+  border: none;
+  color: #FC9158;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px;
+  width: 80px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.nextBtn:disabled {
+  color: #444;
+  cursor: default;
+}
+
+.saveBtn {
+  background: none;
+  border: none;
+  color: #8DCF42;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px;
+  width: 80px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.saveBtn:disabled {
+  color: #444;
+  cursor: default;
+}
+
+/* ── Step dots ───────────────────────────────────────────────── */
+
+.stepDots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 12px 0 4px;
+  flex-shrink: 0;
+}
+
+.dot {
+  height: 6px;
+  width: 6px;
+  border-radius: 999px;
+  background: #444;
+  transition: width 0.2s, background 0.2s;
+}
+
+.dotActive {
+  background: #FC9158;
+  width: 20px;
+}
+
+/* ── Scrollable body ─────────────────────────────────────────── */
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 20px 48px;
+  scrollbar-width: none;
+  width: 100%;
+}
+
+.body::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Photo picker ────────────────────────────────────────────── */
+
+.photoPicker {
+  width: 100%;
+  height: 160px;
+  border-radius: 16px;
+  border: 1.5px dashed #2C2C2E;
+  background: #232325;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 20px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.photoPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photoClearBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+}
+
+.photoPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.photoPlaceholderText {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+}
+
+.photoPlaceholderHint {
+  font-size: 12px;
+  color: #444;
+}
+
+/* ── Step 1: Name input ──────────────────────────────────────── */
+
+.nameInput {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #2C2C2E;
+  outline: none;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  padding: 8px 0 12px;
+  margin-bottom: 28px;
+  display: block;
+  transition: border-color 0.2s;
+}
+
+.nameInput:focus {
+  border-bottom-color: #FC9158;
+}
+
+.nameInput::placeholder {
+  color: #444;
+}
+
+/* ── Section label + hint ────────────────────────────────────── */
+
+.sectionLabel {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.sectionHint {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+/* ── Chip grid ───────────────────────────────────────────────── */
+
+.chipGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.chip {
+  background: #232325;
+  border: 1.5px solid #2e2e30;
+  border-radius: 16px;
+  padding: 14px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.chipActive {
+  border-color: #FC9158;
+  background: rgba(252,145,88,0.10);
+}
+
+.chipEmoji {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.chipLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chipCheck {
+  font-size: 12px;
+  color: #FC9158;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── No fields hint ──────────────────────────────────────────── */
+
+.noFieldsHint {
+  font-size: 13px;
+  color: #555;
+  margin-top: 20px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ── Step 2: header row with thumb + name ────────────────────── */
+
+.step2Header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  min-width: 0;
+}
+
+.step2Thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.recipeNameBadge {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Section card ────────────────────────────────────────────── */
+
+.section {
+  background: #232325;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.sectionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 8px;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.perPortie {
+  font-size: 12px;
+  color: #FC9158;
+  font-weight: 600;
+  background: rgba(252,145,88,0.12);
+  padding: 3px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Macro 2×2 grid ──────────────────────────────────────────── */
+
+.macroGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.macroCell {
+  background: #2e2e30;
+  border-radius: 12px;
+  padding: 10px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.macroCellLabel {
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.macroCellInput {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+}
+
+.macroInput {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid #2C2C2E;
+  outline: none;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 0 0 2px;
+  transition: border-color 0.15s;
+}
+
+.macroInput:focus {
+  border-bottom-color: #FC9158;
+}
+
+.macroInput::placeholder {
+  color: #2C2C2E;
+}
+
+.macroUnit {
+  font-size: 11px;
+  color: #666;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ── Porties field ───────────────────────────────────────────── */
+
+.fieldHint {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.fieldInputRow {
+  display: flex;
+  align-items: center;
+  background: #2e2e30;
+  border-radius: 12px;
+  padding: 10px 14px;
+  gap: 8px;
+  width: 100%;
+}
+
+.fieldInput {
+  flex: 1 1 0;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.fieldInput::placeholder {
+  color: #444;
+}
+
+.fieldUnit {
+  font-size: 13px;
+  color: #666;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ── List rows (ingredients + steps) ────────────────────────── */
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.stepNum {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  background: #2C2C2E;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #FC9158;
+  flex-shrink: 0;
+}
+
+.listInputMain {
+  flex: 3 1 0;
+  min-width: 0;
+  background: #2e2e30;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 10px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.listInputMain::placeholder { color: #555; }
+
+.listInputSub {
+  flex: 2 1 0;
+  min-width: 0;
+  background: #2e2e30;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 10px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.listInputSub::placeholder { color: #555; }
+
+/* Steps use a single full-width input (after the number badge) */
+.listInputFull {
+  flex: 1 1 0;
+  min-width: 0;
+  background: #2e2e30;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 10px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.listInputFull::placeholder { color: #555; }
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.removeBtn:active {
+  color: #E4222A;
+}
+
+.addRowBtn {
+  width: 100%;
+  background: none;
+  border: 1px dashed #2C2C2E;
+  border-radius: 10px;
+  padding: 10px;
+  color: #FC9158;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+/* ── Error ───────────────────────────────────────────────────── */
+
+.errorMsg {
+  background: rgba(228, 34, 42, 0.12);
+  border: 1px solid #E4222A;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #E4222A;
+  margin-top: 16px;
+  width: 100%;
+}

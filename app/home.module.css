@@ -1,4 +1,4 @@
-/* app/home.module.css */
+﻿/* app/home.module.css */
 
 
 
@@ -28,14 +28,14 @@ body::-webkit-scrollbar {
 
 .screen {
   min-height: 100vh;
-  background: #000;
+  background: #18181A;
   color: #fff;
 }
 
 /* Loading / redirect */
 .centerScreen {
   min-height: 100vh;
-  background: #000;
+  background: #18181A;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,7 +70,7 @@ body::-webkit-scrollbar {
   justify-content: space-between;
   align-items: center;
   padding: 45px 20px 16px;
-  background: #000;
+  background: #18181A;
 }
 
 .headerTitle {
@@ -93,7 +93,7 @@ body::-webkit-scrollbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1C1C1E;
+  background: #232325;
     backdrop-filter: blur(8px) url(#switcher) saturate(var(--saturation));
   -webkit-backdrop-filter: blur(8px) saturate(var(--saturation));
 box-sizing: border-box;
@@ -181,7 +181,7 @@ box-sizing: border-box;
 }
 
 .card {
-  background: #1C1C1E;
+  background: #232325;
   border-radius: 25px;
   padding: 20px;
   backdrop-filter: blur(8px) url(#switcher) saturate(var(--saturation));
@@ -259,12 +259,12 @@ box-sizing: border-box;
 }
 
 .cardTitleActivity {
-  color: #ff4400;
+  color: #FC9158;
   margin-bottom: 10px;
 }
 
 .cardTitleFood {
-  color: #8dcf42;
+  color: #8DCF42;
 }
 
 .activityValueRow {
@@ -279,7 +279,7 @@ box-sizing: border-box;
 
 .unitText {
   margin-left: 4px;
-  color: #97969B;
+  color: #A1A1A1;
   font-size: 17px;
 }
 
@@ -300,7 +300,7 @@ box-sizing: border-box;
 .progressFill {
   height: 100%;
   border-radius: 9999px;
-  background: #8dcf42;
+  background: #8DCF42;
   width: 0%;
 }
 
@@ -329,7 +329,7 @@ box-sizing: border-box;
 
 .remainingText {
   font-size: 14px;
-  color: #97969B;
+  color: #A1A1A1;
 }
 
 .macrosRow {
@@ -353,9 +353,9 @@ box-sizing: border-box;
   margin-bottom: 8px;
 }
 
-.macroLabelProtein { color: #e4222a; }
-.macroLabelFat { color: #f1a500; }
-.macroLabelCarbs { color: #08b6dc; }
+.macroLabelProtein { color: #E4222A; }
+.macroLabelFat { color: #F1A500; }
+.macroLabelCarbs { color: #08B6DC; }
 
 .macroValue {
   font-size: 18px;
@@ -377,7 +377,7 @@ box-sizing: border-box;
 
 /* Meals */
 .mealsCard {
-  background: #1C1C1E;
+  background: #232325;
   border-radius: 25px;
   padding-bottom: 16px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.06);
@@ -467,7 +467,7 @@ box-sizing: border-box;
 }
 
 .mealWrapExpanded {
-  background: #2d2d2d;
+  background: #2C2C2E;
 }
 
 .mealWrapDisabled {
@@ -502,11 +502,11 @@ box-sizing: border-box;
 }
 
 .mealMetaHas {
-  color: #8dcf42;
+  color: #8DCF42;
 }
 
 .mealMetaEmpty {
-  color: #aaa;
+  color: #A1A1A1;
 }
 
 .mealAddBtn {
@@ -610,7 +610,7 @@ box-sizing: border-box;
 }
 
 .foodRow {
-  background: #212121;
+  background: #232325;
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 8px;
@@ -727,7 +727,7 @@ box-sizing: border-box;
 }
 
 .foodNameChecked {
-  color: #aaa;
+  color: #A1A1A1;
   text-decoration: line-through;
 }
 
@@ -739,7 +739,7 @@ box-sizing: border-box;
 .foodMeta {
   font-size: 12px;
   margin-top: 8px;
-  color: #97969B;
+  color: #A1A1A1;
 }
 
 .hr {
@@ -841,7 +841,7 @@ box-sizing: border-box;
   border-radius: 24px;
   padding: 20px;
   overflow-y: auto;
-  background: #1C1C1E;
+  background: #232325;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     overflow: auto;
   scrollbar-width: none;      /* Firefox */
@@ -864,7 +864,7 @@ box-sizing: border-box;
   text-transform: uppercase;
   margin-bottom: 12px;
   margin-top: 0px;
-  color: #97969B;
+  color: #A1A1A1;
   letter-spacing: 0.5px;
 }
 
@@ -876,11 +876,11 @@ box-sizing: border-box;
   font-size: 14px;
   text-align: center;
   padding: 20px 0;
-  color: #aaa;
+  color: #A1A1A1;
 }
 
 .recipeRow {
-  background: #2a2a2a;
+  background: #2C2C2E;
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 10px;
@@ -909,14 +909,14 @@ box-sizing: border-box;
 .recipeMeta {
   font-size: 12px;
   margin-top: 8px;
-  color: #97969B;
+  color: #A1A1A1;
 }
 
 .modalInfoText {
   font-size: 14px;
   text-align: center;
   padding: 20px 0;
-  color: #aaa;
+  color: #A1A1A1;
 }
 
 .overTarget {
@@ -931,7 +931,6 @@ box-sizing: border-box;
   height: 100%;
   transition: opacity 180ms ease, transform 180ms ease;
   opacity: 1;
-  transform: translateY(0);
 }
 
 .tabPageExit {

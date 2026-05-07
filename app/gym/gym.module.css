@@ -1,3 +1,373 @@
+﻿/* --- Gym Home Page Layout --- */
+.gymPage {
+  min-height: 100vh;
+  background: #18181A;
+  color: #fff;
+  font-family: system-ui, sans-serif, sans-serif;
+}
+
+.gymHeader {
+  padding: 44px 20px 100px 20px;
+}
+
+.gymTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 28px;
+  font-family: system-ui, sans-serif, sans-serif;
+}
+
+.workoutStartBtn {
+  width: 100%;
+  background: transparent;
+  color: #FC9158;
+  border: 1.5px solid #FC9158;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 9px 0;
+  margin-bottom: 28px;
+  margin-top: 0;
+  letter-spacing: 0.1px;
+  transition: background 0.2s, color 0.2s;
+  font-family: system-ui, sans-serif, sans-serif;
+}
+
+.muscleCard, .historyCard {
+  background: #232325;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.muscleCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.muscleCardTitle {
+  font-weight: 600;
+  color: #fff;
+  font-size: 14px;
+  font-family: system-ui, sans-serif, sans-serif;
+}
+
+.expandBtn {
+  background: none;
+  border: none;
+  color: #888;
+  padding: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.muscleMapRow {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+
+.muscleMapItem {
+  min-width: 110px;
+  height: 180px;
+}
+
+.weekSelectorRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18px;
+  gap: 12px;
+}
+
+.weekSelectorBtn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weekSelectorBtn:disabled {
+  color: #444;
+  cursor: not-allowed;
+}
+
+.weekLabel {
+  color: #fff;
+  font-weight: 500;
+  font-size: 14px;
+  min-width: 120px;
+  text-align: center;
+  font-family: system-ui, sans-serif, sans-serif;
+}
+
+.historyCardTitle {
+  font-weight: 700;
+  color: #fff;
+  font-size: 15px;
+  margin-bottom: 18px;
+  font-family: system-ui, sans-serif, sans-serif;
+}
+
+.historyMonth {
+  color: #A1A1A1;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  font-family: system-ui, sans-serif, sans-serif;
+}
+
+.historyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #232325;
+}
+
+.historyRowName {
+  font-weight: 700;
+  color: #fff;
+  font-size: 15px;
+  font-family: system-ui, sans-serif, sans-serif;
+}
+
+.historyRowMeta {
+  color: #A1A1A1;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 3px;
+  font-family: system-ui, sans-serif, sans-serif;
+}
+
+.historyRowMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #A1A1A1;
+  font-size: 13px;
+}
+
+.historyEmpty, .historyLoading, .historyNotLoggedIn {
+  color: #888;
+  font-size: 15px;
+}
+
+.historyStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.historyStatusAfgerond {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.historyStatusBezig {
+  background: rgba(252, 145, 88, 0.12);
+  color: #FC9158;
+}
+
+.historyUnfinishedBadge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, #FC9158 10%, transparent);
+  border: 1px solid color-mix(in srgb, #FC9158 25%, transparent);
+  color: #FC9158;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: middle;
+  letter-spacing: 0.2px;
+}
+
+.muscleCardNote {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(235, 235, 245, 0.4);
+  margin: 4px 0 10px;
+}
+
+/* ===== Workout History Detail (fullscreen) ===== */
+
+.historyDetailOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: #18181A;
+  color: #f4f4f5;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.historyDetailTopBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 10px;
+  flex-shrink: 0;
+}
+
+.historyDetailTitleWrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.historyDetailTitle {
+  font-size: 20px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.historyDetailIconBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: #d9d9dd;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.historyDetailDeleteBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(228, 34, 42, 0.2);
+  background: rgba(228, 34, 42, 0.08);
+  color: #E4222A;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.historyDetailDeleteBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.historyDetailMeta {
+  display: flex;
+  gap: 16px;
+  padding: 0 18px 14px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.historyDetailMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: rgba(235, 235, 245, 0.6);
+}
+
+.historyDetailScroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 16px 40px;
+  scrollbar-width: none;
+}
+
+.historyDetailScroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Done row tint in history detail */
+.tmSetRowDone {
+  background: rgba(71, 225, 128, 0.08);
+  border-radius: 10px;
+  padding: 3px 6px;
+}
+
+/* Checkmark button in history set row */
+.historySetCheckBtn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
+.historySetCheck {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.historySetCheckOff {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(235, 235, 245, 0.2);
+}
+
+.historySetCheckOn {
+  background: rgba(34, 197, 94, 0.9);
+  border: 1px solid rgba(34, 197, 94, 0.95);
+  color: #08110b;
+}
+
+.savingToast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(245, 245, 247, 0.9);
+  font-size: 14px;
+  font-weight: 700;
+  pointer-events: none;
+  z-index: 500;
+}
+
 /* ===== Legacy / shared buttons & text ===== */
 
 .timerRow {
@@ -5,7 +375,7 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 8px;
-  color: #97969b;
+  color: #A1A1A1;
   font-size: 14px;
 }
 
@@ -15,7 +385,7 @@
   padding: 14px 14px;
   border-radius: 16px;
   border: none;
-  background: #ff2d2d;
+  background: #E4222A;
   color: #fff;
   font-weight: 700;
   cursor: pointer;
@@ -26,7 +396,7 @@
   margin-top: 12px;
   padding: 12px 14px;
   border-radius: 16px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid #2C2C2E;
   background: transparent;
   color: #fff;
   font-weight: 600;
@@ -56,7 +426,7 @@
   width: 100px;
   height: 44px;
   border-radius: 14px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid #2C2C2E;
   background: #111;
   color: #fff;
   cursor: pointer;
@@ -67,7 +437,7 @@
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid #2C2C2E;
   background: #111;
   color: #fff;
   cursor: pointer;
@@ -85,40 +455,84 @@
   font-size: 12px;
   padding: 4px 8px;
   border-radius: 9999px;
-  background: #1c1c1e;
+  background: #232325;
   border: 1px solid #333;
   color: #cfcfcf;
 }
 
-/* ===== Sheet / modal base ===== */
+/* ===== Bottom sheet ===== */
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
 
 .sheetOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 120;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 220;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: 16px; /* gives breathing room on small screens */
 }
 
 .sheet {
   width: min(520px, 100%);
-  max-height: min(90vh, 720px);
-  background: #0b0b0b;
-  border-radius: 24px; /* all corners rounded now */
-    overflow-y: auto;
+  max-height: 85vh;
+  background: #232325;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.sheetHandle {
+  width: 36px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  margin: 10px auto 6px;
+  flex-shrink: 0;
+}
+
+.sheetExercise {
+  flex: 1;
+  overflow-y: auto;
   overflow-x: hidden;
-  position: relative; /* important for sticky stability */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
+.sheetExercise::-webkit-scrollbar {
+  display: none;
+}
 
-.sheet::-webkit-scrollbar {
-  width: 0;
-  height: 0;
+.sheetFooter {
+  padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #232325;
+  flex-shrink: 0;
+}
+
+.sheetFooterBtn {
+  width: 100%;
+  height: 48px;
+  border-radius: 14px;
+  border: none;
+  background: #FC9158;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sheetFooterBtn:disabled {
+  background: #2C2C2E;
+  color: #666;
+  cursor: not-allowed;
 }
 
 
@@ -129,8 +543,8 @@
   width: 100%;
   height: 44px;
   border-radius: 14px;
-  border: 1px solid #2a2a2a;
-  background: #1c1c1e;
+  border: none;
+  background: #232325;
   color: #fff;
   padding: 0 12px;
   outline: none;
@@ -139,17 +553,15 @@
 /* ===== New header that matches your screenshot ===== */
 
 .headerBlock {
-    position: sticky;
+  position: sticky;
   top: 0;
-    will-change: transform;
+  will-change: transform;
   transform: translateZ(0);
-  background: #141416; /* distinct bar color */
-  border-radius: 18px 18px 0 0;
+  background: #232325;
+  border-radius: 20px 20px 0 0;
   padding: 10px;
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  z-index:99;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 99;
 }
 
 .headerTopRow {
@@ -163,15 +575,12 @@
   width: 40px;
   height: 40px;
   border-radius: 9999px;
-  border: 1px solid #2a2a2a;
-  background: #1c1c1e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #232325;
   color: #fff;
-
-  /* add/adjust these */
   display: grid;
   place-items: center;
   line-height: 1;
-
   font-size: 20px;
   cursor: pointer;
 }
@@ -181,8 +590,8 @@
   height: 40px;
   padding: 0 14px;
   border-radius: 9999px;
-  border: 1px solid #2a2a2a;
-  background: #2c2c2e;
+  border: 1px solid #2C2C2E;
+  background: #2C2C2E;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -194,7 +603,7 @@
 }
 
 .searchRow {
-margin: 15px 0;
+  margin: 10px 0;
 }
 
 /* ===== Chips ===== */
@@ -209,78 +618,74 @@ margin: 15px 0;
   height: 34px;
   padding: 0 12px;
   border-radius: 9999px;
-  border: 1px solid #2a2a2a;
-  background: #1c1c1e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #232325;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
 }
 
 .chipBtnActive {
-  border-color: #395716;
-  background: #1a2b07;
-  color: #8dcf42;
+  border-color: color-mix(in srgb, #FC9158 40%, transparent);
+  background: color-mix(in srgb, #FC9158 12%, transparent);
+  color: #FC9158;
 }
 
-/* ===== Popover ===== */
+/* ===== Inline filter panel ===== */
 
-.popover {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  z-index: 60;
-  width: min(360px, calc(100vw - 24px));
-  padding: 12px;
-  border-radius: 16px;
-  background: rgba(28, 28, 30, 0.98);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.55);
+.filterPanel {
+  margin: 8px 0 2px;
+  padding: 10px 4px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.popoverHeader {
+.filterPanelHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-.popoverTitle {
+.filterPanelTitle {
   color: #fff;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-.popoverLinkBtn {
+.filterPanelClearBtn {
   border: none;
   background: transparent;
-  color: #8dcf42;
+  color: #FC9158;
   font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
-  padding: 6px 8px;
-  border-radius: 10px;
+  padding: 4px 6px;
 }
 
-.popoverLinkBtn:disabled {
-  opacity: 0.5;
+.filterPanelClearBtn:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-.popoverGrid {
+.filterChipGrid {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  max-height: 280px;
-  overflow: auto;
-  padding-right: 4px;
+  max-height: 250px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.filterChipGrid::-webkit-scrollbar {
+  display: none;
 }
 
 .popoverOption {
   height: 34px;
   padding: 0 12px;
   border-radius: 9999px;
-  border: 1px solid #2a2a2a;
-  background: #1c1c1e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #232325;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -288,9 +693,9 @@ margin: 15px 0;
 }
 
 .popoverOptionActive {
-  border-color: #395716;
-  background: #1a2b07;
-  color: #8dcf42;
+  border-color: color-mix(in srgb, #FC9158 40%, transparent);
+  background: color-mix(in srgb, #FC9158 12%, transparent);
+  color: #FC9158;
 }
 
 /* ===== Exercise list (flat, iOS-like) ===== */
@@ -299,7 +704,7 @@ margin: 15px 0;
   display: flex;
   flex-direction: column;
   padding-top: 4px;
-  background: #141416; /* distinct bar color */
+  background: #232325;
 }
 
 .exerciseRow {
@@ -323,7 +728,7 @@ margin: 15px 0;
 }
 
 .exerciseRow[data-selected="true"] {
-  background: #1a2b07;
+  background: color-mix(in srgb, #FC9158 10%, transparent);
 }
 
 .exerciseImg {
@@ -331,7 +736,7 @@ margin: 15px 0;
   height: 56px;
   border-radius: 14px;
   object-fit: cover;
-  background: #fff;
+  background: #2C2C2E;
 }
 
 .exerciseMain {
@@ -370,8 +775,8 @@ margin: 15px 0;
   width: 34px;
   height: 34px;
   border-radius: 9999px;
-  border: 1px solid #2a2a2a;
-  background: #1c1c1e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #232325;
   color: #c7c7cc;
   cursor: pointer;
   display: grid;
@@ -418,7 +823,7 @@ margin: 15px 0;
 }
 
 .weekLabel {
-  color: #97969b;
+  color: #A1A1A1;
   font-size: 13px;
 }
 
@@ -479,7 +884,7 @@ margin: 15px 0;
 }
 
 .rowChevron {
-  color: #97969b;
+  color: #A1A1A1;
 }
 
 /* If you don't have a deleteBtn yet, add it */
@@ -487,8 +892,8 @@ margin: 15px 0;
   height: 34px;
   padding: 0 12px;
   border-radius: 9999px;
-  border: 1px solid #2a2a2a;
-  background: #1c1c1e;
+  border: 1px solid #2C2C2E;
+  background: #232325;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -498,11 +903,31 @@ margin: 15px 0;
   border-color: rgba(255, 45, 45, 0.55);
 }
 
+.infoSheet {
+  width: min(520px, 100%);
+  height: 90vh;
+  background: #232325;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 .infoContainer{
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding:20px;
+  padding: 20px 20px 32px;
+}
+
+.infoContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .infoStepImg {
@@ -566,7 +991,7 @@ margin: 15px 0;
   height: 56px;
   border-radius: 9999px;
   border: 0;
-  background: #8dcf42;
+  background: #8DCF42;
   color: #000;
   cursor: pointer;
   box-shadow: 0 10px 26px rgba(141, 207, 66, 0.25);
@@ -596,7 +1021,7 @@ margin: 15px 0;
 
 .fabMenuItem {
   border: 0;
-  background: #2a2a2a;
+  background: #2C2C2E;
   color: #fff;
   border-radius: 16px;
   padding: 10px 14px;
@@ -611,7 +1036,7 @@ margin: 15px 0;
   height: 32px;
   padding:8px;
   border-radius: 9999px;
-  background: #1c1c1e;
+  background: #232325;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -642,7 +1067,7 @@ margin: 15px 0;
 
 .headerMenuItem {
   border: 0;
-  background: #2a2a2a;
+  background: #2C2C2E;
   color: #fff;
   border-radius: 9999px;
   padding: 10px 14px;
@@ -650,3 +1075,694 @@ margin: 15px 0;
   text-align: left;
   font-weight: 700;
 }
+
+/* ===== Templates section ===== */
+
+.templateCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.templateAddBtn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.templateRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid #2e2e30;
+}
+
+.templateRowMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.templateRowName {
+  font-weight: 700;
+  color: #fff;
+  font-size: 15px;
+}
+
+.templateRowExercises {
+  color: #A1A1A1;
+  font-size: 13px;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+.templateStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-top: 6px;
+}
+
+.templateStatusBezig {
+  background: rgba(252, 145, 88, 0.12);
+  color: #FC9158;
+}
+
+.templateStatusAfgerond {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.templateStatusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.templateDotBtn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px 6px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ===== Template options dropdown ===== */
+
+.menuOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 119;
+}
+
+.templateMenu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #2C2C2E;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 120;
+  min-width: 160px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.templateMenuItem {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.templateMenuItem:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ===== "Workout starten" choice modal ===== */
+
+.choiceOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.choiceSheet {
+  width: 100%;
+  max-width: 380px;
+  background: #2C2C2E;
+  border-radius: 20px;
+  padding: 20px 20px 24px;
+}
+
+.choiceHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.choiceTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.choiceCloseBtn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.choicePrimaryBtn {
+  width: 100%;
+  padding: 15px 0;
+  background: #FC9158;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.choiceSecondaryBtn {
+  width: 100%;
+  padding: 14px 0;
+  background: transparent;
+  color: #FC9158;
+  border: 1.5px solid #FC9158;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ===== Template maker full-screen step flow ===== */
+.templateMakerOverlay {
+  position: fixed;
+  inset: 0;
+  background: #18181A;
+  z-index: 180;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.templateMakerTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 52px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+
+.templateMakerTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.templateMakerScroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px 20px 40px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.templateMakerScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.pickerSearchBar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #0b0b0b;
+}
+
+.stepDots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  padding: 12px 0 20px;
+}
+
+.stepDot {
+  height: 6px;
+  border-radius: 999px;
+  background: #444;
+  transition: width 0.2s, background 0.2s;
+  width: 6px;
+}
+
+.stepDotActive {
+  background: #FC9158;
+  width: 20px;
+}
+
+/* Exercise card in template step 2 */
+.tmExCard {
+  background: #232325;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.tmExCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 14px;
+}
+
+/* Exercise row in step 1 selection list */
+.tmExRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Add set button */
+.tmAddSetBtn {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px dashed rgba(252,145,88,0.4);
+  background: rgba(252,145,88,0.04);
+  color: #FC9158;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.tmCancelBtn {
+  background: none;
+  border: none;
+  color: #A1A1A1;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.tmNextBtn {
+  background: none;
+  border: none;
+  color: #FC9158;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.tmNextBtn:disabled {
+  color: #555;
+  cursor: not-allowed;
+}
+
+.tmSaveBtn {
+  background: none;
+  border: none;
+  color: #FC9158;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.tmSaveBtn:disabled {
+  color: #555;
+  cursor: not-allowed;
+}
+
+.tmBackBtn {
+  background: none;
+  border: none;
+  color: #A1A1A1;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+/* Set header row in template step 2 */
+.tmSetHeader {
+  display: grid;
+  grid-template-columns: 30px 1fr 1fr 32px;
+  gap: 8px;
+  padding: 0 2px 8px;
+  color: rgba(235,235,245,0.4);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.tmSetHeader > :first-child {
+  text-align: left;
+}
+
+/* Set row in template step 2 */
+.tmSetRow {
+  display: grid;
+  grid-template-columns: 30px 1fr 1fr 32px;
+  gap: 8px;
+  align-items: center;
+  padding: 5px 2px;
+  margin-bottom: 6px;
+}
+
+.tmSetNum {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #888;
+}
+
+/* Kg/Reps input in step 2 */
+.tmInput {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255,255,255,0.06);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 8px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  outline: none;
+  text-align: center;
+}
+
+.tmInput:focus {
+  background: rgba(252,145,88,0.12);
+}
+
+.tmInput:disabled {
+  opacity: 0.3;
+}
+
+/* Trash button in template step 2 set row */
+.tmTrashBtn {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.tmTrashBtn:disabled {
+  opacity: 0.15;
+  cursor: not-allowed;
+}
+
+/* Exercise name input in step 1 */
+.tmNameInput {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  outline: none;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.tmNameInput::placeholder {
+  color: #555;
+}
+
+/* Add exercise chip in step 1 */
+.tmAddExBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1.5px dashed rgba(252,145,88,0.5);
+  background: rgba(252,145,88,0.06);
+  color: #FC9158;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Empty state in step 1 */
+.tmEmptyEx {
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+  padding: 24px 0;
+}
+
+/* Section label */
+.tmSectionLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #555;
+  margin-bottom: 10px;
+  margin-top: 4px;
+}
+
+/* Remove X button on exercise row in step 1 */
+.tmRemoveBtn {
+  background: rgba(255,255,255,0.06);
+  border: none;
+  border-radius: 999px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* ===== Workout start flow ===== */
+.wsfTemplateCard {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: background 0.15s;
+}
+
+.wsfTemplateCard:active {
+  background: rgba(255,255,255,0.08);
+}
+
+.wsfTemplateCard:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.wsfDivider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 16px;
+  color: #444;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.wsfDivider::before,
+.wsfDivider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+
+.wsfDividerLabel {
+  color: #555;
+  font-size: 13px;
+}
+
+/* ===== Fullscreen Muscle Map Overlay ===== */
+
+.muscleFullOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: #18181A;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.muscleFullTopBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 52px 16px 12px;
+  flex-shrink: 0;
+}
+
+.muscleFullTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.muscleFullCloseBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.muscleFullScroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 48px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.muscleFullScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.muscleFullBigMaps {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px 0 6px;
+}
+
+.muscleFullSectionLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(235,235,245,0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 22px 0 10px;
+}
+
+.muscleFullSessionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #232325;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+.muscleFullSessionInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.muscleFullSessionName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.muscleFullSessionDate {
+  font-size: 12px;
+  color: rgba(235,235,245,0.4);
+  margin-bottom: 4px;
+}
+
+.muscleFullSessionMuscleList {
+  font-size: 11px;
+  color: rgba(235,235,245,0.3);
+  white-space: normal;
+  line-height: 1.4;
+}
+
+.muscleFullSessionMaps {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.helpBtn {
+  position: fixed;
+  bottom: 96px;
+  right: 20px;
+  z-index: 90;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #232325;
+  border: 1.5px solid #2C2C2E;
+  color: #FC9158;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+

@@ -1,12 +1,11 @@
 // components/gym/ExercisePickerModal.tsx
 "use client";
 
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gymStyles from "../../gym/gym.module.css";
 import homeStyles from "../../home.module.css";
 import MuscleMap from "./muscle-map/MuscleMap";
-import { FiX } from "react-icons/fi";
-import { FiChevronLeft, FiCheck } from "react-icons/fi";
+import { FiX, FiChevronLeft, FiCheck, FiInfo } from "react-icons/fi";
 import type { FreeExercise } from "../../lib/freeExerciseDb";
 import {
   buildExerciseTags,
@@ -148,7 +147,7 @@ const ExerciseRow = memo(function ExerciseRow(props: {
 
       <div className={gymStyles.rowActions}>
         {selected ? (
-          <span className={gymStyles.rowIconBtn} aria-label="Geselecteerd" title="Geselecteerd" style={{ border: 'none', background: 'transparent', color: '#22c55e', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span className={gymStyles.rowIconBtn} aria-label="Geselecteerd" title="Geselecteerd" style={{ border: 'none', background: 'transparent', color: '#FC9158', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <FiCheck size={18} />
           </span>
         ) : (
@@ -162,7 +161,7 @@ const ExerciseRow = memo(function ExerciseRow(props: {
             aria-label="Info"
             title="Info"
           >
-            i
+            <FiInfo size={15} />
           </button>
         )}
       </div>
@@ -200,11 +199,7 @@ export default function ExercisePickerModal({
   // Selected chip (UI)
   const [selectedOnly, setSelectedOnly] = useState(false);
 
-  // “Type” chip purely UI (visual)
-  const [typeChipOn, setTypeChipOn] = useState(false);
-
   const filterBtnRef = useRef<HTMLButtonElement | null>(null);
-  const filterMenuRef = useRef<HTMLDivElement | null>(null);
 
   const infoOnlyMode = !!initialInfoExerciseId;
 
@@ -222,17 +217,6 @@ export default function ExercisePickerModal({
     }
   }, [open, initialInfoExerciseId]);
 
-  // Click outside closes popover
-  useEffect(() => {
-    function onDown(e: MouseEvent) {
-      const t = e.target as Node;
-      const inMenu = filterMenuRef.current?.contains(t);
-      const inBtn = filterBtnRef.current?.contains(t);
-      if (!inMenu && !inBtn) setFiltersOpen(false);
-    }
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
-  }, []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -335,7 +319,7 @@ export default function ExercisePickerModal({
   if (infoOnlyMode) {
     return (
       <div className={gymStyles.sheetOverlay} onClick={onClose}>
-        <div className={gymStyles.sheet} onClick={(e) => e.stopPropagation()}>
+        <div className={gymStyles.infoSheet} onClick={(e) => e.stopPropagation()}>
           <div className={gymStyles.sheetHandle} />
 
           <div className={gymStyles.headerBlock}>
@@ -418,23 +402,65 @@ export default function ExercisePickerModal({
       <div className={gymStyles.sheet} onClick={(e) => e.stopPropagation()}>
         <div className={gymStyles.sheetHandle} />
 
-        {/* Header */}
+        {/* Header: search + filters */}
         <div className={gymStyles.headerBlock}>
           <div className={gymStyles.headerTopRow}>
             <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Sluiten">
               <FiX size={20} />
             </button>
-
-            <button
-              className={gymStyles.addBtn}
-              type="button"
-              onClick={() => onStart({ exercises: selectedArr, musclesWorked: allMusclesWorked })}
-              disabled={selectedCount === 0}
-              title="Voeg geselecteerde toe"
-            >
-              Toevoegen ({selectedCount})
-            </button>
+            <div className={gymStyles.chipRow}>
+              <button
+                ref={filterBtnRef}
+                type="button"
+                className={`${gymStyles.chipBtn} ${muscleFilters.size ? gymStyles.chipBtnActive : ""}`}
+                onClick={() => setFiltersOpen((v) => !v)}
+                aria-expanded={filtersOpen}
+              >
+                Filter{muscleFilters.size > 0 ? ` (${muscleFilters.size})` : ""}
+              </button>
+              <button
+                type="button"
+                className={`${gymStyles.chipBtn} ${selectedOnly ? gymStyles.chipBtnActive : ""}`}
+                onClick={() => setSelectedOnly((v) => !v)}
+                aria-pressed={selectedOnly}
+                style={selectedCount > 0 ? { color: "#FC9158", background: "rgba(252,145,88,0.1)", borderColor: "rgba(252,145,88,0.35)" } : {}}
+              >
+                Geselecteerd ({selectedCount})
+              </button>
+            </div>
           </div>
+
+          {filtersOpen && (
+            <div className={gymStyles.filterPanel}>
+              <div className={gymStyles.filterPanelHeader}>
+                <span className={gymStyles.filterPanelTitle}>Filter</span>
+                <button
+                  className={gymStyles.filterPanelClearBtn}
+                  type="button"
+                  onClick={clearMuscles}
+                  disabled={muscleFilters.size === 0}
+                >
+                  Wissen
+                </button>
+              </div>
+              <div className={gymStyles.filterChipGrid}>
+                {availableMuscleSlugs.map((slug) => {
+                  const active = muscleFilters.has(slug);
+                  return (
+                    <button
+                      key={slug}
+                      type="button"
+                      className={`${gymStyles.popoverOption} ${active ? gymStyles.popoverOptionActive : ""}`}
+                      onClick={() => toggleMuscle(slug)}
+                      aria-pressed={active}
+                    >
+                      {niceLabel(slug)}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className={gymStyles.searchRow}>
             <input
@@ -443,77 +469,6 @@ export default function ExercisePickerModal({
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
-          </div>
-
-          <div className={gymStyles.chipRow}>
-            <div style={{ position: "relative" }}>
-              <button
-                ref={filterBtnRef}
-                type="button"
-                className={`${gymStyles.chipBtn} ${muscleFilters.size ? gymStyles.chipBtnActive : ""}`}
-                onClick={() => setFiltersOpen((v) => !v)}
-                aria-expanded={filtersOpen}
-                aria-haspopup="dialog"
-              >
-                Lichaam
-              </button>
-
-              {filtersOpen ? (
-                <div
-                  ref={filterMenuRef}
-                  className={gymStyles.popover}
-                  role="dialog"
-                  aria-label="Lichaamsfilters"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className={gymStyles.popoverHeader}>
-                    <div className={gymStyles.popoverTitle}>Lichaam</div>
-                    <button
-                      className={gymStyles.popoverLinkBtn}
-                      type="button"
-                      onClick={clearMuscles}
-                      disabled={muscleFilters.size === 0}
-                    >
-                      Wissen
-                    </button>
-                  </div>
-
-                  <div className={gymStyles.popoverGrid}>
-                    {availableMuscleSlugs.map((slug) => {
-                      const active = muscleFilters.has(slug);
-                      return (
-                        <button
-                          key={slug}
-                          type="button"
-                          className={`${gymStyles.popoverOption} ${
-                            active ? gymStyles.popoverOptionActive : ""
-                          }`}
-                          onClick={() => toggleMuscle(slug)}
-                          aria-pressed={active}
-                          title={slug}
-                        >
-                          {niceLabel(slug)}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : null}
-            </div>
-
-            <button
-              type="button"
-              className={
-                `${gymStyles.chipBtn} ${selectedOnly ? gymStyles.chipBtnActive : ""}` +
-                (selectedCount > 0 ? ` ${gymStyles.chipBtnSelected}` : "")
-              }
-              onClick={() => setSelectedOnly((v) => !v)}
-              aria-pressed={selectedOnly}
-              title="Selected"
-              style={selectedCount > 0 ? { color: '#8dcf42', background: '#1a2b07', borderColor: '#395716' } : {}}
-            >
-              Geselecteerd ({selectedCount})
-            </button>
           </div>
         </div>
 
@@ -528,26 +483,35 @@ export default function ExercisePickerModal({
               onInfo={onInfoFromList}
             />
           ))}
-
           {filteredItems.length > 100 ? (
             <div className={homeStyles.modalInfoText} style={{ padding: "25px 0 15px" }}>
               Alleen de eerste 100 resultaten worden getoond. Verfijn je zoekopdracht.
             </div>
           ) : null}
-
           {rows.length === 0 ? (
             <div className={homeStyles.modalEmptyText} style={{ padding: "12px 0" }}>
               Geen oefeningen gevonden met deze filters.
             </div>
           ) : null}
+        </div>
 
+        {/* Sticky footer with confirm button */}
+        <div className={gymStyles.sheetFooter}>
+          <button
+            className={gymStyles.sheetFooterBtn}
+            type="button"
+            onClick={() => onStart({ exercises: selectedArr, musclesWorked: allMusclesWorked })}
+            disabled={selectedCount === 0}
+          >
+            {selectedCount === 0 ? "Selecteer oefeningen" : `Toevoegen (${selectedCount})`}
+          </button>
         </div>
       </div>
 
       {/* Info overlay ONLY when user clicked info from list */}
       {info && infoSource === "list" ? (
         <div className={gymStyles.sheetOverlay} onClick={() => setInfo(null)}>
-          <div className={gymStyles.sheet} onClick={(e) => e.stopPropagation()}>
+          <div className={gymStyles.infoSheet} onClick={(e) => e.stopPropagation()}>
             <div className={gymStyles.sheetHandle} />
 
             <div className={gymStyles.headerBlock}>

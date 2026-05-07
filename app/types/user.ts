@@ -16,14 +16,22 @@ export interface LoggedFood {
   grams?: number;
 }
 
+export interface RecipeIngredient {
+  name: string;
+  amount: string;
+}
+
 export interface Recipe {
   id: string;
   title: string;
   image?: string;
+  portions?: number;
   kcal: number;
   protein: number;
   carbs: number;
   fat: number;
+  ingredients?: RecipeIngredient[];
+  steps?: string[];
 }
 
 export interface DailyLog {

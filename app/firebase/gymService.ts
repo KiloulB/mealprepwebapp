@@ -73,6 +73,7 @@ function safeSession(raw: any, id: string): GymSession {
     startedAt: Number(raw?.startedAt || Date.now()),
     finishedAt: raw?.finishedAt ? Number(raw.finishedAt) : undefined,
     durationSec: raw?.durationSec ? Number(raw.durationSec) : undefined,
+    status: raw?.status === "finished" || raw?.status === "unfinished" ? raw.status : undefined,
     musclesWorked: Array.isArray(raw?.musclesWorked) ? raw.musclesWorked.map(String) : [],
     exercises,
     templateId: raw?.templateId ? String(raw.templateId) : undefined,
@@ -266,6 +267,14 @@ export const saveGymTemplate = async (userId: string, data: Omit<GymTemplate, "i
   });
 
   return newRef.id;
+};
+
+export const updateGymTemplate = async (userId: string, templateId: string, data: Omit<GymTemplate, "id">) => {
+  if (!userId) throw new Error("Missing userId");
+  if (!templateId) throw new Error("Missing templateId");
+  const ref = doc(db, "users", userId, "gymTemplates", templateId);
+  await setDoc(ref, { ...data, updatedAt: serverTimestamp() }, { merge: true });
+  return templateId;
 };
 
 export const deleteGymTemplate = async (userId: string, templateId: string) => {

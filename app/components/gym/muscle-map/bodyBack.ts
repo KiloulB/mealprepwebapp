@@ -1,4 +1,4 @@
-import { BodyPart } from "..";
+import { BodyPart } from "./bodyTypes";
 
 export const bodyBack: BodyPart[] = [
   // Neck

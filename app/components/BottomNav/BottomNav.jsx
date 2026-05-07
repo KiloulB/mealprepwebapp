@@ -2,15 +2,37 @@
 
 import React, { useEffect, useRef } from "react";
 import styles from "./BottomNav.module.css";
-import { HiHome } from "react-icons/hi2";
-import { ImSpoonKnife } from "react-icons/im";
-import { IoPersonCircleSharp, IoBookSharp } from "react-icons/io5";
-import { IoBarbellSharp } from "react-icons/io5"; // <-- add
+import { IoCalendarOutline } from "react-icons/io5";
+
+function GymIcon({ className }) {
+  return (
+    <svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      <path d="M22.5983 8.1725H22.155V4.22917C22.1532 3.72848 21.9534 3.24882 21.5994 2.89477C21.2453 2.54073 20.7657 2.34101 20.265 2.33917H19.53V1.89583C19.53 1.39303 19.3303 0.910815 18.9747 0.555277C18.6192 0.199739 18.137 0 17.6342 0C17.1314 0 16.6491 0.199739 16.2936 0.555277C15.9381 0.910815 15.7383 1.39303 15.7383 1.89583V8.1725H7.44333V1.89583C7.44333 1.39303 7.24359 0.910815 6.88806 0.555277C6.53252 0.199739 6.05031 0 5.5475 0C5.04469 0 4.56248 0.199739 4.20694 0.555277C3.85141 0.910815 3.65167 1.39303 3.65167 1.89583V2.33917H2.91667C2.41541 2.33917 1.93468 2.53829 1.58023 2.89273C1.22579 3.24718 1.02667 3.72791 1.02667 4.22917V8.1725H0.583333C0.428624 8.1725 0.28025 8.23396 0.170854 8.34335C0.061458 8.45275 0 8.60112 0 8.75583C0 8.91054 0.061458 9.05892 0.170854 9.16831C0.28025 9.27771 0.428624 9.33917 0.583333 9.33917H1.02667V13.2708C1.02513 13.52 1.07288 13.767 1.16717 13.9977C1.26146 14.2283 1.40044 14.4381 1.57609 14.6148C1.75175 14.7916 1.96062 14.9318 2.19069 15.0275C2.42076 15.1232 2.66748 15.1725 2.91667 15.1725H3.6575V15.6042C3.6575 16.107 3.85724 16.5892 4.21278 16.9447C4.56831 17.3003 5.05053 17.5 5.55333 17.5C6.05614 17.5 6.53835 17.3003 6.89389 16.9447C7.24943 16.5892 7.44917 16.107 7.44917 15.6042V9.33917H15.7442V15.6042C15.7442 16.107 15.9439 16.5892 16.2994 16.9447C16.655 17.3003 17.1372 17.5 17.64 17.5C18.1428 17.5 18.625 17.3003 18.9806 16.9447C19.3361 16.5892 19.5358 16.107 19.5358 15.6042V15.1725H20.2708C20.7732 15.1694 21.2539 14.9677 21.608 14.6114C21.9621 14.2551 22.1608 13.7732 22.1608 13.2708V9.33917H22.6042C22.7589 9.33917 22.9072 9.27771 23.0166 9.16831C23.126 9.05892 23.1875 8.91054 23.1875 8.75583C23.1875 8.60112 23.126 8.45275 23.0166 8.34335C22.9072 8.23396 22.7589 8.1725 22.6042 8.1725H22.5983ZM3.6575 14.0058H2.9225C2.82674 14.0051 2.73207 13.9855 2.6439 13.9481C2.55573 13.9108 2.47577 13.8564 2.4086 13.7881C2.34143 13.7199 2.28837 13.6391 2.25243 13.5503C2.2165 13.4616 2.1984 13.3666 2.19917 13.2708V4.22917C2.20009 4.03761 2.27659 3.85416 2.41204 3.71871C2.5475 3.58326 2.73094 3.50675 2.9225 3.50583H3.6575V14.0058ZM6.2825 15.6042C6.28128 15.7987 6.20345 15.985 6.06587 16.1225C5.9283 16.2601 5.74206 16.3379 5.5475 16.3392C5.45174 16.3384 5.35707 16.3188 5.2689 16.2814C5.18073 16.2441 5.10077 16.1897 5.0336 16.1215C4.96643 16.0532 4.91337 15.9724 4.87743 15.8837C4.8415 15.7949 4.8234 15.6999 4.82417 15.6042V1.89583C4.82509 1.70428 4.90159 1.52083 5.03704 1.38538C5.1725 1.24992 5.35594 1.17342 5.5475 1.1725C5.74043 1.17248 5.92563 1.24831 6.06314 1.38364C6.20065 1.51896 6.27944 1.70293 6.2825 1.89583V15.6042ZM18.3692 15.6042C18.3692 15.7976 18.2923 15.983 18.1556 16.1198C18.0189 16.2565 17.8334 16.3333 17.64 16.3333C17.4466 16.3333 17.2611 16.2565 17.1244 16.1198C16.9877 15.983 16.9108 15.7976 16.9108 15.6042V1.89583C16.9108 1.70245 16.9877 1.51698 17.1244 1.38023C17.2611 1.24349 17.4466 1.16667 17.64 1.16667C17.8334 1.16667 18.0189 1.24349 18.1556 1.38023C18.2923 1.51698 18.3692 1.70245 18.3692 1.89583V15.6042ZM20.9942 13.2708C20.9949 13.3666 20.9768 13.4616 20.9409 13.5503C20.905 13.6391 20.8519 13.7199 20.7847 13.7881C20.7176 13.8564 20.6376 13.9108 20.5494 13.9481C20.4613 13.9855 20.3666 14.0051 20.2708 14.0058H19.5358V3.50583H20.2708C20.4624 3.50675 20.6458 3.58326 20.7813 3.71871C20.9167 3.85416 20.9932 4.03761 20.9942 4.22917V13.2708Z" fill="currentColor"/>
+    </svg>
+  );
+}
+
+function FoodIcon({ className }) {
+  return (
+    <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      <path d="M2 20C1.45 20 0.979333 19.8043 0.588 19.413C0.196667 19.0217 0.000666667 18.5507 0 18V4C0 3.45 0.196 2.97933 0.588 2.588C0.98 2.19667 1.45067 2.00067 2 2H3V0H5V2H13V0H15V2H16C16.55 2 17.021 2.196 17.413 2.588C17.805 2.98 18.0007 3.45067 18 4V18C18 18.55 17.8043 19.021 17.413 19.413C17.0217 19.805 16.5507 20.0007 16 20H2ZM16 18V4H2V18H16ZM6 16H7.5V12C7.93333 11.8833 8.29167 11.646 8.575 11.288C8.85833 10.93 9 10.5257 9 10.075V6H8V9.775H7.25V6H6.25V9.775H5.5V6H4.5V10.075C4.5 10.525 4.64167 10.9293 4.925 11.288C5.20833 11.6467 5.56667 11.884 6 12V16ZM12 16H13.5V6C12.6667 6 11.9583 6.29167 11.375 6.875C10.7917 7.45833 10.5 8.16667 10.5 9V12H12V16Z" fill="currentColor"/>
+    </svg>
+  );
+}
+
+function ProfileIcon({ className }) {
+  return (
+    <svg width="15" height="17" viewBox="0 0 15 17" fill="none" xmlns="http://www.w3.org/2000/svg" className={className} aria-hidden="true">
+      <path d="M10.6928 8.83743C11.9239 9.41857 12.9736 10.3238 13.7293 11.4561C14.4851 12.5884 14.9184 13.9051 14.9828 15.2649C14.9914 15.3895 14.975 15.5145 14.9346 15.6327C14.8942 15.7508 14.8306 15.8597 14.7476 15.9529C14.6645 16.0461 14.5637 16.1219 14.451 16.1756C14.3383 16.2293 14.216 16.26 14.0913 16.2658C13.9665 16.2717 13.8419 16.2525 13.7247 16.2095C13.6075 16.1665 13.5 16.1006 13.4086 16.0155C13.3173 15.9304 13.2438 15.8279 13.1926 15.7141C13.1413 15.6002 13.1134 15.4773 13.1103 15.3524C13.0421 13.9081 12.4204 12.5455 11.3742 11.5474C10.3279 10.5493 8.93748 9.99253 7.49154 9.99253C6.04559 9.99253 4.65517 10.5493 3.60891 11.5474C2.56266 12.5455 1.94093 13.9081 1.87278 15.3524C1.85595 15.5969 1.74405 15.8251 1.56106 15.9881C1.37807 16.1511 1.13853 16.2359 0.89374 16.2245C0.64895 16.2131 0.418369 16.1062 0.251376 15.9269C0.0843819 15.7475 -0.00574884 15.5099 0.000284498 15.2649C0.0645716 13.9052 0.497694 12.5887 1.25322 11.4564C2.00874 10.3241 3.05818 9.41874 4.28904 8.83743C3.5003 8.17955 2.93337 7.29466 2.66535 6.30315C2.39733 5.31164 2.44125 4.26164 2.79112 3.29598C3.14099 2.33031 3.77983 1.49585 4.62074 0.90612C5.46165 0.316386 6.46382 0 7.49091 0C8.518 0 9.52017 0.316386 10.3611 0.90612C11.202 1.49585 11.8408 2.33031 12.1907 3.29598C12.5406 4.26164 12.5845 5.31164 12.3165 6.30315C12.0485 7.29466 11.4815 8.17955 10.6928 8.83743ZM10.6165 4.99618C10.6165 4.16738 10.2873 3.37253 9.70124 2.78648C9.11519 2.20042 8.32034 1.87118 7.49154 1.87118C6.66273 1.87118 5.86788 2.20042 5.28183 2.78648C4.69577 3.37253 4.36654 4.16738 4.36654 4.99618C4.36654 5.82499 4.69577 6.61984 5.28183 7.20589C5.86788 7.79194 6.66273 8.12118 7.49154 8.12118C8.32034 8.12118 9.11519 7.79194 9.70124 7.20589C10.2873 6.61984 10.6165 5.82499 10.6165 4.99618Z" fill="currentColor"/>
+    </svg>
+  );
+}
 
 export default function BottomNav({
   value = "home",
   onChange,
   className = "",
+  mealPrepEnabled = false,
 }) {
   const navRef = useRef(null);
   const previousOptionRef = useRef("1");
@@ -18,7 +40,6 @@ export default function BottomNav({
   useEffect(() => {
     const el = navRef.current;
     if (!el) return;
-
     const checked = el.querySelector('input[type="radio"]:checked');
     if (checked) {
       const opt = checked.getAttribute("c-option") || "1";
@@ -32,93 +53,48 @@ export default function BottomNav({
     onChange?.(nextValue);
   };
 
+  const profileOption = mealPrepEnabled ? "4" : "3";
+
   return (
-    <fieldset
-      ref={navRef}
-      className={`${styles.switcher} ${className}`}
-      aria-label="Bottom nav"
-    >
+    <fieldset ref={navRef} className={`${styles.switcher} ${className}`} aria-label="Bottom nav">
       <legend className={styles["switcher__legend"]}>Navigate</legend>
 
+      {/* Gym */}
       <label className={styles["switcher__option"]}>
-        <input
-          className={styles["switcher__input"]}
-          type="radio"
-          name="nav"
-          value="home"
-          c-option="1"
-          checked={value === "home"}
-          onChange={handleNavChange}
-        />
+        <input className={styles["switcher__input"]} type="radio" name="nav" value="gym" c-option="1" checked={value === "gym"} onChange={handleNavChange} />
         <span className={styles["switcher__content"]}>
-          <HiHome className={styles["switcher__icon"]} aria-hidden="true" />
-          <span className={styles["switcher__text"]}>Home</span>
+          <GymIcon className={styles["switcher__icon"]} />
         </span>
       </label>
 
+      {/* Food */}
       <label className={styles["switcher__option"]}>
-        <input
-          className={styles["switcher__input"]}
-          type="radio"
-          name="nav"
-          value="food"
-          c-option="2"
-          checked={value === "food"}
-          onChange={handleNavChange}
-        />
+        <input className={styles["switcher__input"]} type="radio" name="nav" value="food" c-option="2" checked={value === "food"} onChange={handleNavChange} />
         <span className={styles["switcher__content"]}>
-          <ImSpoonKnife
-            className={styles["switcher__icon"]}
-            aria-hidden="true"
-          />
-          <span className={styles["switcher__text"]}>Food</span>
+          <FoodIcon className={styles["switcher__icon"]} />
         </span>
       </label>
 
-      <label className={styles["switcher__option"]}>
-        <input
-          className={styles["switcher__input"]}
-          type="radio"
-          name="nav"
-          value="recepten"
-          c-option="3"
-          checked={value === "recepten"}
-          onChange={handleNavChange}
-        />
-        <span className={styles["switcher__content"]}>
-          <IoBookSharp
-            className={styles["switcher__icon"]}
-            aria-hidden="true"
-          />
-          <span className={styles["switcher__text"]}>Recepten</span>
-        </span>
-      </label>
+      {/* Prep */}
+      {mealPrepEnabled && (
+        <label className={styles["switcher__option"]}>
+          <input className={styles["switcher__input"]} type="radio" name="nav" value="prep" c-option="3" checked={value === "prep"} onChange={handleNavChange} />
+          <span className={styles["switcher__content"]}>
+            <IoCalendarOutline size={24} className={styles["switcher__icon"]} aria-hidden="true" />
+          </span>
+        </label>
+      )}
 
+      {/* Profile */}
       <label className={styles["switcher__option"]}>
-        <input
-          className={styles["switcher__input"]}
-          type="radio"
-          name="nav"
-          value="gym"
-          c-option="4"
-          checked={value === "gym"}
-          onChange={handleNavChange}
-        />
+        <input className={styles["switcher__input"]} type="radio" name="nav" value="profile" c-option={profileOption} checked={value === "profile"} onChange={handleNavChange} />
         <span className={styles["switcher__content"]}>
-          <IoBarbellSharp
-            className={styles["switcher__icon"]}
-            aria-hidden="true"
-          />
-          <span className={styles["switcher__text"]}>Gym</span>
+          <ProfileIcon className={styles["switcher__icon"]} />
         </span>
       </label>
 
       <div className={styles["switcher__filter"]} aria-hidden="true">
-        <svg>
-          <filter id="switcher" primitiveUnits="objectBoundingBox">
-            {/* keep your original filter content here if you had it */}
-          </filter>
-        </svg>
+        <svg><filter id="switcher" primitiveUnits="objectBoundingBox"></filter></svg>
       </div>
     </fieldset>
   );

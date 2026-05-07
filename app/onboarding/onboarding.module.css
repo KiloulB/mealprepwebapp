@@ -1,0 +1,512 @@
+﻿/* ── Layout ──────────────────────────────────────────────────────────────── */
+
+.page {
+  min-height: 100vh;
+  background: #18181A;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.progressBarTrack {
+  width: 100%;
+  height: 4px;
+  background: #2e2e30;
+  flex-shrink: 0;
+}
+
+.progressBarFill {
+  height: 4px;
+  background: #FC9158;
+  transition: width 0.3s ease;
+}
+
+.content {
+  flex: 1;
+  padding: 32px 24px 40px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.content::-webkit-scrollbar { display: none; }
+
+.stepLabel {
+  font-size: 13px;
+  color: #A1A1A1;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.stepTitle {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.stepSubtitle {
+  font-size: 15px;
+  color: #A1A1A1;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+/* ── Form elements ────────────────────────────────────────────────────────── */
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #A1A1A1;
+  margin-bottom: 8px;
+}
+
+.input {
+  width: 100%;
+  background: #232325;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 18px;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input::placeholder { color: #555; }
+
+.inputWithUnit {
+  display: flex;
+  align-items: center;
+  background: #232325;
+  border-radius: 14px;
+  padding: 0 18px;
+}
+
+.inputWithUnit input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 16px 0;
+}
+
+.inputWithUnit input::placeholder { color: #555; }
+
+.inputUnit {
+  font-size: 14px;
+  color: #A1A1A1;
+  flex-shrink: 0;
+}
+
+/* ── Picker rows ─────────────────────────────────────────────────────────── */
+
+.pickerCard {
+  background: #232325;
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.pickerRow {
+  display: flex;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid #2e2e30;
+  cursor: pointer;
+  gap: 14px;
+  transition: background 0.15s;
+}
+
+.pickerRow:last-child { border-bottom: none; }
+
+.pickerRow:active { background: #2a2a2c; }
+
+.pickerRowLabel {
+  flex: 1;
+  font-size: 16px;
+  color: #fff;
+}
+
+.pickerRowSub {
+  font-size: 13px;
+  color: #A1A1A1;
+  margin-top: 2px;
+}
+
+.pickerCheck {
+  color: #FC9158;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ── Slider ──────────────────────────────────────────────────────────────── */
+
+.sliderWrap {
+  margin-bottom: 16px;
+}
+
+.sliderTrackWrap {
+  position: relative;
+  padding: 8px 0;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: #2C2C2E;
+  border-radius: 99px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #FC9158;
+  cursor: pointer;
+  box-shadow: 0 2px 8px color-mix(in srgb, #FC9158 50%, transparent);
+}
+
+.slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #FC9158;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px color-mix(in srgb, #FC9158 50%, transparent);
+}
+
+.sliderValueRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.sliderMin, .sliderMax {
+  font-size: 12px;
+  color: #555;
+}
+
+.sliderValue {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.sliderValueLabel {
+  font-size: 13px;
+  color: #A1A1A1;
+}
+
+/* ── Stepper ─────────────────────────────────────────────────────────────── */
+
+.stepper {
+  display: flex;
+  align-items: center;
+  background: #232325;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.stepperBtn {
+  width: 52px;
+  height: 52px;
+  background: none;
+  border: none;
+  color: #FC9158;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stepperBtn:disabled { color: #444; cursor: not-allowed; }
+
+.stepperValue {
+  flex: 1;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stepperLabel {
+  font-size: 13px;
+  color: #A1A1A1;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ── Unit toggle ─────────────────────────────────────────────────────────── */
+
+.unitToggle {
+  display: flex;
+  background: #232325;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 16px;
+}
+
+.unitToggleBtn {
+  flex: 1;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.unitToggleBtnActive {
+  background: #FC9158;
+  color: #fff;
+}
+
+/* ── Live preview (step 6) ───────────────────────────────────────────────── */
+
+.liveCard {
+  background: #232325;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.liveRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.liveRow:last-child { margin-bottom: 0; }
+
+.liveLabel {
+  font-size: 14px;
+  color: #A1A1A1;
+}
+
+.liveValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.liveValueAccent {
+  font-size: 18px;
+  font-weight: 700;
+  color: #FC9158;
+}
+
+.warning {
+  font-size: 13px;
+  color: #FC9158;
+  background: color-mix(in srgb, #FC9158 10%, transparent);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+/* ── Result step (step 7) ────────────────────────────────────────────────── */
+
+.sourceCard {
+  background: #232325;
+  border-left: 3px solid #FC9158;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 24px;
+}
+
+.sourceTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FC9158;
+  margin-bottom: 10px;
+}
+
+.sourceItem {
+  font-size: 12px;
+  color: #A1A1A1;
+  margin-bottom: 5px;
+  line-height: 1.5;
+}
+
+.sourceItem:last-child { margin-bottom: 0; }
+
+.resultKcal {
+  font-size: 52px;
+  font-weight: 800;
+  color: #FC9158;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.resultKcalLabel {
+  font-size: 14px;
+  color: #A1A1A1;
+  margin-bottom: 24px;
+}
+
+.macroRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.macroCard {
+  flex: 1;
+  background: #232325;
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+}
+
+.macroCardValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.macroCardLabel {
+  font-size: 12px;
+  color: #A1A1A1;
+}
+
+.macroProtein { color: #E4222A; }
+.macroFat     { color: #F1A500; }
+.macroCarbs   { color: #08B6DC; }
+
+/* ── Footer / button area ────────────────────────────────────────────────── */
+
+.footer {
+  padding: 16px 24px 32px;
+  background: #18181A;
+  flex-shrink: 0;
+}
+
+.primaryBtn {
+  width: 100%;
+  padding: 17px 0;
+  background: #FC9158;
+  border: none;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  color: #A1A1A1;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 0;
+}
+
+.errorText {
+  font-size: 13px;
+  color: #E4222A;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.tdeeNote {
+  font-size: 13px;
+  color: #A1A1A1;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+/* ── Goal info card ──────────────────────────────────────────────────────── */
+
+.goalInfoCard {
+  background: color-mix(in srgb, #FC9158 8%, transparent);
+  border: 1px solid color-mix(in srgb, #FC9158 25%, transparent);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+/* ── Field error ─────────────────────────────────────────────────────────── */
+
+.fieldError {
+  font-size: 12px;
+  color: #E4222A;
+  margin-top: 6px;
+}
+
+/* ── Week preview table ──────────────────────────────────────────────────── */
+
+.weekPreviewWrap {
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  background: #232325;
+  border-radius: 14px;
+  margin-top: 16px;
+}
+
+.weekPreviewWrap::-webkit-scrollbar { display: none; }
+
+.weekPreviewTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.weekPreviewTable th {
+  position: sticky;
+  top: 0;
+  background: #2e2e30;
+  color: #A1A1A1;
+  font-weight: 600;
+  padding: 9px 14px;
+  text-align: left;
+}
+
+.weekPreviewTable td {
+  padding: 9px 14px;
+  color: #ccc;
+  border-top: 1px solid #2e2e30;
+}
+
+.weekPreviewTable tr.weekPreviewEnd td {
+  color: #FC9158;
+  font-weight: 700;
+}

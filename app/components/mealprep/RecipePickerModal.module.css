@@ -1,0 +1,149 @@
+﻿.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 400;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.sheet {
+  width: 100%;
+  max-width: 480px;
+  background: #2C2C2E;
+  border-radius: 20px 20px 0 0;
+  padding: 20px 0 0;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 16px;
+}
+
+.title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.searchWrap {
+  display: flex;
+  align-items: center;
+  background: #2C2C2E;
+  border-radius: 12px;
+  margin: 0 20px 12px;
+  padding: 10px 14px;
+  gap: 8px;
+}
+
+.searchIcon {
+  color: #888;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 15px;
+}
+
+.searchInput::placeholder {
+  color: #666;
+}
+
+.tabs {
+  display: flex;
+  padding: 0 20px 12px;
+  gap: 8px;
+}
+
+.tabBtn {
+  padding: 7px 18px;
+  border-radius: 20px;
+  border: none;
+  background: #2C2C2E;
+  color: #A1A1A1;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tabBtnActive {
+  background: #FC9158;
+  color: #fff;
+}
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-bottom: 20px;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.empty {
+  padding: 32px 20px;
+  color: #555;
+  font-size: 14px;
+  text-align: center;
+}
+
+.recipeRow {
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #2C2C2E;
+  padding: 14px 20px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.recipeRow:last-child {
+  border-bottom: none;
+}
+
+.recipeRow:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.recipeInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.recipeTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.recipeMeta {
+  font-size: 13px;
+  color: #A1A1A1;
+}

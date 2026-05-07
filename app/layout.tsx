@@ -30,7 +30,6 @@ export default function RootLayout({
         <UserProvider>
           <FontProvider>
             {children}
-             
           </FontProvider>
         </UserProvider>
         

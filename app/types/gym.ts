@@ -38,6 +38,7 @@ export type GymSession = {
   startedAt: number;
   finishedAt?: number;
   durationSec?: number;
+  status?: "finished" | "unfinished";
 
   exercises: GymSessionExercise[];
   musclesWorked: string[];

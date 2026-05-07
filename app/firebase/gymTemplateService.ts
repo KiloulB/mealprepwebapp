@@ -9,6 +9,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
 } from "firebase/firestore";
 import type { GymTemplate } from "../types/gym";
 
@@ -35,4 +36,13 @@ export function subscribeToGymTemplates(uid: string, cb: (rows: GymTemplate[]) =
 
 export async function deleteGymTemplate(uid: string, templateId: string) {
   await deleteDoc(doc(db, "users", uid, "gymTemplates", templateId));
+}
+
+export async function updateGymTemplate(
+  uid: string,
+  templateId: string,
+  data: Omit<GymTemplate, "id">
+) {
+  const ref = doc(db, "users", uid, "gymTemplates", templateId);
+  await setDoc(ref, data, { merge: false });
 }

@@ -80,10 +80,7 @@ export default function RecipeDetailPage({
 
   const description = useMemo(() => {
     if (!recipe) return "";
-    return (
-      recipe.subtitle ||
-      `Geen subtitel toevoegd.`
-    );
+    return `${recipe.portions ?? 1} porties`;
   }, [recipe]);
 
   if (!recipe) {
@@ -125,12 +122,7 @@ export default function RecipeDetailPage({
           </button>
         </div>
 
-        <p className={styles.desc}>
-          <span className={styles.timeInline}>
-            {recipe.totalTime || recipe.prepTime || "0 min"}
-          </span>{" "}
-          — {description}
-        </p>
+        <p className={styles.desc}>{description}</p>
 
         {/* NUTRITION */}
         <div className={styles.section}>
@@ -184,17 +176,16 @@ export default function RecipeDetailPage({
         {activeTab === "ingredients" ? (
           <div>
             <div className={styles.servingsRow}>
-              <div>Servings</div>
+              <div>Porties</div>
               <div className={styles.servingsValue}>
-                {recipe.servings ? String(recipe.servings).padStart(2, "0") : "0"}{" "}
-                servings
+                {String(recipe.portions ?? 1).padStart(2, "0")} porties
               </div>
             </div>
 
             <div className={styles.list}>
               {recipe.ingredients?.length ? (
-                recipe.ingredients.map((ing) => (
-                  <div key={ing.id} className={styles.ingredientItem}>
+                recipe.ingredients.map((ing, ingIdx) => (
+                  <div key={ingIdx} className={styles.ingredientItem}>
                     <div className={styles.ingredientIcon}>
                       {getIngredientEmoji(ing.name)}
                     </div>
@@ -212,15 +203,15 @@ export default function RecipeDetailPage({
           </div>
         ) : (
           <div className={styles.list}>
-            {recipe.instructions?.length ? (
-              recipe.instructions.map((inst, idx) => (
-                <div key={inst.id} className={styles.stepItem}>
+            {recipe.steps?.length ? (
+              recipe.steps.map((step, idx) => (
+                <div key={idx} className={styles.stepItem}>
                   <div className={styles.stepNum}>{idx + 1}</div>
-                  <div className={styles.stepText}>{inst.step}</div>
+                  <div className={styles.stepText}>{step}</div>
                 </div>
               ))
             ) : (
-              <div className={styles.emptyText}>No steps added</div>
+              <div className={styles.emptyText}>Geen stappen toegevoegd</div>
             )}
           </div>
         )}

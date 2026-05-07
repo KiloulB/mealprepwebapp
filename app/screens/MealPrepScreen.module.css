@@ -1,0 +1,337 @@
+﻿.screen {
+  min-height: 100vh;
+  background: #18181A;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  padding: 0 0 120px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 52px 20px 16px;
+}
+
+.headerTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.addBtn {
+  background: #232325;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FC9158;
+  cursor: pointer;
+}
+
+/* ── Reminder banner ─────────────────────────────────────────────────── */
+
+.reminderBanner {
+  background: #2C1F0E;
+  border: 1px solid #FC9158;
+  border-radius: 14px;
+  margin: 0 20px 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.reminderIcon { font-size: 20px; flex-shrink: 0; line-height: 1; }
+.reminderText { display: flex; flex-direction: column; gap: 2px; }
+.reminderTitle { font-size: 14px; font-weight: 700; color: #FC9158; }
+.reminderSub { font-size: 13px; color: #A1A1A1; }
+
+/* ── Active plan card ─────────────────────────────────────────────────── */
+
+.planCard {
+  background: #232325;
+  border-radius: 18px;
+  margin: 0 20px 16px;
+  padding: 16px 18px;
+}
+
+.planCardRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #2e2e30;
+}
+
+.planCardRow:last-of-type { border-bottom: none; }
+.planCardLabel { font-size: 14px; color: #A1A1A1; }
+.planCardValue { font-size: 14px; font-weight: 600; color: #fff; }
+
+.planCardActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.completeBtn {
+  flex: 1;
+  padding: 10px 0;
+  background: none;
+  border: 1px solid #2C2C2E;
+  border-radius: 12px;
+  color: #A1A1A1;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.completeBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.deleteBtn {
+  flex: 1;
+  padding: 10px 0;
+  background: none;
+  border: 1px solid color-mix(in srgb, #E4222A 30%, transparent);
+  border-radius: 12px;
+  color: #E4222A;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.deleteBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.confirmDeleteRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #2e2e30;
+}
+
+.confirmDeleteText {
+  font-size: 13px;
+  color: #A1A1A1;
+  flex: 1;
+}
+
+.confirmDeleteYes {
+  background: #E4222A;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+.confirmDeleteYes:disabled { opacity: 0.6; }
+
+.confirmDeleteNo {
+  background: #2e2e30;
+  border: none;
+  border-radius: 10px;
+  color: #A1A1A1;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+/* ── Week calendar ────────────────────────────────────────────────────── */
+
+.weekCard {
+  background: #232325;
+  border-radius: 18px;
+  margin: 0 20px 16px;
+  padding: 16px 12px;
+}
+
+.weekCardTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.weekRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.weekDay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: #2e2e30;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  padding: 8px 4px;
+  min-width: 0;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.weekDayToday {
+  background: #3a2a1a;
+  border-color: #FC9158;
+}
+
+.weekDaySelected {
+  border-color: #FC9158;
+  background: color-mix(in srgb, #FC9158 12%, transparent);
+}
+
+.weekDayLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: #A1A1A1;
+}
+
+.weekDayToday .weekDayLabel,
+.weekDaySelected .weekDayLabel {
+  color: #FC9158;
+}
+
+.weekDayMeal {
+  font-size: 10px;
+  color: #fff;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.dayDetail {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #2e2e30;
+}
+
+.dayDetailTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FC9158;
+  margin-bottom: 6px;
+}
+
+.dayDetailRecipe {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 3px;
+}
+
+.dayDetailMeta {
+  font-size: 12px;
+  color: #666;
+}
+
+.dayDetailEmpty {
+  font-size: 14px;
+  color: #555;
+}
+
+/* ── Meals list ───────────────────────────────────────────────────────── */
+
+.mealsCard {
+  background: #232325;
+  border-radius: 18px;
+  margin: 0 20px 16px;
+  padding: 16px 18px;
+}
+
+.mealsCardTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.mealRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #2e2e30;
+  gap: 8px;
+}
+.mealRow:last-child { border-bottom: none; }
+
+.mealInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mealTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mealMeta { font-size: 12px; color: #A1A1A1; }
+
+.mealPattern {
+  font-size: 12px;
+  color: #FC9158;
+  font-weight: 600;
+  flex-shrink: 0;
+  background: color-mix(in srgb, #FC9158 12%, transparent);
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+/* ── Empty state ──────────────────────────────────────────────────────── */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 8px;
+}
+
+.emptyIcon { font-size: 48px; margin-bottom: 8px; }
+.emptyTitle { font-size: 18px; font-weight: 700; color: #fff; }
+.emptySub { font-size: 14px; color: #A1A1A1; text-align: center; }
+
+.helpBtn {
+  position: fixed;
+  bottom: 96px;
+  right: 20px;
+  z-index: 90;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #232325;
+  border: 1.5px solid #2C2C2E;
+  color: #FC9158;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}

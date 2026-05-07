@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useMemo } from "react";
 import type { BodyPart } from "./bodyTypes";
@@ -50,7 +50,7 @@ export default function MuscleMap({
   const viewBox = view === "front" ? "0 0 700 1400" : "700 0 750 1400";
 
   return (
-    <div className={className} style={{ width: "100px", height }}>
+    <div className={className} style={{ height }}>
       <svg
         viewBox={viewBox}
         width="100%"
@@ -63,8 +63,8 @@ export default function MuscleMap({
           const slug = String(part.slug || "").toLowerCase();
           const isWorked = worked.has(slug);
 
-          const fill = isWorked ? "#ff2d2d" : `#${(part.color || "3f3f3f").replace("#", "")}`;
-          const stroke = isWorked ? "#ff6b6b" : "#2b2b2b";
+          const fill = isWorked ? "#FC9158" : "#3f3f3f";
+          const stroke = isWorked ? "#E4222A" : "#2b2b2b";
           const opacity = isWorked ? 0.95 : 0.55;
 
           const paths = partPaths(part);
