@@ -20,18 +20,23 @@
 
 .workoutStartBtn {
   width: 100%;
-  background: transparent;
+  background: rgba(252, 145, 88, 0.04);
   color: #FC9158;
-  border: 1.5px solid #FC9158;
-  border-radius: 10px;
+  border: 1px dashed rgba(252, 145, 88, 0.30);
+  border-radius: 12px;
   font-weight: 600;
   font-size: 14px;
-  padding: 9px 0;
+  padding: 10px 0;
   margin-bottom: 28px;
   margin-top: 0;
   letter-spacing: 0.1px;
-  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  transition: background 0.15s;
   font-family: system-ui, sans-serif, sans-serif;
+}
+
+.workoutStartBtn:hover {
+  background: rgba(252, 145, 88, 0.09);
 }
 
 .muscleCard, .historyCard {
@@ -559,7 +564,7 @@
   transform: translateZ(0);
   background: #232325;
   border-radius: 20px 20px 0 0;
-  padding: 10px;
+  padding: 10px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   z-index: 99;
 }

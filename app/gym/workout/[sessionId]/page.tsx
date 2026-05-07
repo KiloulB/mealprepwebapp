@@ -100,6 +100,7 @@ export default function WorkoutSessionPage() {
   const [pickerInfoId, setPickerInfoId] = useState<string | null>(null);
 
   const [prevSession, setPrevSession] = useState<WorkoutSession | null>(null);
+  const [editingExerciseId, setEditingExerciseId] = useState<string | null>(null);
 
   const prevByTemplateSetId = useMemo(() => {
     const m = new Map<string, { kg?: number; reps?: number }>();
@@ -267,6 +268,17 @@ export default function WorkoutSessionPage() {
     } finally {
       setSaving(false);
     }
+  }
+
+  async function deleteSet(exerciseId: string, setId: string) {
+    if (!session?.exercises) return;
+    const nextExercises = session.exercises.map((ex) => {
+      if (ex.id !== exerciseId) return ex;
+      const nextSets = (ex.sets ?? []).filter((s) => s.id !== setId);
+      return { ...ex, sets: nextSets, done: nextSets.length > 0 && nextSets.every((s) => !!s.done) };
+    });
+    setSession((prev) => (prev ? { ...prev, exercises: nextExercises } : prev));
+    await persistExercises(nextExercises);
   }
 
   async function deleteWorkout() {
@@ -450,19 +462,34 @@ export default function WorkoutSessionPage() {
                       </div>
                     </div>
 
-                    <button
-                      className={styles.infoBtn}
-                      type="button"
-                      aria-label="Oefening info"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setPickerMode("info");
-                        setPickerInfoId(ex.ref?.exerciseId ?? null);
-                        setPickerOpen(true);
-                      }}
-                    >
-                      i
-                    </button>
+                    <div style={{ display: "flex", gap: 10 }}>
+                      {!locked && (
+                        <button
+                          className={`${styles.editSetsBtn} ${editingExerciseId === ex.id ? styles.editSetsBtnActive : ""}`}
+                          type="button"
+                          aria-label="Sets bewerken"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingExerciseId(editingExerciseId === ex.id ? null : ex.id);
+                          }}
+                        >
+                          {editingExerciseId === ex.id ? "✓" : "−"}
+                        </button>
+                      )}
+                      <button
+                        className={styles.infoBtn}
+                        type="button"
+                        aria-label="Oefening info"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPickerMode("info");
+                          setPickerInfoId(ex.ref?.exerciseId ?? null);
+                          setPickerOpen(true);
+                        }}
+                      >
+                        i
+                      </button>
+                    </div>
                   </div>
 
                   {/* Set header */}
@@ -483,12 +510,24 @@ export default function WorkoutSessionPage() {
                         const prevKey = set.templateSetId || (ex.ref?.exerciseId ? `${ex.ref.exerciseId}:${setIdx}` : `ex-${ex.id}:${setIdx}`);
                         const prev = fromTemplate ? prevByTemplateSetId.get(prevKey) : undefined;
 
+                        const isEditing = !locked && editingExerciseId === ex.id;
                         return (
                           <div
                             key={set.id ?? setIdx}
                             className={`${fromTemplate ? styles.setRow : styles.setRow2} ${set.done ? styles.setRowDone : ""}`}
                           >
-                            <div className={styles.setCellSet}>{setIdx + 1}</div>
+                            {isEditing ? (
+                              <button
+                                className={styles.setCellDeleteBtn}
+                                type="button"
+                                aria-label="Set verwijderen"
+                                onClick={() => deleteSet(ex.id, set.id)}
+                              >
+                                −
+                              </button>
+                            ) : (
+                              <div className={styles.setCellSet}>{setIdx + 1}</div>
+                            )}
 
                             {fromTemplate && (
                               <div className={styles.setCellPrev}>
@@ -505,7 +544,7 @@ export default function WorkoutSessionPage() {
                                 inputMode="decimal"
                                 value={kgValue}
                                 onChange={(e) => updateSetField(ex.id, set.id, "targetKg", e.target.value)}
-                                disabled={saving || locked}
+                                disabled={saving || locked || isEditing}
                                 aria-label="Kg"
                               />
                             </div>
@@ -516,7 +555,7 @@ export default function WorkoutSessionPage() {
                               inputMode="numeric"
                               value={repsValue}
                               onChange={(e) => updateSetField(ex.id, set.id, "targetReps", e.target.value)}
-                              disabled={saving || locked}
+                              disabled={saving || locked || isEditing}
                               aria-label="Reps"
                             />
 
@@ -524,7 +563,7 @@ export default function WorkoutSessionPage() {
                               type="button"
                               className={styles.checkBtn}
                               onClick={() => toggleSetDone(ex.id, set.id)}
-                              disabled={saving || locked}
+                              disabled={saving || locked || isEditing}
                               aria-label="Set voltooien"
                             >
                               <span className={`${styles.check} ${set.done ? styles.checkOn : styles.checkOff}`}>

@@ -307,6 +307,53 @@
   margin-bottom: 10px;
 }
 
+/* ── Edit-mode set delete ────────────────────────────── */
+.editSetsBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(235, 235, 245, 0.50);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.editSetsBtnActive {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.10);
+  color: #22c55e;
+}
+
+.setCellDeleteBtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba(228, 34, 42, 0.10);
+  border: 1px solid rgba(228, 34, 42, 0.28);
+  color: #E4222A;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.setCellDeleteBtn:hover {
+  background: rgba(228, 34, 42, 0.18);
+}
+
 .setRow {
   display: grid;
   grid-template-columns: 28px 68px 1fr 1fr 40px;
@@ -315,7 +362,9 @@
   padding: 5px 4px;
   border-radius: 12px;
   border: 1px solid transparent;
-  transition: background 0.15s, border-color 0.15s;
+  background: #232325;
+  position: relative;
+  z-index: 1;
 }
 
 .setRow2 {
@@ -326,11 +375,13 @@
   padding: 5px 4px;
   border-radius: 12px;
   border: 1px solid transparent;
-  transition: background 0.15s, border-color 0.15s;
+  background: #232325;
+  position: relative;
+  z-index: 1;
 }
 
 .setRowDone {
-  background: rgba(34, 197, 94, 0.07);
+  background: #232e29;
   border-color: rgba(34, 197, 94, 0.15);
 }
 
