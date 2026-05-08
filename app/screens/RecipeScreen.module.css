@@ -183,17 +183,14 @@
 }
 
 .trashBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: 9999px;
-  border: 0;
-  background: rgba(228, 34, 42, 0.12);
-  border: 1px solid rgba(228, 34, 42, 0.35);
-  color: #ffb4b8;
+  background: none;
+  border: none;
+  color: #888;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4px;
 }
 
 
@@ -317,16 +314,14 @@
 }
 
 .circleBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: 9999px;
-  border: 0;
-  background: #232325;
-  color: #fff;
+  background: none;
+  border: none;
+  color: #888;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4px;
 }
 
 /* Ingredients rows */
@@ -363,16 +358,14 @@
 }
 
 .removeBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: 9999px;
-  border: 0;
-  background: #232325;
-  color: #fff;
+  background: none;
+  border: none;
+  color: #888;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4px;
 }
 
 /* Steps rows */
@@ -479,6 +472,24 @@
   margin-top: 6px;
   font-size: 12px;
   color: #A1A1A1;
+}
+
+.helpBtn {
+  position: fixed;
+  bottom: 100px;
+  right: 12px;
+  z-index: 90;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #232325;
+  border: 1.5px solid #2C2C2E;
+  color: #FC9158;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
 .headerMenuWrap {

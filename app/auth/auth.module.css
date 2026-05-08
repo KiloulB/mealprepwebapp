@@ -1,78 +1,191 @@
-﻿.page {
+/* Auth Page — redesigned */
+
+.page {
   min-height: 100vh;
-  background: #18181A;
+  background: #111113;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 24px 20px;
+  /* Subtle warm bloom at top */
+  background-image: radial-gradient(
+    ellipse 900px 420px at 50% -60px,
+    rgba(252, 145, 88, 0.07) 0%,
+    transparent 70%
+  );
 }
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
 
 .card {
   width: 100%;
-  max-width: 400px;
-  background: #232325;
-  border-radius: 24px;
-  padding: 32px 24px;
+  max-width: 380px;
+  background: #1c1c1e;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 28px;
+  padding: 36px 28px 28px;
 }
 
-.logo {
-  text-align: center;
-  margin-bottom: 28px;
+/* ── Logo ─────────────────────────────────────────────────────────────────── */
+
+.logoWrap {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  justify-content: center;
+  margin-bottom: 32px;
 }
 
-.logoText {
-  font-size: 26px;
+.logoIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #FC9158 0%, #e0722e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 6px 20px rgba(252, 145, 88, 0.28);
+}
+
+.logoName {
+  font-size: 20px;
   font-weight: 800;
   color: #fff;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
 }
 
-.logoAccent {
-  color: #FC9158;
-}
+/* ── Heading ──────────────────────────────────────────────────────────────── */
 
 .title {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 700;
   color: #fff;
-  margin-bottom: 24px;
+  margin: 0 0 6px;
   text-align: center;
 }
 
+.subtitle {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin: 0 0 28px;
+  font-weight: 500;
+}
+
+/* ── Form ─────────────────────────────────────────────────────────────────── */
+
 .formGroup {
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 
 .label {
   display: block;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   color: #A1A1A1;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #555;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
 }
 
 .input {
   width: 100%;
   background: #2C2C2E;
-  border: none;
-  border-radius: 12px;
-  padding: 14px 16px;
+  border: 1.5px solid #2e2e30;
+  border-radius: 14px;
+  padding: 14px 16px 14px 42px;
   color: #fff;
   font-size: 15px;
   outline: none;
   box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: #FC9158;
 }
 
 .input::placeholder {
-  color: #666;
+  color: #444;
 }
 
-.error {
+/* ── PIN ──────────────────────────────────────────────────────────────────── */
+
+.pinWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pinRow {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.pinBox {
+  width: 62px;
+  height: 62px;
+  background: #2C2C2E;
+  border: 1.5px solid #2e2e30;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  caret-color: transparent;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.pinBox:focus {
+  border-color: #FC9158;
+  background: #333335;
+}
+
+.pinBoxFilled {
+  border-color: rgba(252, 145, 88, 0.5);
+  background: rgba(252, 145, 88, 0.06);
+}
+
+/* ── Error ────────────────────────────────────────────────────────────────── */
+
+.errorBox {
+  background: rgba(228, 34, 42, 0.1);
+  border: 1px solid rgba(228, 34, 42, 0.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.errorText {
   font-size: 13px;
   color: #ff6b6b;
-  text-align: center;
-  margin-bottom: 12px;
+  font-weight: 500;
+  flex: 1;
 }
+
+/* ── Submit button ────────────────────────────────────────────────────────── */
 
 .primaryBtn {
   width: 100%;
@@ -80,26 +193,59 @@
   background: #FC9158;
   border: none;
   border-radius: 14px;
-  color: #fff;
+  color: #000;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 10px;
+  letter-spacing: -0.2px;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.primaryBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.primaryBtn:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .primaryBtn:disabled {
-  opacity: 0.6;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
+/* ── Divider ──────────────────────────────────────────────────────────────── */
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 22px 0 0;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background: #2e2e30;
+}
+
+.dividerText {
+  font-size: 12px;
+  color: #444;
+  font-weight: 500;
+}
+
+/* ── Switch ───────────────────────────────────────────────────────────────── */
+
 .switchRow {
-  margin-top: 20px;
+  margin-top: 16px;
   text-align: center;
 }
 
 .switchText {
   font-size: 14px;
-  color: #A1A1A1;
+  color: #666;
 }
 
 .switchBtn {
@@ -107,38 +253,8 @@
   border: none;
   color: #FC9158;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   padding: 0;
-  margin-left: 4px;
-}
-
-.pinRow {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 4px;
-}
-
-.pinBox {
-  width: 56px;
-  height: 56px;
-  background: #2C2C2E;
-  border: 2px solid transparent;
-  border-radius: 14px;
-  color: #fff;
-  font-size: 22px;
-  font-weight: 700;
-  text-align: center;
-  outline: none;
-  caret-color: transparent;
-  transition: border-color 150ms;
-}
-
-.pinBox:focus {
-  border-color: #FC9158;
-}
-
-.pinBoxFilled {
-  border-color: color-mix(in srgb, #FC9158 50%, transparent);
+  margin-left: 5px;
 }

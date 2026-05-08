@@ -14,22 +14,20 @@
 }
 
 .headerTitle {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
   color: #fff;
 }
 
 .addBtn {
-  background: #232325;
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  color: #888;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FC9158;
-  cursor: pointer;
+  padding: 4px;
 }
 
 /* ── Reminder banner ─────────────────────────────────────────────────── */
@@ -320,8 +318,8 @@
 
 .helpBtn {
   position: fixed;
-  bottom: 96px;
-  right: 20px;
+  bottom: 100px;
+  right: 12px;
   z-index: 90;
   width: 42px;
   height: 42px;

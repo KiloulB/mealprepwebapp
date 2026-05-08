@@ -405,9 +405,6 @@ export default function ExercisePickerModal({
         {/* Header: search + filters */}
         <div className={gymStyles.headerBlock}>
           <div className={gymStyles.headerTopRow}>
-            <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Sluiten">
-              <FiX size={20} />
-            </button>
             <div className={gymStyles.chipRow}>
               <button
                 ref={filterBtnRef}
@@ -428,6 +425,9 @@ export default function ExercisePickerModal({
                 Geselecteerd ({selectedCount})
               </button>
             </div>
+            <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Sluiten">
+              <FiX size={20} />
+            </button>
           </div>
 
           {filtersOpen && (

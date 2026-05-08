@@ -13,8 +13,11 @@ import {
   IoClose,
   IoCreateOutline,
   IoImageOutline,
+  IoInformationCircleOutline,
   IoTrashOutline,
 } from "react-icons/io5";
+
+import HelpOverlay from "../components/HelpOverlay";
 
 import { useUser } from "../context/UserContext";
 import {
@@ -46,12 +49,13 @@ const initialFormState = {
 
 export default function RecipeScreen() {
   const router = useRouter();
-  const { authUser } = useUser();
+  const { authUser, helpModeEnabled } = useUser();
 
   const [recipes, setRecipes] = useState([]);
 
   // Header menu (replaces FAB)
   const [menuOpen, setMenuOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectRecipeModalVisible, setSelectRecipeModalVisible] =
@@ -237,6 +241,28 @@ export default function RecipeScreen() {
     setForm(initialFormState);
   };
 
+  const RECIPE_HELP_STEPS = [
+    {
+      title: "Recepten bekijken",
+      description: (
+        <>
+          <p><strong>Overzicht</strong><br />In het Recepten-scherm zie je alle recepten die je hebt aangemaakt. Tik op een receptkaart om naar de detailpagina te gaan met ingrediënten, bereidingsstappen en voedingswaarden.</p>
+          <p><strong>Macros per portie</strong><br />Op elke kaart zie je direct de calorieën, eiwitten, koolhydraten en vetten per portie. Zo kies je snel het recept dat bij je doelen past.</p>
+        </>
+      ),
+    },
+    {
+      title: "Recepten beheren",
+      description: (
+        <>
+          <p><strong>Nieuw recept</strong><br />Tik op het + icoontje rechtsboven en kies &apos;New recipe&apos;. Voer een naam in en voeg optioneel een foto, macrowaarden, ingrediënten en bereidingsstappen toe.</p>
+          <p><strong>Bewerken</strong><br />Tik op + en kies &apos;Edit recipe&apos; om een bestaand recept aan te passen. Je kunt ook via de detailpagina op het potlood-icoontje tikken.</p>
+          <p><strong>Gebruiken in voedingslog</strong><br />Je recepten zijn beschikbaar in het Voeding-scherm. Tik op + bij een maaltijdmoment en kies &apos;Vanuit recept&apos; om een recept direct toe te voegen aan je daglog.</p>
+        </>
+      ),
+    },
+  ];
+
   return (
     <div className={homeStyles.screen}>
       {/* Header + action button */}
@@ -364,6 +390,15 @@ export default function RecipeScreen() {
           type="button"
           aria-label="Close menu"
         />
+      )}
+
+      {helpModeEnabled && (
+        <button className={recipeStyles.helpBtn} onClick={() => setHelpOpen(true)} aria-label="Uitleg">
+          <IoInformationCircleOutline size={22} />
+        </button>
+      )}
+      {helpOpen && (
+        <HelpOverlay steps={RECIPE_HELP_STEPS} onClose={() => setHelpOpen(false)} />
       )}
 
       {/* Add/Edit modal */}

@@ -10,7 +10,7 @@ import MuscleMap from "./muscle-map/MuscleMap";
 
 import type { GymExerciseRef, GymTemplate, GymTemplateExercise, GymTemplateSet } from "../../types/gym";
 import { musclesToSlugs } from "../../lib/muscleSlugMap";
-import { saveGymTemplate } from "../../firebase/gymService";
+import { saveGymTemplate, updateGymTemplate } from "../../firebase/gymService";
 
 import styles from "../food/RecipeAddModal.module.css";
 import gymStyles from "../../gym/gym.module.css";
@@ -36,15 +36,17 @@ export default function TemplateMakerModal({
   uid: firebaseUid,
   onClose,
   onSaved,
+  initialTemplate,
 }: {
   open: boolean;
   uid: string;
   onClose: () => void;
   onSaved?: (id: string) => void;
+  initialTemplate?: GymTemplate;
 }) {
   const [step, setStep] = useState(1);
-  const [name, setName] = useState("");
-  const [exercises, setExercises] = useState<GymTemplateExercise[]>([]);
+  const [name, setName] = useState(initialTemplate?.name ?? "");
+  const [exercises, setExercises] = useState<GymTemplateExercise[]>(initialTemplate?.exercises ?? []);
   const [busy, setBusy] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
 
@@ -111,11 +113,17 @@ export default function TemplateMakerModal({
     try {
       const payload: Omit<GymTemplate, "id"> = {
         name: name.trim(),
-        createdAt: Date.now(),
+        createdAt: initialTemplate?.createdAt ?? Date.now(),
         musclesWorked,
         exercises,
       };
-      const templateId = await saveGymTemplate(firebaseUid, payload as any);
+      let templateId: string;
+      if (initialTemplate) {
+        await updateGymTemplate(firebaseUid, initialTemplate.id, payload as any);
+        templateId = initialTemplate.id;
+      } else {
+        templateId = await saveGymTemplate(firebaseUid, payload as any);
+      }
       handleClose();
       onSaved?.(templateId);
     } finally {
@@ -140,7 +148,7 @@ export default function TemplateMakerModal({
         )}
 
         <span className={styles.topTitle}>
-          {step === 1 ? "Nieuw template" : "Sets instellen"}
+          {step === 1 ? (initialTemplate ? "Template bewerken" : "Nieuw template") : "Sets instellen"}
         </span>
 
         {step === 1 ? (

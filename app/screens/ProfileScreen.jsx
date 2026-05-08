@@ -184,13 +184,13 @@ function GoalCard({ planData, onClick }) {
   const isLoss = goalType === "Afvallen";
   const isGain = goalType === "Toename";
 
-  const title = noWeightGoal
-    ? (goalType === "Recomp" ? "Body Recomp" : "Op gewicht blijven")
-    : `${isGain ? "Aankomen" : "Afvallen"} ${goalAmount ?? 0} kg`;
+  const title = "Jouw plan";
 
   const badgeColor = isLoss ? "#FC9158" : isGain ? "#8DCF42" : "#08B6DC";
   const badgeBg   = isLoss ? "rgba(252,145,88,0.12)" : isGain ? "rgba(141,207,66,0.12)" : "rgba(8,182,220,0.12)";
-  const badgeLabel = isLoss ? "Afvallen" : isGain ? "Aankomen" : goalType === "Recomp" ? "Recomp" : "Behoud";
+  const badgeLabel = noWeightGoal
+    ? (goalType === "Recomp" ? "Body Recomp" : "Op gewicht blijven")
+    : `${goalAmount ?? 0} kg ${isGain ? "aankomen" : "afvallen"}`;
 
   let progressPct = null;
   if (!noWeightGoal && startWeight != null && targetWeight != null && currentWeight != null) {
@@ -465,7 +465,7 @@ export default function ProfileScreen() {
       title: "Doel instellen",
       description: (
         <>
-          <p><strong>Waar stel je dit in?</strong><br />Tik op de rode kaart bovenaan om je plan te openen. Tik daarna op &apos;Wijzig&apos; rechtsboven om je doelen in te stellen of aan te passen.</p>
+          <p><strong>Waar stel je dit in?</strong><br />Tik op de doelkaart bovenaan om je plan te openen. Tik daarna op &apos;Wijzig&apos; rechtsboven om je doelen in te stellen of aan te passen.</p>
           <p><strong>Doeltype kiezen</strong><br />Je kiest uit vier opties: afvallen, aankomen, body recomp (vetmassa verminderen en spiermassa opbouwen) of op gewicht blijven. Vul daarna je startgewicht, doelgewicht en gewenste einddatum in.</p>
           <p><strong>Calorie-advies</strong><br />Op basis van je gegevens berekent de app hoeveel calorieën je per dag nodig hebt. Dit advies verschijnt in je planweergave en wordt ook gebruikt als doel in het Voeding-scherm.</p>
         </>
@@ -475,7 +475,7 @@ export default function ProfileScreen() {
       title: "Gewicht bijhouden",
       description: (
         <>
-          <p><strong>Meting toevoegen</strong><br />Open je plan via de rode kaart. Tik op de + knop naast &apos;Voortgang&apos; om je huidige gewicht in te loggen. Voer het gewicht in kilogram in en tik op &apos;Opslaan&apos;.</p>
+          <p><strong>Meting toevoegen</strong><br />Open je plan via de doelkaart bovenaan. Tik op de + knop naast &apos;Voortgang&apos; om je huidige gewicht in te loggen. Voer het gewicht in kilogram in en tik op &apos;Opslaan&apos;.</p>
           <p><strong>Hoe vaak meten?</strong><br />Meet bij voorkeur wekelijks op dezelfde dag en hetzelfde tijdstip — bij voorkeur &apos;s ochtends voor het ontbijt. Zo zijn je metingen onderling vergelijkbaar en geeft de grafiek een betrouwbaar beeld.</p>
           <p><strong>De grafiek</strong><br />Alle metingen worden weergegeven als een vloeiende lijn over tijd. Je ziet direct de trend: gaat de lijn de goede kant op?</p>
         </>
@@ -498,7 +498,7 @@ export default function ProfileScreen() {
           <p><strong>Openen</strong><br />Tik op het tandwiel-icoontje rechtsboven om naar de instellingen te gaan.</p>
           <p><strong>Account</strong><br />Pas hier je persoonlijke gegevens aan: voornaam, geboortedatum, geslacht, gewicht en lengte. Deze gegevens worden gebruikt voor berekeningen in de app.</p>
           <p><strong>Meal Prep Planner</strong><br />Schakel deze optie in om een extra tabblad toe te voegen aan de navigatiebalk onderaan. Zo heb je toegang tot de maaltijdplanningsfunctie.</p>
-          <p><strong>Uitleg modus</strong><br />Met deze schakelaar zet je het informatie-icoontje (ⓘ) aan of uit. Zet het uit zodra je de app goed kent en de uitleg niet meer nodig hebt.</p>
+          <p><strong>Uitleg modus</strong><br />Schakel dit in om op alle navigatieschermen een ⓘ knop te tonen. Tik erop om per scherm uitleg te krijgen over de functies en hoe je ze gebruikt.</p>
         </>
       ),
     },
@@ -512,7 +512,6 @@ export default function ProfileScreen() {
       {view === "main" && (
         <>
           <div className={styles.navHeader}>
-            <div style={{ minWidth: 36 }} />
             <span style={{ fontSize: 22, fontWeight: 700 }}>{displayName}&apos;s profiel</span>
             <button className={styles.navActionIcon} onClick={() => setView("settings")}>
               <IoSettingsOutline size={22} />
@@ -547,13 +546,19 @@ export default function ProfileScreen() {
           <div className={styles.settingsList}>
             <div className={styles.settingsRow} onClick={() => setView("account")}>
               <span className={styles.settingsRowIcon}><IoPersonOutline size={20} /></span>
-              <span className={styles.settingsRowLabel}>Account</span>
+              <div className={styles.settingsRowText}>
+                <span className={styles.settingsRowLabel}>Account</span>
+                <span className={styles.settingsRowSub}>Naam, PIN en persoonlijke gegevens</span>
+              </div>
               <span className={styles.settingsRowArrow}><IoChevronForward size={18} /></span>
             </div>
 
             <div className={styles.settingsRow} style={{ cursor: "default" }}>
               <span className={styles.settingsRowIcon}><IoCalendarOutline size={20} /></span>
-              <span className={styles.settingsRowLabel}>Meal Prep Planner</span>
+              <div className={styles.settingsRowText}>
+                <span className={styles.settingsRowLabel}>Meal Prep Planner</span>
+                <span className={styles.settingsRowSub}>Extra tabblad voor maaltijdplanning</span>
+              </div>
               <button
                 className={mealPrepEnabled ? styles.toggleBtnOn : styles.toggleBtnOff}
                 onClick={() => authUser && toggleMealPrep(authUser.uid, !mealPrepEnabled)}
@@ -561,9 +566,13 @@ export default function ProfileScreen() {
                 <span className={styles.toggleKnob} />
               </button>
             </div>
+
             <div className={styles.settingsRow} style={{ cursor: "default" }}>
-              <span className={styles.settingsRowIcon}><IoInformationCircleOutline size={20} /></span>
-              <span className={styles.settingsRowLabel}>Uitleg modus</span>
+              <span className={styles.settingsRowIcon}><IoEyeOutline size={20} /></span>
+              <div className={styles.settingsRowText}>
+                <span className={styles.settingsRowLabel}>Uitleg modus</span>
+                <span className={styles.settingsRowSub}>Toont ⓘ knop op elk scherm</span>
+              </div>
               <button
                 className={helpModeEnabled ? styles.toggleBtnOn : styles.toggleBtnOff}
                 onClick={() => authUser && toggleHelpMode(authUser.uid, !helpModeEnabled)}
@@ -571,9 +580,13 @@ export default function ProfileScreen() {
                 <span className={styles.toggleKnob} />
               </button>
             </div>
+
             <div className={styles.settingsRow} onClick={handleLogout}>
               <span className={styles.settingsRowIcon}><IoLogOutOutline size={20} /></span>
-              <span className={styles.settingsRowLabel}>Uitloggen</span>
+              <div className={styles.settingsRowText}>
+                <span className={styles.settingsRowLabel}>Uitloggen</span>
+                <span className={styles.settingsRowSub}>Afmelden van Peak</span>
+              </div>
             </div>
           </div>
         </>
@@ -782,7 +795,7 @@ export default function ProfileScreen() {
         document.body
       )}
 
-      {helpModeEnabled && (
+      {helpModeEnabled && view !== "settings" && (
         <button className={styles.helpBtn} onClick={() => setHelpOpen(true)} aria-label="Uitleg">
           <IoInformationCircleOutline size={22} />
         </button>

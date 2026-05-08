@@ -34,6 +34,7 @@ import {
   IoAdd,
   IoClose,
   IoInformationCircleOutline,
+  IoTrashOutline,
 } from "react-icons/io5";
 
 import MuscleMap from "../components/gym/muscle-map/MuscleMap";
@@ -45,7 +46,7 @@ import { useUser } from "../context/UserContext";
 import { auth } from "../firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { subscribeToGymSessionsInRange } from "../firebase/gymService";
+import { subscribeToGymSessionsInRange, deleteGymSession } from "../firebase/gymService";
 import { subscribeToGymTemplates, deleteGymTemplate } from "../firebase/gymTemplateService";
 
 import type { GymSession, GymTemplate } from "../types/gym";
@@ -79,6 +80,14 @@ export default function GymHomePage() {
   const [templatePickerOpen, setTemplatePickerOpen] = useState(false);
   const [templateMakerOpen, setTemplateMakerOpen] = useState(false);
   const [previewTemplate, setPreviewTemplate] = useState<GymTemplate | null>(null);
+  const [editTemplate, setEditTemplate] = useState<GymTemplate | null>(null);
+
+  const [historyEditMode, setHistoryEditMode] = useState(false);
+
+  async function deleteSession(id: string) {
+    if (!uid) return;
+    await deleteGymSession(uid, id);
+  }
 
   // Template options menu
   const [menuTemplate, setMenuTemplate] = useState<GymTemplate | null>(null);
@@ -122,20 +131,7 @@ export default function GymHomePage() {
     return subscribeToGymTemplates(uid, setTemplates);
   }, [uid]);
 
-  const templateStatusMap = useMemo(() => {
-    const map = new Map<string, "bezig" | "afgerond">();
-    for (const s of sessions) {
-      if (!s.templateId) continue;
-      if (s.status === "unfinished") {
-        map.set(s.templateId, "bezig");
-      } else if (s.status === "finished" && map.get(s.templateId) !== "bezig") {
-        map.set(s.templateId, "afgerond");
-      }
-    }
-    return map;
-  }, [sessions]);
-
-  const weekMuscles = useMemo(() => {
+const weekMuscles = useMemo(() => {
     const slugs = new Set<string>();
     for (const s of sessions) {
       if (s.status !== "finished") continue;
@@ -253,7 +249,19 @@ export default function GymHomePage() {
 
         {/* Workout-geschiedenis */}
         <div className={gymStyles.historyCard}>
-          <div className={gymStyles.historyCardTitle}>Workout-geschiedenis</div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+            <div className={gymStyles.historyCardTitle} style={{ marginBottom: 0 }}>Workout-geschiedenis</div>
+            {sessions.length > 0 && (
+              <button
+                className={`${gymStyles.editSetsBtn} ${historyEditMode ? gymStyles.editSetsBtnActive : ""}`}
+                type="button"
+                onClick={() => setHistoryEditMode((v) => !v)}
+                aria-label="Workouts bewerken"
+              >
+                {historyEditMode ? "✓" : <IoTrashOutline size={15} />}
+              </button>
+            )}
+          </div>
           <div className={gymStyles.historyMonth}>{historyMonthLabel}</div>
           {!authReady ? (
             <div className={gymStyles.historyEmpty}>Account laden…</div>
@@ -271,9 +279,9 @@ export default function GymHomePage() {
                   className={gymStyles.historyRow}
                   role="button"
                   tabIndex={0}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => router.push(`/gym/workout/${s.id}`)}
-                  onKeyDown={(e) => { if (e.key === "Enter") router.push(`/gym/workout/${s.id}`); }}
+                  style={{ cursor: historyEditMode ? "default" : "pointer" }}
+                  onClick={() => { if (!historyEditMode) router.push(`/gym/workout/${s.id}`); }}
+                  onKeyDown={(e) => { if (e.key === "Enter" && !historyEditMode) router.push(`/gym/workout/${s.id}`); }}
                 >
                   <div>
                     <div className={gymStyles.historyRowName}>{s.name || "Workout"}</div>
@@ -290,9 +298,20 @@ export default function GymHomePage() {
                       ) : null}
                     </div>
                   </div>
-                  <span className={`${gymStyles.historyStatusBadge} ${finished ? gymStyles.historyStatusAfgerond : gymStyles.historyStatusBezig}`}>
-                    {finished ? "Afgerond" : "Bezig"}
-                  </span>
+                  {historyEditMode ? (
+                    <button
+                      className={gymStyles.historyDeleteBtn}
+                      type="button"
+                      aria-label="Workout verwijderen"
+                      onClick={(e) => { e.stopPropagation(); deleteSession(s.id); }}
+                    >
+                      −
+                    </button>
+                  ) : (
+                    <span className={`${gymStyles.historyStatusBadge} ${finished ? gymStyles.historyStatusAfgerond : gymStyles.historyStatusBezig}`}>
+                      {finished ? "Afgerond" : "Bezig"}
+                    </span>
+                  )}
                 </div>
               );
             })
@@ -307,7 +326,7 @@ export default function GymHomePage() {
             </span>
             <button
               className={gymStyles.templateAddBtn}
-              onClick={() => setTemplateMakerOpen(true)}
+              onClick={() => { setEditTemplate(null); setTemplateMakerOpen(true); }}
               aria-label="Template toevoegen"
             >
               <IoAdd size={20} />
@@ -322,27 +341,12 @@ export default function GymHomePage() {
               <div
                 key={t.id}
                 className={gymStyles.templateRow}
-                role="button"
-                tabIndex={0}
-                style={{ cursor: "pointer" }}
-                onClick={() => { setPreviewTemplate(t); setTemplatePickerOpen(true); }}
-                onKeyDown={(e) => { if (e.key === "Enter") { setPreviewTemplate(t); setTemplatePickerOpen(true); } }}
               >
                 <div className={gymStyles.templateRowMain}>
                   <div className={gymStyles.templateRowName}>{t.name}</div>
                   <div className={gymStyles.templateRowExercises}>
                     {(t.exercises || []).map((e) => e.ref.name).join(", ")}
                   </div>
-                  {templateStatusMap.has(t.id) && (
-                    <div className={`${gymStyles.templateStatusBadge} ${
-                      templateStatusMap.get(t.id) === "bezig"
-                        ? gymStyles.templateStatusBezig
-                        : gymStyles.templateStatusAfgerond
-                    }`}>
-                      <div className={gymStyles.templateStatusDot} />
-                      {templateStatusMap.get(t.id) === "bezig" ? "Bezig" : "Afgerond"}
-                    </div>
-                  )}
                 </div>
                 <button
                   className={gymStyles.templateDotBtn}
@@ -366,9 +370,11 @@ export default function GymHomePage() {
       />
 
       <TemplateMakerModal
+        key={editTemplate?.id ?? "new"}
         open={templateMakerOpen}
         uid={uid}
-        onClose={() => setTemplateMakerOpen(false)}
+        initialTemplate={editTemplate ?? undefined}
+        onClose={() => { setTemplateMakerOpen(false); setEditTemplate(null); }}
       />
 
       {/* Fullscreen muscle map — portal */}
@@ -456,6 +462,17 @@ export default function GymHomePage() {
             className={gymStyles.templateMenu}
             style={{ position: "fixed", top: menuPos.top, right: menuPos.right }}
           >
+            <button
+              className={gymStyles.templateMenuItem}
+              onClick={() => {
+                const t = menuTemplate;
+                closeTemplateMenu();
+                setEditTemplate(t);
+                setTemplateMakerOpen(true);
+              }}
+            >
+              Bewerken
+            </button>
             <button
               className={gymStyles.templateMenuItem}
               style={{ color: "#E4222A" }}

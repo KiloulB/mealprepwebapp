@@ -13,8 +13,8 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Meal Prep App",
-  description: "Web version of the meal prep app",
+  title: "Peak",
+  description: "Eat. Train. Peak.",
 };
 
 export default function RootLayout({
