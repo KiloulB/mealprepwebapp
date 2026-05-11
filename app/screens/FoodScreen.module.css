@@ -5,7 +5,7 @@
   background: #18181A;
   color: #fff;
   font-family: system-ui, sans-serif;
-  padding: 44px 20px 120px;
+  padding: calc(env(safe-area-inset-top) + 4px) 20px calc(90px + env(safe-area-inset-bottom));
 }
 
 .foodTitle {

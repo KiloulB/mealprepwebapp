@@ -40,7 +40,7 @@
   align-items: center;
   padding-left: 20px;
   padding-right: 20px;
-  padding-top: 80px;
+  padding-top: calc(env(safe-area-inset-top) + 20px);
   padding-bottom: 16px;
   background-color: #000000;
 }
@@ -75,7 +75,7 @@
 
 .content {
   overflow-y: auto;
-  padding-bottom: 80px;
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
   padding-left: 20px;
   padding-right: 20px;
 }
@@ -363,7 +363,7 @@
 }
 
 .bottom-spacer {
-  height: 80px;
+  height: calc(90px + env(safe-area-inset-bottom));
 }
 
 .modal-overlay {

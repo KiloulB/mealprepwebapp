@@ -227,3 +227,15 @@ export const removeFoodFromLog = async (userId: string, date: Date, foodId: stri
     lastUpdated: new Date(),
   });
 };
+
+export const getRecentLoggedDays = async (userId: string, days = 7): Promise<number> => {
+  const snaps = await Promise.all(
+    Array.from({ length: days }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().split("T")[0];
+      return getDoc(doc(db, "users", userId, "dailyLogs", dateStr));
+    })
+  );
+  return snaps.filter((s) => s.exists() && (s.data()?.foods?.length ?? 0) > 0).length;
+};

@@ -69,7 +69,7 @@ body::-webkit-scrollbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 45px 20px 16px;
+  padding: calc(env(safe-area-inset-top) + 16px) 20px 16px;
   background: #18181A;
 }
 
@@ -166,11 +166,11 @@ box-sizing: border-box;
   overflow-y: auto;
   padding-left: 20px;
   padding-right: 20px;
-  padding-bottom: 80px;
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
 }
 
 .bottomSpacer {
-  height: 80px;
+  height: calc(90px + env(safe-area-inset-bottom));
 }
 
 /* Cards */

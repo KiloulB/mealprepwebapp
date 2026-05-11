@@ -30,6 +30,7 @@ import {
   toggleMealPrep,
   toggleHelpMode,
 } from "../firebase/profileService";
+import { getRecentLoggedDays } from "../firebase/dataService";
 import HelpOverlay from "../components/HelpOverlay";
 import { subscribeToGymSessionsInRange } from "../firebase/gymService";
 
@@ -236,7 +237,83 @@ function GoalCard({ planData, onClick }) {
   );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+// ─── SmartInsightsCard ────────────────────────────────────────────────────────
+
+function getWorkoutInsight(sessions) {
+  const now = Date.now();
+  const DAY = 86400000;
+  const weekAgo = now - 7 * DAY;
+  const twoWeeksAgo = now - 14 * DAY;
+
+  if (sessions.length === 0)
+    return { heading: "Nog geen workouts geregistreerd.", body: "Zodra je begint met trainen zie je hier je voortgang." };
+
+  const thisWeek = sessions.filter((s) => s.startedAt >= weekAgo).length;
+  const lastWeek = sessions.filter((s) => s.startedAt >= twoWeeksAgo && s.startedAt < weekAgo).length;
+  const sorted = [...sessions].sort((a, b) => b.startedAt - a.startedAt);
+  const daysSinceLast = Math.floor((now - sorted[0].startedAt) / DAY);
+
+  if (thisWeek === 0 && daysSinceLast > 14)
+    return { heading: "Al meer dan twee weken niet getraind.", body: "Zelfs een korte sessie helpt je momentum terug te vinden." };
+  if (thisWeek === 0)
+    return { heading: "Nog geen workout deze week.", body: "Je hebt nog tijd om een sessie in te plannen." };
+  if (thisWeek === 1 && lastWeek >= 3)
+    return { heading: "Vorige week deed je het sterker.", body: `${lastWeek} workouts tegenover 1 deze week. Pak het momentum terug.` };
+  if (thisWeek === 1)
+    return { heading: "Goed begin.", body: "Je eerste workout van de week staat erop." };
+  if (thisWeek >= 3 && thisWeek > lastWeek && lastWeek > 0)
+    return { heading: "Betere week dan vorige.", body: `Je hebt al ${thisWeek} workouts afgerond — dat is progressie.` };
+  if (thisWeek >= 3)
+    return { heading: "Consistente week.", body: `${thisWeek} workouts afgerond. Zo bouw je aan resultaat.` };
+  return { heading: "Je bent goed bezig.", body: `${thisWeek} workouts deze week afgerond.` };
+}
+
+function getVoedingInsight(loggedDaysCount) {
+  if (loggedDaysCount === null) return null;
+  if (loggedDaysCount === 7)
+    return { heading: "Perfecte week.", body: "Elke dag bijgehouden — zo krijg je het beste inzicht in je voeding." };
+  if (loggedDaysCount >= 5)
+    return { heading: "Bijna een perfecte week.", body: `${loggedDaysCount} van de 7 dagen bijgehouden. Kleine stap naar volledigheid.` };
+  if (loggedDaysCount >= 3)
+    return { heading: "Regelmatig bijgehouden.", body: `${loggedDaysCount} dagen gelogd deze week. Dagelijkse consistentie geeft betrouwbaarder inzicht.` };
+  if (loggedDaysCount >= 1)
+    return { heading: "Sporadisch gelogd.", body: `Slechts ${loggedDaysCount} dag${loggedDaysCount > 1 ? "en" : ""} bijgehouden. Probeer het elke dag kort te doen.` };
+  return { heading: "Deze week niets gelogd.", body: "Begin vandaag — zelfs een globaal overzicht helpt al." };
+}
+
+function getMealPrepInsight(mealPrepPlan) {
+  const days = mealPrepPlan
+    ? Object.keys(mealPrepPlan.days || mealPrepPlan.meals || {}).length
+    : 0;
+  if (days === 0)
+    return { heading: "Maaltijdplan is nog leeg.", body: "Voeg maaltijden toe om je week goed voor te bereiden." };
+  if (days >= 7)
+    return { heading: "Volledig gepland.", body: "Je maaltijdplan staat klaar voor de hele week." };
+  if (days >= 5)
+    return { heading: "Plan is bijna compleet.", body: `${days} van de 7 dagen ingepland. Nog een paar maaltijden toe te voegen.` };
+  return { heading: `${days} dag${days !== 1 ? "en" : ""} gepland.`, body: "Vul het plan verder aan voor een rustigere week." };
+}
+
+function SmartInsightsCard({ sessions, mealPrepEnabled, mealPrepPlan, loggedDaysCount }) {
+  const voedingInsight = getVoedingInsight(loggedDaysCount);
+  const insights = [
+    getWorkoutInsight(sessions),
+    ...(voedingInsight ? [voedingInsight] : []),
+    ...(mealPrepEnabled ? [getMealPrepInsight(mealPrepPlan)] : []),
+  ];
+
+  return (
+    <div className={styles.insightCard}>
+      <span className={styles.insightCardTitle}>Slimme inzichten</span>
+      {insights.map((item, i) => (
+        <p key={i} className={styles.insightText}>
+          <span className={styles.insightHeading}>{item.heading}</span>
+          {" "}{item.body}
+        </p>
+      ))}
+    </div>
+  );
+}
 
 // ─── WeekProgressCard ─────────────────────────────────────────────────────────
 
@@ -308,7 +385,7 @@ function WeekProgressCard({ planData }) {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function ProfileScreen() {
-  const { authUser, mealPrepEnabled, helpModeEnabled } = useUser();
+  const { authUser, mealPrepEnabled, helpModeEnabled, macroTargets, mealPrepPlan } = useUser();
   const router = useRouter();
 
   // Navigation
@@ -324,6 +401,9 @@ export default function ProfileScreen() {
 
   // Gym sessions (last 60 days for workout-data card)
   const [recentSessions, setRecentSessions] = useState([]);
+
+  // Voeding logging days this week
+  const [loggedDaysCount, setLoggedDaysCount] = useState(null);
 
   // Add weight modal
   const [addWeightOpen, setAddWeightOpen] = useState(false);
@@ -351,6 +431,11 @@ export default function ProfileScreen() {
     const now = Date.now();
     const sixtyDaysAgo = now - 60 * 24 * 60 * 60 * 1000;
     return subscribeToGymSessionsInRange(authUser.uid, sixtyDaysAgo, now + 86400000, setRecentSessions);
+  }, [authUser]);
+
+  useEffect(() => {
+    if (!authUser) return;
+    getRecentLoggedDays(authUser.uid, 7).then(setLoggedDaysCount);
   }, [authUser]);
 
   // ── Computed workout data ──────────────────────────────────────────────────
@@ -520,15 +605,12 @@ export default function ProfileScreen() {
 
           <GoalCard planData={planData} onClick={() => setView("plan")} />
 
-          <div className={styles.infoCard}>
-            <div className={styles.infoCardTitle}>Workout-data</div>
-            <div className={styles.infoCardRow}>
-              Laatste workout: {workoutStats.lastDate ?? "—"}
-            </div>
-            <div className={styles.infoCardRow}>
-              Meest getrainde spiergroep: {workoutStats.topMuscle ?? "—"}
-            </div>
-          </div>
+          <SmartInsightsCard
+            sessions={recentSessions}
+            mealPrepEnabled={mealPrepEnabled}
+            mealPrepPlan={mealPrepPlan}
+            loggedDaysCount={loggedDaysCount}
+          />
         </>
       )}
 
