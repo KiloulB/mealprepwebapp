@@ -22,9 +22,11 @@
   width: 100%;
   max-width: 380px;
   background: #1c1c1e;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 28px;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
   padding: 36px 28px 28px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.07);
 }
 
 /* ── Logo ─────────────────────────────────────────────────────────────────── */
@@ -50,7 +52,7 @@
 }
 
 .logoName {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.4px;
@@ -67,7 +69,7 @@
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
   text-align: center;
   margin: 0 0 28px;
@@ -99,7 +101,7 @@
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: #555;
+  color: #666;
   display: flex;
   align-items: center;
   pointer-events: none;
@@ -108,18 +110,19 @@
 .input {
   width: 100%;
   background: #2C2C2E;
-  border: 1.5px solid #2e2e30;
+  border: 1.5px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   padding: 14px 16px 14px 42px;
   color: #fff;
   font-size: 15px;
   outline: none;
   box-sizing: border-box;
-  transition: border-color 0.15s;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .input:focus {
   border-color: #FC9158;
+  box-shadow: 0 0 0 3px rgba(252,145,88,0.12);
 }
 
 .input::placeholder {
@@ -144,20 +147,21 @@
   width: 62px;
   height: 62px;
   background: #2C2C2E;
-  border: 1.5px solid #2e2e30;
-  border-radius: 16px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
   color: #fff;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   text-align: center;
   outline: none;
   caret-color: transparent;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 
 .pinBox:focus {
   border-color: #FC9158;
   background: #333335;
+  box-shadow: 0 0 0 3px rgba(252,145,88,0.12);
 }
 
 .pinBoxFilled {
@@ -199,7 +203,8 @@
   cursor: pointer;
   margin-top: 10px;
   letter-spacing: -0.2px;
-  transition: opacity 0.15s, transform 0.1s;
+  box-shadow: 0 4px 20px rgba(252,145,88,0.3);
+  transition: opacity 150ms ease, transform 100ms ease, box-shadow 150ms ease;
 }
 
 .primaryBtn:hover:not(:disabled) {
@@ -244,7 +249,7 @@
 }
 
 .switchText {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
 }
 
@@ -252,9 +257,16 @@
   background: none;
   border: none;
   color: #FC9158;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  padding: 0;
-  margin-left: 5px;
+  padding: 2px 4px;
+  margin-left: 3px;
+  border-radius: 6px;
+  transition: opacity 150ms ease, background 150ms ease;
+}
+
+.switchBtn:hover {
+  opacity: 0.8;
+  background: rgba(252,145,88,0.08);
 }

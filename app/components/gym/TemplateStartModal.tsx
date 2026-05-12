@@ -3,8 +3,8 @@
 
 import { useEffect, useState } from "react";
 import gymStyles from "../../gym/gym.module.css";
-import { FiX, FiChevronLeft } from "react-icons/fi";
-import { IoChevronForward, IoListOutline, IoFlashOutline } from "react-icons/io5";
+import { FiChevronLeft } from "react-icons/fi";
+import { IoChevronForward, IoListOutline, IoFlashOutline, IoClose } from "react-icons/io5";
 import type { GymExerciseRef, GymSessionExercise, GymSet, GymTemplate } from "../../types/gym";
 import { subscribeToGymTemplates } from "../../firebase/gymTemplateService";
 import { getLatestSessionForTemplate } from "../../firebase/gymSessionQueries";
@@ -167,160 +167,113 @@ export default function TemplateStartModal({
   return (
     <>
       {view !== "picker" && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.65)",
-            zIndex: 300,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "0 20px",
-          }}
-          onClick={onClose}
-        >
-          <div
-            style={{
-              background: "#18181A",
-              borderRadius: 24,
-              width: "100%",
-              maxWidth: 420,
-              padding: "24px 20px 20px",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* ── Keuze view ── */}
+        <div className={gymStyles.sheetOverlay} onClick={onClose}>
+          <div className={gymStyles.tsSheet} onClick={(e) => e.stopPropagation()}>
+            <div className={gymStyles.sheetHandle} />
+
+            {/* ── Choice view ── */}
             {view === "choice" && (
               <>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: "#fff" }}>Workout starten</div>
-                  <button
-                    onClick={onClose}
-                    style={{ background: "none", border: "none", color: "#A1A1A1", cursor: "pointer", display: "flex", alignItems: "center", padding: 4 }}
-                    aria-label="Sluiten"
-                  >
-                    <FiX size={20} />
-                  </button>
+                <div className={gymStyles.tsHeader}>
+                  <div className={gymStyles.tsTitle}>Workout starten</div>
+                  <div className={gymStyles.tsSubtitle}>Kies hoe je wil beginnen</div>
                 </div>
 
-                <button
-                  onClick={() => setView("templates")}
-                  style={{
-                    width: "100%",
-                    background: "#232325",
-                    border: "none",
-                    borderRadius: 16,
-                    padding: "16px 14px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                    cursor: "pointer",
-                    marginBottom: 10,
-                    textAlign: "left",
-                  }}
-                >
-                  <div style={{
-                    width: 42, height: 42,
-                    background: "rgba(252,145,88,0.12)",
-                    borderRadius: 12,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    flexShrink: 0,
-                  }}>
-                    <IoListOutline size={20} color="#FC9158" />
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: "#fff" }}>Vanuit template</div>
-                    <div style={{ fontSize: 13, color: "#A1A1A1", marginTop: 3 }}>Start met een opgeslagen schema</div>
-                  </div>
-                  <IoChevronForward size={16} color="#555" style={{ flexShrink: 0 }} />
-                </button>
+                <div className={gymStyles.tsChoiceList}>
+                  <button
+                    className={gymStyles.tsChoiceCard}
+                    onClick={() => setView("templates")}
+                  >
+                    <div className={gymStyles.tsChoiceIcon}>
+                      <IoListOutline size={22} color="#FC9158" />
+                    </div>
+                    <div className={gymStyles.tsChoiceBody}>
+                      <div className={gymStyles.tsChoiceLabel}>Vanuit template</div>
+                      <div className={gymStyles.tsChoiceSub}>Start met een opgeslagen schema</div>
+                    </div>
+                    <IoChevronForward size={18} color="#555" />
+                  </button>
 
-                <button
-                  onClick={() => setView("picker")}
-                  style={{
-                    width: "100%",
-                    background: "#232325",
-                    border: "none",
-                    borderRadius: 16,
-                    padding: "16px 14px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                    cursor: "pointer",
-                    textAlign: "left",
-                  }}
-                >
-                  <div style={{
-                    width: 42, height: 42,
-                    background: "rgba(252,145,88,0.08)",
-                    borderRadius: 12,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    flexShrink: 0,
-                  }}>
-                    <IoFlashOutline size={20} color="#FC9158" />
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: "#fff" }}>Zonder template</div>
-                    <div style={{ fontSize: 13, color: "#A1A1A1", marginTop: 3 }}>Kies oefeningen en start direct</div>
-                  </div>
-                  <IoChevronForward size={16} color="#555" style={{ flexShrink: 0 }} />
-                </button>
+                  <button
+                    className={gymStyles.tsChoiceCard}
+                    onClick={() => setView("picker")}
+                  >
+                    <div className={gymStyles.tsChoiceIcon}>
+                      <IoFlashOutline size={22} color="#FC9158" />
+                    </div>
+                    <div className={gymStyles.tsChoiceBody}>
+                      <div className={gymStyles.tsChoiceLabel}>Zonder template</div>
+                      <div className={gymStyles.tsChoiceSub}>Kies oefeningen en start direct</div>
+                    </div>
+                    <IoChevronForward size={18} color="#555" />
+                  </button>
+                </div>
               </>
             )}
 
-            {/* ── Template lijst view ── */}
+            {/* ── Templates view ── */}
             {view === "templates" && (
               <>
-                <div style={{ display: "flex", alignItems: "center", marginBottom: 20 }}>
+                <div className={gymStyles.tsViewBar}>
                   <button
+                    className={gymStyles.tsViewBackBtn}
                     onClick={() => setView("choice")}
-                    style={{ background: "none", border: "none", color: "#FC9158", cursor: "pointer", display: "flex", alignItems: "center", gap: 2, fontSize: 15, fontWeight: 600, padding: "4px 0" }}
                   >
-                    <FiChevronLeft size={18} /> Terug
+                    <FiChevronLeft size={19} />
+                    Terug
                   </button>
-                  <div style={{ flex: 1, textAlign: "center", fontSize: 17, fontWeight: 700, color: "#fff" }}>
-                    Template kiezen
-                  </div>
-                  <div style={{ width: 60 }} />
+                  <div className={gymStyles.tsViewTitle}>Template kiezen</div>
+                  <button
+                    className={gymStyles.closeX}
+                    onClick={onClose}
+                    aria-label="Sluiten"
+                  >
+                    <IoClose size={18} />
+                  </button>
                 </div>
 
-                {templates.length === 0 ? (
-                  <div style={{ color: "#666", fontSize: 14, textAlign: "center", padding: "12px 0" }}>
-                    Nog geen templates. Maak er eerst één aan.
-                  </div>
-                ) : (
-                  templates.map((t) => (
-                    <div
-                      key={t.id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => startFromTemplate(t)}
-                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") startFromTemplate(t); }}
-                      aria-disabled={busy}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        background: "#232325",
-                        borderRadius: 16,
-                        padding: "14px 14px",
-                        marginBottom: 10,
-                        cursor: busy ? "default" : "pointer",
-                        opacity: busyId && busyId !== t.id ? 0.4 : 1,
-                        transition: "opacity 0.15s",
-                      }}
-                    >
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div className={gymStyles.templateRowName}>{t.name}</div>
-                        <div className={gymStyles.templateRowExercises}>
-                          {(t.exercises || []).map((e) => e.ref.name).join(" · ")}
-                          {busyId === t.id ? " • Bezig…" : ""}
-                        </div>
+                <div className={gymStyles.tsTemplateList}>
+                  {templates.length === 0 ? (
+                    <div className={gymStyles.tsEmpty}>
+                      <div className={gymStyles.tsEmptyIcon}>
+                        <IoListOutline size={40} />
                       </div>
-                      <IoChevronForward size={18} color="#FC9158" style={{ flexShrink: 0, marginLeft: 8 }} />
+                      <div className={gymStyles.tsEmptyText}>Nog geen templates</div>
+                      <div className={gymStyles.tsEmptySub}>
+                        Maak eerst een template aan via het plusteken
+                      </div>
                     </div>
-                  ))
-                )}
+                  ) : (
+                    templates.map((t) => (
+                      <button
+                        key={t.id}
+                        className={gymStyles.tsTemplateItem}
+                        onClick={() => startFromTemplate(t)}
+                        disabled={busy}
+                        style={busyId && busyId !== t.id ? { opacity: 0.4 } : undefined}
+                      >
+                        <div className={gymStyles.tsTemplateBody}>
+                          <div className={gymStyles.tsTemplateName}>{t.name}</div>
+                          <div className={gymStyles.tsTemplateExs}>
+                            {(t.exercises || []).map((e) => e.ref.name).join(" · ") || "Geen oefeningen"}
+                          </div>
+                          {(t.musclesWorked || []).length > 0 && (
+                            <div className={gymStyles.tsMusclePills}>
+                              {(t.musclesWorked || []).slice(0, 4).map((m) => (
+                                <span key={m} className={gymStyles.tsMusclePill}>{m}</span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        {busyId === t.id ? (
+                          <div className={gymStyles.tsSpinner} />
+                        ) : (
+                          <IoChevronForward size={18} color="#FC9158" />
+                        )}
+                      </button>
+                    ))
+                  )}
+                </div>
               </>
             )}
           </div>

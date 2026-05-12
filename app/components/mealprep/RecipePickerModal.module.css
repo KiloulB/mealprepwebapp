@@ -35,7 +35,7 @@
 .closeBtn {
   background: none;
   border: none;
-  color: #888;
+  color: #666;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -45,14 +45,14 @@
   display: flex;
   align-items: center;
   background: #2C2C2E;
-  border-radius: 12px;
+  border-radius: 14px;
   margin: 0 20px 12px;
   padding: 10px 14px;
   gap: 8px;
 }
 
 .searchIcon {
-  color: #888;
+  color: #666;
   flex-shrink: 0;
 }
 
@@ -77,11 +77,11 @@
 
 .tabBtn {
   padding: 7px 18px;
-  border-radius: 20px;
+  border-radius: 9999px;
   border: none;
   background: #2C2C2E;
   color: #A1A1A1;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -104,8 +104,8 @@
 
 .empty {
   padding: 32px 20px;
-  color: #555;
-  font-size: 14px;
+  color: #666;
+  font-size: 13px;
   text-align: center;
 }
 

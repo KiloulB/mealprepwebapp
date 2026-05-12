@@ -50,7 +50,7 @@
 
 /* ── Step dots ─────────────────────────────────────────────────────────── */
 .stepDots { display: flex; gap: 6px; justify-content: center; padding: 12px 0 4px; flex-shrink: 0; }
-.dot { height: 6px; width: 6px; border-radius: 999px; background: #444; transition: width 0.2s, background 0.2s; }
+.dot { height: 6px; width: 6px; border-radius: 999px; background: #444; transition: width 200ms ease, background 200ms ease; }
 .dotActive { background: #FC9158; width: 20px; }
 
 /* ── Scrollable body ───────────────────────────────────────────────────── */
@@ -58,7 +58,7 @@
 .body::-webkit-scrollbar { display: none; }
 
 /* ── Section label + hint ──────────────────────────────────────────────── */
-.sectionLabel { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; display: block; }
+.sectionLabel { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; display: block; }
 .sectionHint { font-size: 13px; color: #666; margin: 0 0 14px; line-height: 1.5; }
 
 /* ── Meal type chips (step 1) ──────────────────────────────────────────── */
@@ -67,14 +67,14 @@
 .mealTypeChip {
   background: #232325;
   border: 1.5px solid #2e2e30;
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 16px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 150ms ease, background 150ms ease;
   width: 100%;
 }
 
@@ -91,9 +91,9 @@
 .pillRow { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .pill {
-  padding: 9px 16px; border-radius: 20px; border: 1.5px solid #2e2e30; background: #232325;
-  color: #A1A1A1; font-size: 14px; font-weight: 600; cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  padding: 9px 16px; border-radius: 9999px; border: 1.5px solid #2e2e30; background: #232325;
+  color: #A1A1A1; font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
 }
 
 .pillActive { background: rgba(252,145,88,0.10); border-color: #FC9158; color: #FC9158; }
@@ -109,22 +109,22 @@
   padding: 12px 16px;
 }
 
-.customFreqLabel { font-size: 14px; color: #A1A1A1; font-weight: 500; }
+.customFreqLabel { font-size: 13px; color: #A1A1A1; font-weight: 500; }
 
 .stepperBtn {
   width: 32px; height: 32px; border-radius: 50%; background: #2e2e30; border: none;
-  color: #fff; font-size: 18px; font-weight: 700; cursor: pointer; display: flex;
+  color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; display: flex;
   align-items: center; justify-content: center;
 }
 
-.stepperVal { font-size: 20px; font-weight: 700; color: #FC9158; min-width: 28px; text-align: center; }
+.stepperVal { font-size: 22px; font-weight: 700; color: #FC9158; min-width: 28px; text-align: center; }
 
 /* ── Slider ────────────────────────────────────────────────────────────── */
 .slider { width: 100%; accent-color: #FC9158; cursor: pointer; margin-bottom: 4px; }
-.sliderLabels { display: flex; justify-content: space-between; font-size: 12px; color: #555; }
+.sliderLabels { display: flex; justify-content: space-between; font-size: 12px; color: #666; }
 
 /* ── Meal cards (step 3) ───────────────────────────────────────────────── */
-.mealCard { background: #232325; border-radius: 16px; padding: 14px; margin-bottom: 12px; }
+.mealCard { background: #232325; border-radius: 18px; padding: 14px; margin-bottom: 12px; }
 
 .mealCardHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 
@@ -134,40 +134,40 @@
 }
 
 .removeBtn {
-  background: none; border: none; color: #555; cursor: pointer; display: flex; align-items: center;
-  padding: 4px; flex-shrink: 0; transition: color 0.15s;
+  background: none; border: none; color: #666; cursor: pointer; display: flex; align-items: center;
+  padding: 4px; flex-shrink: 0; transition: color 150ms ease;
 }
 .removeBtn:active { color: #E4222A; }
 
 .patternRow { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .patternPill {
-  padding: 6px 12px; border-radius: 14px; border: 1.5px solid #2e2e30; background: #2e2e30;
+  padding: 6px 12px; border-radius: 9999px; border: 1.5px solid #2e2e30; background: #2e2e30;
   color: #A1A1A1; font-size: 12px; font-weight: 600; cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
 }
 .patternPillActive { background: rgba(252,145,88,0.10); border-color: #FC9158; color: #FC9158; }
 
 .manualDayRow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 
 .addMealBtn {
-  width: 100%; background: none; border: 1px dashed #2C2C2E; border-radius: 12px; padding: 13px;
-  color: #FC9158; font-size: 14px; font-weight: 600; cursor: pointer; display: flex;
+  width: 100%; background: none; border: 1px dashed #2C2C2E; border-radius: 14px; padding: 13px;
+  color: #FC9158; font-size: 15px; font-weight: 600; cursor: pointer; display: flex;
   align-items: center; justify-content: center; gap: 6px; margin-top: 4px;
 }
 
-.emptyHint { font-size: 13px; color: #555; text-align: center; margin: 0 0 16px; line-height: 1.6; }
+.emptyHint { font-size: 13px; color: #666; text-align: center; margin: 0 0 16px; line-height: 1.6; }
 
 /* ── Summary (step 4) ──────────────────────────────────────────────────── */
-.summaryCard { background: #232325; border-radius: 16px; padding: 4px 16px; margin-bottom: 20px; }
+.summaryCard { background: #232325; border-radius: 18px; padding: 4px 16px; margin-bottom: 20px; }
 
 .summaryRow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #2e2e30; }
 .summaryRow:last-child { border-bottom: none; }
-.summaryLabel { font-size: 14px; color: #A1A1A1; }
-.summaryValue { font-size: 14px; font-weight: 600; color: #fff; }
+.summaryLabel { font-size: 13px; color: #A1A1A1; }
+.summaryValue { font-size: 15px; font-weight: 600; color: #fff; }
 
 .summaryMealTitle {
-  font-size: 14px; color: #fff; flex: 1; min-width: 0;
+  font-size: 15px; color: #fff; flex: 1; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .summaryMealPattern { font-size: 12px; color: #FC9158; font-weight: 600; flex-shrink: 0; margin-left: 12px; }

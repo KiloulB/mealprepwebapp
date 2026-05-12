@@ -3,47 +3,55 @@
   min-height: 100vh;
   background: #18181A;
   color: #fff;
-  font-family: system-ui, sans-serif, sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
+  padding-bottom: 90px;
 }
 
 .gymHeader {
-  padding: calc(env(safe-area-inset-top) + 4px) 20px 100px 20px;
+  padding: calc(env(safe-area-inset-top) + 40px) 20px 100px 20px;
 }
 
 .gymTitle {
   font-size: 28px;
   font-weight: 700;
   color: #fff;
-  margin-bottom: 28px;
-  font-family: system-ui, sans-serif, sans-serif;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
 }
 
 .workoutStartBtn {
   width: 100%;
-  background: rgba(252, 145, 88, 0.04);
-  color: #FC9158;
-  border: 1px dashed rgba(252, 145, 88, 0.30);
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 14px;
-  padding: 10px 0;
-  margin-bottom: 28px;
-  margin-top: 0;
-  letter-spacing: 0.1px;
+  background: #FC9158;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 15px 0;
+  margin-bottom: 24px;
+  letter-spacing: -0.2px;
   cursor: pointer;
-  transition: background 0.15s;
-  font-family: system-ui, sans-serif, sans-serif;
+  transition: opacity 180ms ease, transform 100ms ease;
+  box-shadow: 0 4px 18px rgba(252, 145, 88, 0.26);
 }
 
 .workoutStartBtn:hover {
-  background: rgba(252, 145, 88, 0.09);
+  opacity: 0.92;
+}
+
+.workoutStartBtn:active {
+  transform: scale(0.98);
+  opacity: 0.85;
 }
 
 .muscleCard, .historyCard {
   background: #232325;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.06);
   padding: 18px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.28);
 }
 
 .muscleCardHeader {
@@ -54,21 +62,28 @@
 }
 
 .muscleCardTitle {
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
-  font-size: 14px;
-  font-family: system-ui, sans-serif, sans-serif;
+  font-size: 15px;
 }
 
 .expandBtn {
-  background: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   border: none;
-  color: #888;
-  padding: 2px;
+  background: rgba(255,255,255,0.06);
+  color: #A1A1A1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.expandBtn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
 }
 
 .muscleMapRow {
@@ -86,37 +101,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 18px;
-  gap: 12px;
+  margin-top: 16px;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 4px 6px;
 }
 
 .weekSelectorBtn {
   background: none;
   border: none;
-  color: #fff;
-  font-size: 22px;
-  padding: 6px;
+  color: #A1A1A1;
+  font-size: 17px;
+  padding: 4px 10px;
   cursor: pointer;
-  border-radius: 8px;
-  width: 36px;
-  height: 36px;
+  border-radius: 6px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 150ms ease;
+}
+
+.weekSelectorBtn:hover:not(:disabled) {
+  color: #fff;
 }
 
 .weekSelectorBtn:disabled {
-  color: #444;
+  color: #3a3a3c;
   cursor: not-allowed;
 }
 
 .weekLabel {
   color: #fff;
-  font-weight: 500;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 13px;
   min-width: 120px;
   text-align: center;
-  font-family: system-ui, sans-serif, sans-serif;
 }
 
 .historyCardTitle {
@@ -124,30 +145,41 @@
   color: #fff;
   font-size: 15px;
   margin-bottom: 18px;
-  font-family: system-ui, sans-serif, sans-serif;
 }
 
 .historyMonth {
-  color: #A1A1A1;
-  font-size: 12px;
-  font-weight: 500;
+  color: #666;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
   margin-bottom: 10px;
-  font-family: system-ui, sans-serif, sans-serif;
 }
 
 .historyRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid #232325;
+  padding: 12px 10px;
+  border-bottom: 1px solid #2e2e30;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 150ms ease;
+  margin: 0 -10px;
+}
+
+.historyRow:last-of-type {
+  border-bottom: none;
+}
+
+.historyRow:hover {
+  background: rgba(255,255,255,0.04);
 }
 
 .historyRowName {
-  font-weight: 700;
+  font-weight: 600;
   color: #fff;
   font-size: 15px;
-  font-family: system-ui, sans-serif, sans-serif;
 }
 
 .historyRowMeta {
@@ -157,30 +189,30 @@
   align-items: center;
   gap: 12px;
   margin-top: 3px;
-  font-family: system-ui, sans-serif, sans-serif;
 }
 
 .historyRowMetaItem {
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #A1A1A1;
-  font-size: 13px;
+  color: #666;
+  font-size: 12px;
 }
 
 .historyEmpty, .historyLoading, .historyNotLoggedIn {
-  color: #888;
-  font-size: 15px;
+  color: #666;
+  font-size: 13px;
+  padding: 8px 0;
 }
 
 .editSetsBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   border: none;
-  background: rgba(255, 255, 255, 0.07);
-  color: rgba(235, 235, 245, 0.65);
-  font-size: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(235, 235, 245, 0.5);
+  font-size: 15px;
   font-weight: 700;
   line-height: 1;
   display: inline-flex;
@@ -188,30 +220,32 @@
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.editSetsBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(235, 235, 245, 0.8);
 }
 
 .editSetsBtnActive {
-  background: rgba(34, 197, 94, 0.10);
+  background: rgba(34, 197, 94, 0.12);
   color: #22c55e;
 }
 
 .historyDeleteBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   border: 1px solid rgba(228, 34, 42, 0.28);
   background: rgba(228, 34, 42, 0.10);
   color: #E4222A;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s;
+  transition: background 150ms ease;
 }
 
 .historyDeleteBtn:hover {
@@ -292,7 +326,7 @@
 }
 
 .historyDetailTitle {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   white-space: nowrap;
   overflow: hidden;
@@ -300,9 +334,9 @@
 }
 
 .historyDetailIconBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.05);
   color: #d9d9dd;
@@ -311,12 +345,17 @@
   justify-content: center;
   flex-shrink: 0;
   cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.historyDetailIconBtn:hover {
+  background: rgba(255, 255, 255, 0.09);
 }
 
 .historyDetailDeleteBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: 1px solid rgba(228, 34, 42, 0.2);
   background: rgba(228, 34, 42, 0.08);
   color: #E4222A;
@@ -325,6 +364,7 @@
   justify-content: center;
   flex-shrink: 0;
   cursor: pointer;
+  transition: background 150ms ease;
 }
 
 .historyDetailDeleteBtn:disabled {
@@ -345,7 +385,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 14px;
+  font-size: 13px;
   color: rgba(235, 235, 245, 0.6);
 }
 
@@ -387,7 +427,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .historySetCheckOff {
@@ -412,7 +452,7 @@
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: rgba(245, 245, 247, 0.9);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   pointer-events: none;
   z-index: 500;
@@ -426,14 +466,14 @@
   justify-content: space-between;
   margin-top: 8px;
   color: #A1A1A1;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .primaryBtn {
   width: 100%;
   margin-top: 12px;
   padding: 14px 14px;
-  border-radius: 16px;
+  border-radius: 14px;
   border: none;
   background: #E4222A;
   color: #fff;
@@ -445,7 +485,7 @@
   width: 100%;
   margin-top: 12px;
   padding: 12px 14px;
-  border-radius: 16px;
+  border-radius: 14px;
   border: 1px solid #2C2C2E;
   background: transparent;
   color: #fff;
@@ -520,11 +560,12 @@
 .sheetOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(0, 0, 0, 0.78);
   z-index: 220;
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  backdrop-filter: blur(4px);
 }
 
 .sheet {
@@ -532,7 +573,9 @@
   height: 92vh;
   height: 92dvh;
   background: #232325;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 40%);
   border-radius: 24px 24px 0 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -540,11 +583,11 @@
 }
 
 .sheetHandle {
-  width: 32px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.12);
+  width: 36px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.14);
   border-radius: 2px;
-  margin: 12px auto 4px;
+  margin: 10px auto 6px;
   flex-shrink: 0;
 }
 
@@ -574,9 +617,9 @@
   border-radius: 14px;
   border: none;
   background: #FC9158;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 700;
+  color: #000;
+  font-size: 15px;
+  font-weight: 800;
   cursor: pointer;
 }
 
@@ -593,14 +636,14 @@
   flex: 1;
   width: 100%;
   height: 44px;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.07);
   background: rgba(255, 255, 255, 0.06);
   color: #fff;
   padding: 0 14px;
   outline: none;
   font-size: 15px;
-  transition: border-color 0.15s;
+  transition: border-color 150ms ease;
 }
 
 .searchInput:focus {
@@ -619,10 +662,10 @@
   will-change: transform;
   transform: translateZ(0);
   background: #232325;
-  border-radius: 20px 20px 0 0;
-  padding: 10px 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   z-index: 99;
+  flex-shrink: 0;
 }
 
 .headerTopRow {
@@ -633,9 +676,9 @@
 }
 
 .closeX {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: none;
   background: rgba(255, 255, 255, 0.07);
   color: rgba(235, 235, 245, 0.65);
@@ -643,11 +686,11 @@
   place-items: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s;
+  transition: background 150ms ease;
 }
 
 .closeX:hover {
-  background: rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .addBtn {
@@ -656,11 +699,11 @@
   border-radius: 10px;
   border: none;
   background: #FC9158;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
+  color: #000;
+  font-size: 13px;
+  font-weight: 800;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 150ms ease;
 }
 
 .addBtn:disabled {
@@ -812,7 +855,7 @@
 }
 
 .exerciseName {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: #fff;
   line-height: 1.1;
@@ -839,15 +882,21 @@
 }
 
 .rowIconBtn {
-  width: 34px;
-  height: 34px;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #232325;
-  color: #c7c7cc;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.07);
+  color: rgba(235,235,245,0.5);
   cursor: pointer;
   display: grid;
   place-items: center;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.rowIconBtn:hover {
+  background: rgba(255,255,255,0.12);
+  color: rgba(235,235,245,0.9);
 }
 
 .rowIconBtnActive {
@@ -973,12 +1022,19 @@
 .infoSheet {
   width: min(520px, 100%);
   height: 90vh;
-  background: #232325;
-  border-radius: 20px 20px 0 0;
+  height: 90dvh;
+  background: #1c1c1e;
+  border-radius: 24px 24px 0 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   animation: slideUp 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.infoSheet .headerBlock {
+  background: #1c1c1e;
+  border-bottom-color: rgba(255,255,255,0.06);
 }
 
 .infoContainer{
@@ -1153,22 +1209,37 @@
 }
 
 .templateAddBtn {
-  background: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   border: none;
-  color: #888;
+  background: rgba(255,255,255,0.06);
+  color: #A1A1A1;
   cursor: pointer;
-  padding: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.templateAddBtn:hover {
+  background: rgba(252,145,88,0.12);
+  color: #FC9158;
 }
 
 .templateRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 12px 10px;
   border-top: 1px solid #2e2e30;
+  border-radius: 10px;
+  margin: 0 -10px;
+  transition: background 150ms ease;
+}
+
+.templateRow:hover {
+  background: rgba(255,255,255,0.04);
 }
 
 .templateRowMain {
@@ -1177,14 +1248,14 @@
 }
 
 .templateRowName {
-  font-weight: 700;
+  font-weight: 600;
   color: #fff;
   font-size: 15px;
 }
 
 .templateRowExercises {
-  color: #A1A1A1;
-  font-size: 13px;
+  color: #666;
+  font-size: 12px;
   margin-top: 3px;
   white-space: nowrap;
   overflow: hidden;
@@ -1223,7 +1294,7 @@
 .templateDotBtn {
   background: none;
   border: none;
-  color: #888;
+  color: #666;
   cursor: pointer;
   padding: 4px 6px;
   flex-shrink: 0;
@@ -1245,27 +1316,89 @@
   top: 100%;
   background: #2C2C2E;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   z-index: 120;
-  min-width: 160px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  min-width: 170px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(12px);
 }
 
 .templateMenuItem {
   display: block;
   width: 100%;
-  padding: 12px 16px;
+  padding: 13px 16px;
   background: none;
   border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
   color: #fff;
   font-size: 15px;
+  font-weight: 500;
   text-align: left;
   cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.templateMenuItem:last-child {
+  border-bottom: none;
+}
+
+.templateMenuItem:hover {
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .templateMenuItem:active {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== ExercisePickerModal — improvements ===== */
+
+.exerciseRow[data-selected="true"] {
+  background: rgba(252,145,88,0.09);
+  border-left: 3px solid #FC9158;
+  padding-left: 12px;
+}
+
+.rowIconBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.07);
+  color: rgba(235,235,245,0.5);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.rowIconBtn:hover {
+  background: rgba(255,255,255,0.12);
+  color: rgba(235,235,245,0.9);
+}
+
+.sheetFooterBtn {
+  width: 100%;
+  height: 50px;
+  border-radius: 14px;
+  border: none;
+  background: #FC9158;
+  color: #000;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(252,145,88,0.28);
+  transition: opacity 150ms ease, transform 100ms ease, box-shadow 150ms ease;
+}
+
+.sheetFooterBtn:hover:not(:disabled) { opacity: 0.92; }
+.sheetFooterBtn:active:not(:disabled) { transform: scale(0.98); }
+
+.sheetFooterBtn:disabled {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.3);
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ===== "Workout starten" choice modal ===== */
@@ -1305,7 +1438,7 @@
 .choiceCloseBtn {
   background: none;
   border: none;
-  color: #888;
+  color: #666;
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -1352,7 +1485,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 52px 20px 16px;
+  padding: calc(env(safe-area-inset-top) + 14px) 20px 16px;
   border-bottom: 1px solid rgba(255,255,255,0.07);
   flex-shrink: 0;
 }
@@ -1361,6 +1494,7 @@
   font-size: 17px;
   font-weight: 700;
   color: #fff;
+  letter-spacing: -0.2px;
 }
 
 .templateMakerScroll {
@@ -1394,7 +1528,7 @@
   height: 6px;
   border-radius: 999px;
   background: #444;
-  transition: width 0.2s, background 0.2s;
+  transition: width 200ms ease, background 200ms ease;
   width: 6px;
 }
 
@@ -1406,10 +1540,12 @@
 /* Exercise card in template step 2 */
 .tmExCard {
   background: #232325;
-  border: 1px solid rgba(255,255,255,0.06);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 50%);
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
   padding: 16px;
   margin-bottom: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.22);
 }
 
 .tmExCardHeader {
@@ -1434,11 +1570,11 @@
 .tmAddSetBtn {
   margin-top: 12px;
   padding: 10px;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px dashed rgba(252,145,88,0.4);
   background: rgba(252,145,88,0.04);
   color: #FC9158;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
@@ -1466,7 +1602,7 @@
 }
 
 .tmNextBtn:disabled {
-  color: #555;
+  color: #666;
   cursor: not-allowed;
 }
 
@@ -1481,7 +1617,7 @@
 }
 
 .tmSaveBtn:disabled {
-  color: #555;
+  color: #666;
   cursor: not-allowed;
 }
 
@@ -1537,7 +1673,7 @@
   justify-content: center;
   font-size: 13px;
   font-weight: 700;
-  color: #888;
+  color: #666;
 }
 
 /* Kg/Reps input in step 2 */
@@ -1549,7 +1685,7 @@
   border-radius: 10px;
   padding: 10px 8px;
   color: #fff;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   outline: none;
   text-align: center;
@@ -1587,10 +1723,10 @@
   width: 100%;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 14px 16px;
   color: #fff;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   outline: none;
   margin-bottom: 20px;
@@ -1598,7 +1734,7 @@
 }
 
 .tmNameInput::placeholder {
-  color: #555;
+  color: #666;
 }
 
 /* Add exercise chip in step 1 */
@@ -1607,11 +1743,11 @@
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1.5px dashed rgba(252,145,88,0.5);
   background: rgba(252,145,88,0.06);
   color: #FC9158;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
@@ -1621,8 +1757,8 @@
 /* Empty state in step 1 */
 .tmEmptyEx {
   text-align: center;
-  color: #555;
-  font-size: 14px;
+  color: #666;
+  font-size: 13px;
   padding: 24px 0;
 }
 
@@ -1632,7 +1768,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #555;
+  color: #666;
   margin-bottom: 10px;
   margin-top: 4px;
 }
@@ -1641,16 +1777,22 @@
 .tmRemoveBtn {
   background: rgba(255,255,255,0.06);
   border: none;
-  border-radius: 999px;
-  width: 30px;
-  height: 30px;
+  border-radius: 10px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #888;
+  color: #666;
   cursor: pointer;
   flex-shrink: 0;
   margin-left: auto;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.tmRemoveBtn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
 }
 
 /* ===== Workout start flow ===== */
@@ -1658,19 +1800,25 @@
   width: 100%;
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   text-align: left;
   cursor: pointer;
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  transition: background 0.15s;
+  transition: background 160ms ease, border-color 160ms ease, transform 100ms ease;
+}
+
+.wsfTemplateCard:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
 }
 
 .wsfTemplateCard:active {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.09);
+  transform: scale(0.99);
 }
 
 .wsfTemplateCard:disabled {
@@ -1697,7 +1845,7 @@
 }
 
 .wsfDividerLabel {
-  color: #555;
+  color: #666;
   font-size: 13px;
 }
 
@@ -1717,7 +1865,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 52px 16px 12px;
+  padding: calc(env(safe-area-inset-top) + 14px) 16px 12px;
   flex-shrink: 0;
 }
 
@@ -1728,10 +1876,10 @@
 }
 
 .muscleFullCloseBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.08);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.07);
   border: none;
   color: #fff;
   display: flex;
@@ -1739,6 +1887,11 @@
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
+  transition: background 150ms ease;
+}
+
+.muscleFullCloseBtn:hover {
+  background: rgba(255,255,255,0.12);
 }
 
 .muscleFullScroll {
@@ -1831,5 +1984,692 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== TemplateStartModal — bottom sheet ===== */
+
+.tsSheet {
+  width: min(520px, 100%);
+  background: #1e1e20;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.035) 0%, transparent 45%);
+  border-top: 1px solid rgba(255,255,255,0.09);
+  border-radius: 28px 28px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tsHeader {
+  padding: 18px 22px 16px;
+}
+
+.tsTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.4px;
+  line-height: 1.15;
+}
+
+.tsSubtitle {
+  font-size: 13px;
+  color: #666;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.tsChoiceList {
+  padding: 0 16px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tsChoiceCard {
+  width: 100%;
+  background: #2C2C2E;
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 55%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 150ms ease, border-color 150ms ease, transform 120ms ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.tsChoiceCard:hover {
+  background: #333335;
+  border-color: rgba(255,255,255,0.13);
+}
+
+.tsChoiceCard:active {
+  transform: scale(0.982);
+}
+
+.tsChoiceIcon {
+  width: 48px;
+  height: 48px;
+  background: rgba(252,145,88,0.12);
+  border: 1px solid rgba(252,145,88,0.2);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tsChoiceBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.tsChoiceLabel {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+
+.tsChoiceSub {
+  font-size: 13px;
+  color: #666;
+  margin-top: 3px;
+  font-weight: 400;
+}
+
+/* ── Templates view ── */
+
+.tsViewBar {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px 14px;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+
+.tsViewBackBtn {
+  background: none;
+  border: none;
+  color: #FC9158;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0;
+  flex-shrink: 0;
+  transition: opacity 150ms ease;
+  white-space: nowrap;
+}
+
+.tsViewBackBtn:hover { opacity: 0.75; }
+
+.tsViewTitle {
+  flex: 1;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.tsTemplateList {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 12px 16px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 60vh;
+  max-height: 60dvh;
+}
+
+.tsTemplateList::-webkit-scrollbar { display: none; }
+
+.tsTemplateItem {
+  width: 100%;
+  background: #2C2C2E;
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, transparent 55%);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 15px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 150ms ease, border-color 150ms ease, transform 120ms ease;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.tsTemplateItem:hover:not(:disabled) {
+  background: #333335;
+  border-color: rgba(255,255,255,0.13);
+}
+
+.tsTemplateItem:active:not(:disabled) {
+  transform: scale(0.982);
+}
+
+.tsTemplateItem:disabled {
+  cursor: default;
+}
+
+.tsTemplateBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.tsTemplateName {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tsTemplateExs {
+  font-size: 13px;
+  color: #666;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tsMusclePills {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.tsMusclePill {
+  font-size: 11px;
+  font-weight: 600;
+  color: #FC9158;
+  background: rgba(252,145,88,0.1);
+  border: 1px solid rgba(252,145,88,0.2);
+  border-radius: 999px;
+  padding: 2px 8px;
+  text-transform: capitalize;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+}
+
+.tsEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 44px 20px;
+  gap: 6px;
+}
+
+.tsEmptyIcon {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.tsEmptyText {
+  font-size: 15px;
+  font-weight: 600;
+  color: #666;
+}
+
+.tsEmptySub {
+  font-size: 13px;
+  color: #3a3a3c;
+  text-align: center;
+  max-width: 220px;
+}
+
+@keyframes tsSpin {
+  to { transform: rotate(360deg); }
+}
+
+.tsSpinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(252,145,88,0.18);
+  border-top-color: #FC9158;
+  animation: tsSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ===== ExercisePickerModal — redesigned header + rows ===== */
+
+.pickerHead {
+  flex-shrink: 0;
+  background: #232325;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.pickerTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px 12px;
+}
+
+.pickerTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+/* Search bar */
+.pickerSearchWrap {
+  position: relative;
+  margin: 0 16px 10px;
+  display: flex;
+  align-items: center;
+}
+
+.pickerSearchIcon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pickerSearchInput {
+  width: 100%;
+  height: 44px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  background: #2C2C2E;
+  color: #fff;
+  padding: 0 36px;
+  outline: none;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.pickerSearchInput:focus {
+  border-color: rgba(252,145,88,0.45);
+  box-shadow: 0 0 0 3px rgba(252,145,88,0.1);
+}
+
+.pickerSearchInput::placeholder {
+  color: #666;
+}
+
+.pickerSearchClear {
+  position: absolute;
+  right: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.pickerSearchClear:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+/* Chip strip */
+.pickerChipRow {
+  display: flex;
+  gap: 7px;
+  padding: 0 16px 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pickerChipRow::-webkit-scrollbar { display: none; }
+
+.pickerChip {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.05);
+  color: #666;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.pickerChip:hover {
+  background: rgba(255,255,255,0.09);
+  color: #ccc;
+}
+
+.pickerChipActive {
+  border-color: rgba(252,145,88,0.45);
+  background: rgba(252,145,88,0.12);
+  color: #FC9158;
+}
+
+.pickerChipSelected {
+  border-color: rgba(252,145,88,0.3);
+  background: rgba(252,145,88,0.08);
+  color: #FC9158;
+}
+
+/* Filter panel */
+.pickerFilterPanel {
+  margin: 0 16px 10px;
+  padding: 12px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.pickerFilterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.pickerFilterTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.pickerFilterClear {
+  border: none;
+  background: transparent;
+  color: #FC9158;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 120ms ease;
+}
+
+.pickerFilterClear:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pickerFilterGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.pickerFilterGrid::-webkit-scrollbar { display: none; }
+
+/* Scrollable list */
+.pickerList {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pickerList::-webkit-scrollbar { display: none; }
+
+/* Exercise rows */
+.pickerExRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: background 100ms ease;
+}
+
+.pickerExRow::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: #FC9158;
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pickerExRow:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.pickerExRowSelected {
+  background: rgba(252,145,88,0.07);
+}
+
+.pickerExRowSelected::before {
+  transform: scaleY(1);
+}
+
+.pickerExRowSelected:hover {
+  background: rgba(252,145,88,0.1);
+}
+
+.pickerExImg {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #2C2C2E;
+  flex-shrink: 0;
+  display: block;
+}
+
+.pickerExImgEmpty {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #2C2C2E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3A3A3C;
+  flex-shrink: 0;
+}
+
+.pickerExMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.pickerExName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pickerExSub {
+  font-size: 12px;
+  color: #666;
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pickerExAction {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.pickerExCheckOn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #FC9158;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(252,145,88,0.35);
+}
+
+.pickerExInfoBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.pickerExInfoBtn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #aaa;
+}
+
+.pickerEmptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  gap: 8px;
+  color: #666;
+  font-size: 13px;
+  text-align: center;
+}
+
+.pickerOverflowNote {
+  padding: 20px 16px 12px;
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+}
+
+/* ===== ExercisePickerModal — fullscreen layout ===== */
+
+.pickerScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  background: #1c1c1e;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.pickerNavBar {
+  display: flex;
+  align-items: center;
+  padding: calc(env(safe-area-inset-top) + 10px) 14px 8px;
+  flex-shrink: 0;
+}
+
+.pickerNavSpacer {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.pickerNavTitle {
+  flex: 1;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+
+.pickerSearchZone {
+  padding: 4px 16px 8px;
+  flex-shrink: 0;
+}
+
+.pickerChipScroll {
+  display: flex;
+  gap: 7px;
+  padding: 0 16px 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex-shrink: 0;
+}
+
+.pickerChipScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.pickerSeparator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.pickerScroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pickerScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.pickerFooterBar {
+  padding: 12px 16px;
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  background: #1c1c1e;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.pickerInfoOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 230;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(4px);
 }
 

@@ -118,7 +118,7 @@
   width: 6px;
   border-radius: 999px;
   background: #444;
-  transition: width 0.2s, background 0.2s;
+  transition: width 200ms ease, background 200ms ease;
 }
 
 .dotActive {
@@ -146,7 +146,7 @@
 .photoPicker {
   width: 100%;
   height: 160px;
-  border-radius: 16px;
+  border-radius: 18px;
   border: 1.5px dashed #2C2C2E;
   background: #232325;
   display: flex;
@@ -190,7 +190,7 @@
 }
 
 .photoPlaceholderText {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #666;
 }
@@ -209,12 +209,12 @@
   border-bottom: 2px solid #2C2C2E;
   outline: none;
   color: #fff;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   padding: 8px 0 12px;
   margin-bottom: 28px;
   display: block;
-  transition: border-color 0.2s;
+  transition: border-color 200ms ease;
 }
 
 .nameInput:focus {
@@ -228,7 +228,7 @@
 /* ── Section label + hint ────────────────────────────────────── */
 
 .sectionLabel {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
   margin-bottom: 4px;
@@ -253,14 +253,14 @@
 .chip {
   background: #232325;
   border: 1.5px solid #2e2e30;
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 14px 12px;
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 150ms ease, background 150ms ease;
   overflow: hidden;
   min-width: 0;
 }
@@ -271,7 +271,7 @@
 }
 
 .chipEmoji {
-  font-size: 18px;
+  font-size: 17px;
   flex-shrink: 0;
 }
 
@@ -297,7 +297,7 @@
 
 .noFieldsHint {
   font-size: 13px;
-  color: #555;
+  color: #666;
   margin-top: 20px;
   text-align: center;
   line-height: 1.6;
@@ -316,13 +316,13 @@
 .step2Thumb {
   width: 52px;
   height: 52px;
-  border-radius: 12px;
+  border-radius: 10px;
   object-fit: cover;
   flex-shrink: 0;
 }
 
 .recipeNameBadge {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   color: #fff;
   line-height: 1.3;
@@ -353,7 +353,7 @@
 }
 
 .sectionTitle {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
   display: block;
@@ -382,7 +382,7 @@
 
 .macroCell {
   background: #2e2e30;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 10px 10px 8px;
   display: flex;
   flex-direction: column;
@@ -413,10 +413,10 @@
   border-bottom: 1.5px solid #2C2C2E;
   outline: none;
   color: #fff;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   padding: 0 0 2px;
-  transition: border-color 0.15s;
+  transition: border-color 150ms ease;
 }
 
 .macroInput:focus {
@@ -447,7 +447,7 @@
   display: flex;
   align-items: center;
   background: #2e2e30;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 10px 14px;
   gap: 8px;
   width: 100%;
@@ -460,7 +460,7 @@
   border: none;
   outline: none;
   color: #fff;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
 }
 
@@ -509,11 +509,11 @@
   border-radius: 10px;
   padding: 9px 10px;
   color: #fff;
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
 }
 
-.listInputMain::placeholder { color: #555; }
+.listInputMain::placeholder { color: #666; }
 
 .listInputSub {
   flex: 2 1 0;
@@ -523,11 +523,11 @@
   border-radius: 10px;
   padding: 9px 10px;
   color: #fff;
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
 }
 
-.listInputSub::placeholder { color: #555; }
+.listInputSub::placeholder { color: #666; }
 
 /* Steps use a single full-width input (after the number badge) */
 .listInputFull {
@@ -538,22 +538,22 @@
   border-radius: 10px;
   padding: 9px 10px;
   color: #fff;
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
 }
 
-.listInputFull::placeholder { color: #555; }
+.listInputFull::placeholder { color: #666; }
 
 .removeBtn {
   background: none;
   border: none;
-  color: #555;
+  color: #666;
   cursor: pointer;
   display: flex;
   align-items: center;
   padding: 6px;
   flex-shrink: 0;
-  transition: color 0.15s;
+  transition: color 150ms ease;
 }
 
 .removeBtn:active {
@@ -584,7 +584,7 @@
   border: 1px solid #E4222A;
   border-radius: 10px;
   padding: 12px 14px;
-  font-size: 14px;
+  font-size: 13px;
   color: #E4222A;
   margin-top: 16px;
   width: 100%;

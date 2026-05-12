@@ -35,6 +35,8 @@ import {
   IoClose,
   IoInformationCircleOutline,
   IoTrashOutline,
+  IoChevronBack,
+  IoChevronForward,
 } from "react-icons/io5";
 
 import MuscleMap from "../components/gym/muscle-map/MuscleMap";
@@ -233,7 +235,7 @@ const weekMuscles = useMemo(() => {
               onClick={() => setWeekStartMs((v) => addDaysMs(v, -7))}
               aria-label="Vorige week"
             >
-              &#60;
+              <IoChevronBack size={16} />
             </button>
             <div className={gymStyles.weekLabel}>{weekLabel}</div>
             <button
@@ -242,7 +244,7 @@ const weekMuscles = useMemo(() => {
               disabled={disableNext}
               aria-label="Volgende week"
             >
-              &#62;
+              <IoChevronForward size={16} />
             </button>
           </div>
         </div>
@@ -399,7 +401,7 @@ const weekMuscles = useMemo(() => {
                 onClick={() => setWeekStartMs((v) => addDaysMs(v, -7))}
                 aria-label="Vorige week"
               >
-                &#60;
+                <IoChevronBack size={16} />
               </button>
               <div className={gymStyles.weekLabel}>{weekLabel}</div>
               <button
@@ -408,7 +410,7 @@ const weekMuscles = useMemo(() => {
                 disabled={disableNext}
                 aria-label="Volgende week"
               >
-                &#62;
+                <IoChevronForward size={16} />
               </button>
             </div>
 

@@ -3,14 +3,14 @@
   background: #18181A;
   color: #fff;
   font-family: system-ui, sans-serif;
-  padding: 0 0 calc(90px + env(safe-area-inset-bottom));
+  padding: 0 0 90px;
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: calc(env(safe-area-inset-top) + 12px) 20px 16px;
+  padding: calc(env(safe-area-inset-top) + 40px) 20px 16px;
 }
 
 .headerTitle {
@@ -22,12 +22,15 @@
 .addBtn {
   background: none;
   border: none;
-  color: #888;
+  color: #666;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  padding: 0;
 }
 
 /* ── Reminder banner ─────────────────────────────────────────────────── */
@@ -43,18 +46,21 @@
   gap: 12px;
 }
 
-.reminderIcon { font-size: 20px; flex-shrink: 0; line-height: 1; }
+.reminderIcon { font-size: 22px; flex-shrink: 0; line-height: 1; }
 .reminderText { display: flex; flex-direction: column; gap: 2px; }
-.reminderTitle { font-size: 14px; font-weight: 700; color: #FC9158; }
+.reminderTitle { font-size: 15px; font-weight: 700; color: #FC9158; }
 .reminderSub { font-size: 13px; color: #A1A1A1; }
 
 /* ── Active plan card ─────────────────────────────────────────────────── */
 
 .planCard {
   background: #232325;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
   margin: 0 20px 16px;
   padding: 16px 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .planCardRow {
@@ -66,8 +72,8 @@
 }
 
 .planCardRow:last-of-type { border-bottom: none; }
-.planCardLabel { font-size: 14px; color: #A1A1A1; }
-.planCardValue { font-size: 14px; font-weight: 600; color: #fff; }
+.planCardLabel { font-size: 13px; color: #A1A1A1; }
+.planCardValue { font-size: 15px; font-weight: 600; color: #fff; }
 
 .planCardActions {
   display: flex;
@@ -80,7 +86,7 @@
   padding: 10px 0;
   background: none;
   border: 1px solid #2C2C2E;
-  border-radius: 12px;
+  border-radius: 14px;
   color: #A1A1A1;
   font-size: 13px;
   font-weight: 600;
@@ -97,7 +103,7 @@
   padding: 10px 0;
   background: none;
   border: 1px solid color-mix(in srgb, #E4222A 30%, transparent);
-  border-radius: 12px;
+  border-radius: 14px;
   color: #E4222A;
   font-size: 13px;
   font-weight: 600;
@@ -151,13 +157,16 @@
 
 .weekCard {
   background: #232325;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
   margin: 0 20px 16px;
   padding: 16px 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .weekCardTitle {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
   margin-bottom: 12px;
@@ -182,7 +191,7 @@
   padding: 8px 4px;
   min-width: 0;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 150ms ease, background 150ms ease;
 }
 
 .weekDayToday {
@@ -242,21 +251,24 @@
 }
 
 .dayDetailEmpty {
-  font-size: 14px;
-  color: #555;
+  font-size: 13px;
+  color: #666;
 }
 
 /* ── Meals list ───────────────────────────────────────────────────────── */
 
 .mealsCard {
   background: #232325;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
   margin: 0 20px 16px;
   padding: 16px 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .mealsCardTitle {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
   margin-bottom: 12px;
@@ -281,7 +293,7 @@
 }
 
 .mealTitle {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #fff;
   overflow: hidden;
@@ -298,7 +310,7 @@
   flex-shrink: 0;
   background: color-mix(in srgb, #FC9158 12%, transparent);
   padding: 3px 8px;
-  border-radius: 8px;
+  border-radius: 9999px;
 }
 
 /* ── Empty state ──────────────────────────────────────────────────────── */
@@ -313,8 +325,8 @@
 }
 
 .emptyIcon { font-size: 48px; margin-bottom: 8px; }
-.emptyTitle { font-size: 18px; font-weight: 700; color: #fff; }
-.emptySub { font-size: 14px; color: #A1A1A1; text-align: center; }
+.emptyTitle { font-size: 17px; font-weight: 700; color: #fff; }
+.emptySub { font-size: 13px; color: #A1A1A1; text-align: center; }
 
 .helpBtn {
   position: fixed;

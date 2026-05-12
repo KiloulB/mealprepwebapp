@@ -7,10 +7,18 @@ import { useFont } from "./context/FontContext";
 import { checkOnboardingComplete } from "./firebase/profileService";
 
 import dynamicImport from "next/dynamic";
-const FoodScreen = dynamicImport(() => import("./screens/FoodScreen"), { ssr: false });
 const GymScreen = dynamicImport(() => import("./screens/GymScreen"), { ssr: false });
+const FoodScreen = dynamicImport(() => import("./screens/FoodScreen"), { ssr: false });
 const ProfileScreen = dynamicImport(() => import("./screens/ProfileScreen"), { ssr: false });
 const MealPrepScreen = dynamicImport(() => import("./screens/MealPrepScreen"), { ssr: false });
+
+// Preload all screen chunks immediately so tab switches are instant
+if (typeof window !== "undefined") {
+  void import("./screens/GymScreen");
+  void import("./screens/FoodScreen");
+  void import("./screens/ProfileScreen");
+  void import("./screens/MealPrepScreen");
+}
 
 import BottomNav from "./components/BottomNav/BottomNav";
 import styles from "./home.module.css";
@@ -34,7 +42,7 @@ function HomeScreen() {
   const { authUser, loading, mealPrepEnabled } = useUser();
   useFont();
 
-  const ANIM_MS = 180;
+  const ANIM_MS = 80;
   const [displayedTab, setDisplayedTab] = useState(activeTab);
   const [isExiting, setIsExiting] = useState(false);
 

@@ -4,8 +4,8 @@
   min-height: 100vh;
   background: #18181A;
   color: #fff;
-  font-family: system-ui, sans-serif;
-  padding: calc(env(safe-area-inset-top) + 4px) 20px calc(90px + env(safe-area-inset-bottom));
+  font-family: system-ui, -apple-system, sans-serif;
+  padding: calc(env(safe-area-inset-top) + 40px) 20px 90px;
 }
 
 .foodTitle {
@@ -13,6 +13,7 @@
   font-weight: 700;
   color: #fff;
   margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .foodTitleRow {
@@ -25,32 +26,41 @@
 .dateNav {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  background: #232325;
+  border-radius: 10px;
+  padding: 3px;
 }
 
 .dateNavBtn {
-  background: #232325;
+  background: none;
   border: none;
   border-radius: 8px;
-  color: #fff;
-  width: 32px;
-  height: 32px;
+  color: #A1A1A1;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.dateNavBtn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
 }
 
 .dateNavBtn:disabled {
-  color: #444;
+  color: #3a3a3c;
   cursor: default;
 }
 
 .dateNavLabel {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: #fff;
-  min-width: 80px;
+  min-width: 72px;
   text-align: center;
 }
 
@@ -58,17 +68,22 @@
 
 .macrosCard {
   background: #232325;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.07);
   padding: 18px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .macrosLabel {
-  font-size: 13px;
-  color: #A1A1A1;
-  font-weight: 500;
+  font-size: 11px;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .kcalRow {
@@ -86,30 +101,30 @@
 }
 
 .kcalUnit {
-  font-size: 16px;
+  font-size: 15px;
   color: #fff;
   font-weight: 500;
 }
 
 .kcalBarTrack {
   width: 100%;
-  height: 4px;
-  background: #2C2C2E;
+  height: 5px;
+  background: rgba(255,255,255,0.07);
   border-radius: 99px;
   overflow: hidden;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .kcalBarFill {
   height: 100%;
-  background: #FC9158;
+  background: linear-gradient(90deg, #FC9158, #f07d3f);
   border-radius: 99px;
   transition: width 0.6s ease;
 }
 
 .kcalOver {
-  font-size: 13px;
-  color: #A1A1A1;
+  font-size: 12px;
+  color: #666;
   margin-bottom: 14px;
 }
 
@@ -151,43 +166,62 @@
 
 .mealsCard {
   background: #232325;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.07);
   padding: 18px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .mealsHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .mealsTitle {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
 
 .mealsAddBtn {
-  background: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   border: none;
-  color: #888;
+  background: rgba(252,145,88,0.12);
+  color: #FC9158;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  transition: background 150ms ease;
+}
+
+.mealsAddBtn:hover {
+  background: rgba(252,145,88,0.2);
 }
 
 .mealRow {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 18px 0;
+  padding: 14px 8px;
   border-top: 1px solid #2e2e30;
+  border-radius: 10px;
+  margin: 0 -8px;
   cursor: pointer;
   user-select: none;
+  transition: background 150ms ease;
+}
+
+.mealRow:hover {
+  background: rgba(255,255,255,0.04);
 }
 
 .mealName {
@@ -205,7 +239,7 @@
 
 .mealMeta {
   font-size: 12px;
-  color: #555;
+  color: #666;
 }
 
 .mealMetaActive {
@@ -220,14 +254,14 @@
   color: #FC9158;
   background: color-mix(in srgb, #FC9158 12%, transparent);
   padding: 3px 9px;
-  border-radius: 8px;
+  border-radius: 999px;
   white-space: nowrap;
 }
 
 .mealRowAddBtn {
   background: none;
   border: none;
-  color: #888;
+  color: #666;
   padding: 4px 6px;
   cursor: pointer;
   display: flex;
@@ -238,7 +272,7 @@
 .mealItemDeleteBtn {
   background: none;
   border: none;
-  color: #555;
+  color: #666;
   padding: 4px;
   cursor: pointer;
   display: flex;
@@ -258,12 +292,18 @@
   flex: 1;
   padding: 11px 0;
   background: transparent;
-  border: 1.5px solid #FC9158;
-  border-radius: 12px;
+  border: 1.5px solid rgba(252,145,88,0.6);
+  border-radius: 14px;
   color: #FC9158;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.mealActionBtn:hover {
+  background: rgba(252,145,88,0.07);
+  border-color: #FC9158;
 }
 
 /* ── Choice list (meal add modal) ──────────────────────────────────────── */
@@ -271,7 +311,7 @@
 .choiceList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
 }
 
 .choiceRow {
@@ -279,12 +319,18 @@
   align-items: center;
   gap: 14px;
   padding: 14px 14px;
-  background: #2C2C2E;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 14px;
   cursor: pointer;
-  border: none;
   width: 100%;
   text-align: left;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.choiceRow:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.1);
 }
 
 .choiceIcon {
@@ -313,7 +359,7 @@
 
 .choiceSub {
   font-size: 12px;
-  color: #888;
+  color: #666;
 }
 
 /* ── Shared modal overlay ──────────────────────────────────────────────── */
@@ -321,20 +367,22 @@
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(0, 0, 0, 0.78);
   z-index: 300;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 20px;
+  backdrop-filter: blur(4px);
 }
 
 .modalSheet {
   width: 100%;
   background: #232325;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 40%);
   border-radius: 24px 24px 0 0;
-  padding: 22px 24px 28px;
-  max-height: 80vh;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 20px 20px calc(28px + env(safe-area-inset-bottom));
+  max-height: 82vh;
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -344,9 +392,11 @@
 .detailSheet {
   width: 100%;
   background: #232325;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 40%);
   border-radius: 24px 24px 0 0;
-  padding: 22px 24px 28px;
-  max-height: 88vh;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 20px 20px calc(32px + env(safe-area-inset-bottom));
+  max-height: 90vh;
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -357,27 +407,34 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .modalTitle {
   font-size: 17px;
   font-weight: 700;
   color: #fff;
+  letter-spacing: -0.2px;
 }
 
 .modalCloseBtn {
   width: 32px;
   height: 32px;
-  background: #2e2e30;
-  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  border-radius: 10px;
   border: none;
-  color: #888;
+  color: rgba(235,235,245,0.65);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.modalCloseBtn:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
 }
 
 /* ── Search modal ──────────────────────────────────────────────────────── */
@@ -387,8 +444,8 @@
   align-items: center;
   gap: 8px;
   background: #2C2C2E;
-  border-radius: 12px;
-  padding: 10px 12px;
+  border-radius: 14px;
+  padding: 10px 14px;
   margin-bottom: 12px;
 }
 
@@ -411,7 +468,7 @@
   font-size: 15px;
 }
 
-.searchInput::placeholder { color: #888; }
+.searchInput::placeholder { color: #666; }
 
 .searchBtn {
   width: 34px;
@@ -443,8 +500,8 @@
 }
 
 .emptyText {
-  font-size: 14px;
-  color: #888;
+  font-size: 13px;
+  color: #666;
 }
 
 /* ── Result rows ───────────────────────────────────────────────────────── */
@@ -454,7 +511,7 @@
   flex-direction: column;
   gap: 0;
   background: #2C2C2E;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
 }
 
@@ -462,12 +519,17 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 13px 14px;
   cursor: pointer;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 150ms ease;
 }
 
 .resultRow:last-child { border-bottom: none; }
+
+.resultRow:hover {
+  background: rgba(255,255,255,0.05);
+}
 
 .resultMain {
   flex: 1;
@@ -484,29 +546,36 @@
 }
 
 .resultBrand {
-  font-size: 13px;
-  color: #A1A1A1;
-  margin-top: 2px;
-}
-
-.resultHint {
   font-size: 12px;
   color: #666;
   margin-top: 2px;
 }
 
+.resultHint {
+  font-size: 11px;
+  color: #444;
+  margin-top: 2px;
+}
+
 .resultAddBtn {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 9999px;
-  border: 1px solid #555;
+  border: 1px solid rgba(255,255,255,0.14);
   background: transparent;
-  color: #fff;
+  color: #A1A1A1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+}
+
+.resultAddBtn:hover {
+  border-color: #FC9158;
+  color: #FC9158;
+  background: rgba(252,145,88,0.08);
 }
 
 /* ── Detail modal ──────────────────────────────────────────────────────── */
@@ -563,23 +632,25 @@
 .customInput::placeholder { color: #666; }
 
 .customUnit {
-  font-size: 14px;
+  font-size: 13px;
   color: #A1A1A1;
 }
 
 .previewCard {
-  background: color-mix(in srgb, #FC9158 8%, transparent);
-  border: 1px solid color-mix(in srgb, #FC9158 20%, transparent);
-  border-radius: 12px;
-  padding: 12px 14px;
+  background: rgba(252,145,88,0.07);
+  border: 1px solid rgba(252,145,88,0.18);
+  border-radius: 14px;
+  padding: 14px 16px;
   margin-bottom: 16px;
 }
 
 .previewTitle {
-  font-size: 13px;
+  font-size: 11px;
   color: #FC9158;
-  font-weight: 600;
-  margin-bottom: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 12px;
 }
 
 .previewGrid {
@@ -591,7 +662,7 @@
 .previewItem { text-align: center; }
 
 .previewVal {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
 }
@@ -605,25 +676,31 @@
 .mealPills {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 7px;
+  margin-bottom: 18px;
 }
 
 .mealPill {
-  padding: 8px 16px;
+  padding: 8px 15px;
   border-radius: 9999px;
-  border: 1.5px solid #2C2C2E;
-  background: #2C2C2E;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
+  border: 1.5px solid rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.06);
+  color: #A1A1A1;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+}
+
+.mealPill:hover {
+  border-color: rgba(255,255,255,0.16);
+  color: #fff;
 }
 
 .mealPillActive {
-  border-color: #FC9158;
+  border-color: rgba(252,145,88,0.5);
   color: #FC9158;
-  background: color-mix(in srgb, #FC9158 8%, transparent);
+  background: rgba(252,145,88,0.1);
 }
 
 .addBtn {
@@ -636,11 +713,22 @@
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
+  transition: opacity 180ms ease, transform 100ms ease;
+  box-shadow: 0 4px 16px rgba(252,145,88,0.22);
+}
+
+.addBtn:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.addBtn:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .addBtn:disabled {
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ── Spinner ───────────────────────────────────────────────────────────── */
@@ -675,7 +763,7 @@
 }
 
 .mealItemName {
-  font-size: 14px;
+  font-size: 15px;
   color: #ccc;
   flex: 1;
   min-width: 0;
@@ -698,10 +786,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 13px 0;
+  padding: 13px 8px;
   border-top: 1px solid #2e2e30;
+  border-radius: 10px;
+  margin: 0 -8px;
   cursor: pointer;
   user-select: none;
+  transition: background 150ms ease;
+}
+
+.recipeRow:hover {
+  background: rgba(255,255,255,0.04);
 }
 
 .recipeRowMain {
@@ -760,7 +855,7 @@
 
 .recipeImagePlaceholderText {
   font-size: 13px;
-  color: #888;
+  color: #666;
 }
 
 .recipeFormGroup {
@@ -769,10 +864,12 @@
 
 .recipeFormLabel {
   display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  color: #A1A1A1;
   margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .recipeFormInputWrapper {
@@ -802,7 +899,7 @@
 .recipeFormUnit {
   position: absolute;
   right: 14px;
-  font-size: 14px;
+  font-size: 13px;
   color: #A1A1A1;
   pointer-events: none;
 }
@@ -821,7 +918,7 @@
   border-radius: 10px;
   padding: 10px 12px;
   color: #fff;
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
 }
 
@@ -834,7 +931,7 @@
   border-radius: 10px;
   padding: 10px 12px;
   color: #fff;
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
 }
 
@@ -843,7 +940,7 @@
 .recipeRemoveBtn {
   background: none;
   border: none;
-  color: #888;
+  color: #666;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -895,7 +992,7 @@
   border-radius: 10px;
   padding: 10px 12px;
   color: #fff;
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
 }
 
@@ -965,26 +1062,31 @@
 }
 
 .recipeDetailContent {
-  padding: 20px 20px 100px;
+  padding: 22px 20px 100px;
 }
 
 .recipeDetailTitle {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
   color: #fff;
   margin-bottom: 4px;
+  letter-spacing: -0.4px;
 }
 
 .recipeDetailPortions {
-  font-size: 14px;
-  color: #A1A1A1;
-  margin-bottom: 16px;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 18px;
 }
 
 .recipeDetailMacroRow {
   display: flex;
-  gap: 24px;
+  gap: 0;
+  background: rgba(255,255,255,0.04);
+  border-radius: 14px;
+  padding: 14px 16px;
   margin-bottom: 20px;
+  justify-content: space-between;
 }
 
 .recipeDetailMacroItem {
@@ -999,15 +1101,15 @@
 }
 
 .recipeDetailMacroVal {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
 }
 
 .recipeDetailTabs {
   display: flex;
-  background: #2C2C2E;
-  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
   padding: 3px;
   margin-bottom: 16px;
 }
@@ -1017,17 +1119,22 @@
   padding: 9px 0;
   background: transparent;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 9px;
+  font-size: 13px;
   font-weight: 600;
-  color: #888;
+  color: #666;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.recipeDetailTab:hover:not(.recipeDetailTabActive) {
+  color: #A1A1A1;
 }
 
 .recipeDetailTabActive {
-  background: #2C2C2E;
+  background: #3A3A3C;
   color: #FC9158;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 .recipeDetailTabContent {
@@ -1082,7 +1189,7 @@
 }
 
 .recipeDetailEmpty {
-  font-size: 14px;
+  font-size: 13px;
   color: #666;
   padding: 16px 0;
   text-align: center;

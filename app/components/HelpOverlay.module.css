@@ -34,13 +34,13 @@
 .closeBtn {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 10px;
   background: #2e2e30;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #888;
+  color: #A1A1A1;
   cursor: pointer;
 }
 
@@ -54,7 +54,7 @@
 .content::-webkit-scrollbar { display: none; }
 
 .stepTitle {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: #fff;
   margin-bottom: 10px;
@@ -92,7 +92,7 @@
   width: 6px;
   border-radius: 999px;
   background: #2C2C2E;
-  transition: width 0.2s, background 0.2s;
+  transition: width 200ms ease, background 200ms ease;
 }
 
 .dotActive {
@@ -110,7 +110,7 @@
   background: none;
   border: none;
   color: #666;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   padding: 10px 0;

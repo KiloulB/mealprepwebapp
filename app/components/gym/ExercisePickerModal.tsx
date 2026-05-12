@@ -5,7 +5,8 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gymStyles from "../../gym/gym.module.css";
 import homeStyles from "../../home.module.css";
 import MuscleMap from "./muscle-map/MuscleMap";
-import { FiX, FiChevronLeft, FiCheck, FiInfo } from "react-icons/fi";
+import { FiX, FiChevronLeft, FiCheck, FiInfo, FiSearch } from "react-icons/fi";
+import { IoBodyOutline } from "react-icons/io5";
 import type { FreeExercise } from "../../lib/freeExerciseDb";
 import {
   buildExerciseTags,
@@ -90,7 +91,6 @@ function ExerciseStepPlayer({
   return <img src={resolved[idx]} alt={alt} className={className} loading="lazy" draggable={false} />;
 }
 
-
 function equipmentToType(equipmentArr: string[] = []) {
   const raw = equipmentArr[0] || "";
   const e = raw.toLowerCase();
@@ -111,7 +111,7 @@ function equipmentToType(equipmentArr: string[] = []) {
 function buildSubtitle(ref: GymExerciseRef) {
   const a = muscleToCategory(ref.primaryMuscles || []);
   const b = equipmentToType(ref.equipment || []);
-  return b ? `${a} • ${b}` : a;
+  return b ? `${a} · ${b}` : a;
 }
 
 type RowModel = {
@@ -130,38 +130,38 @@ const ExerciseRow = memo(function ExerciseRow(props: {
 
   return (
     <div
-      className={gymStyles.exerciseRow}
-      data-selected={selected ? "true" : "false"}
+      className={`${gymStyles.pickerExRow} ${selected ? gymStyles.pickerExRowSelected : ""}`}
       onClick={() => onToggleSelect(model.ref.exerciseId, model.ref)}
     >
       {model.ref.image ? (
-        <img className={gymStyles.exerciseImg} alt="" src={model.ref.image} />
+        <img className={gymStyles.pickerExImg} alt="" src={model.ref.image} loading="lazy" />
       ) : (
-        <div className={gymStyles.exerciseImg} />
+        <div className={gymStyles.pickerExImgEmpty}>
+          <IoBodyOutline size={22} />
+        </div>
       )}
 
-      <div className={gymStyles.exerciseMain}>
-        <div className={gymStyles.exerciseName}>{model.ref.name}</div>
-        <div className={gymStyles.exerciseMeta}>{model.subtitle}</div>
+      <div className={gymStyles.pickerExMain}>
+        <div className={gymStyles.pickerExName}>{model.ref.name}</div>
+        <div className={gymStyles.pickerExSub}>{model.subtitle}</div>
       </div>
 
-      <div className={gymStyles.rowActions}>
+      <div className={gymStyles.pickerExAction}>
         {selected ? (
-          <span className={gymStyles.rowIconBtn} aria-label="Geselecteerd" title="Geselecteerd" style={{ border: 'none', background: 'transparent', color: '#FC9158', fontSize: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <FiCheck size={18} />
-          </span>
+          <div className={gymStyles.pickerExCheckOn} aria-label="Geselecteerd">
+            <FiCheck size={14} />
+          </div>
         ) : (
           <button
-            className={gymStyles.rowIconBtn}
+            className={gymStyles.pickerExInfoBtn}
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               onInfo(model.ex);
             }}
             aria-label="Info"
-            title="Info"
           >
-            <FiInfo size={15} />
+            <FiInfo size={14} />
           </button>
         )}
       </div>
@@ -184,39 +184,28 @@ export default function ExercisePickerModal({
 }) {
   const [q, setQ] = useState("");
   const [info, setInfo] = useState<FreeExercise | null>(null);
-
-  // NEW: where did “info view” come from?
   const [infoSource, setInfoSource] = useState<InfoSource>("list");
 
-  // Selection (fast)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [selectedRefs, setSelectedRefs] = useState<Map<string, GymExerciseRef>>(new Map());
 
-  // Filters
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [muscleFilters, setMuscleFilters] = useState<Set<string>>(new Set());
-
-  // Selected chip (UI)
   const [selectedOnly, setSelectedOnly] = useState(false);
 
   const filterBtnRef = useRef<HTMLButtonElement | null>(null);
-
   const infoOnlyMode = !!initialInfoExerciseId;
 
-  // If modal is opened from workout page with an id: go straight to info
   useEffect(() => {
     if (!open) return;
-
     if (initialInfoExerciseId) {
       setInfoSource("direct");
       setInfo(getExerciseById(initialInfoExerciseId));
     } else {
-      // normal open
       setInfoSource("list");
       setInfo(null);
     }
   }, [open, initialInfoExerciseId]);
-
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -225,13 +214,10 @@ export default function ExercisePickerModal({
         filterBtnRef.current?.focus();
         return;
       }
-
       if (e.key === "Escape" && info && infoSource === "list") {
-        // list → info: Esc should go back to list
         setInfo(null);
         return;
       }
-
       if (e.key === "Escape" && open) onClose();
     }
     document.addEventListener("keydown", onKey);
@@ -250,18 +236,15 @@ export default function ExercisePickerModal({
 
   const filteredItems = useMemo(() => {
     let base = items;
-
     if (muscleFilters.size > 0) {
       base = base.filter((ex) => {
         const exSlugs = musclesToSlugs(ex.primaryMuscles || [], ex.secondaryMuscles || []);
         return exSlugs.some((s) => muscleFilters.has(s));
       });
     }
-
     if (selectedOnly) {
       base = base.filter((ex) => selectedIds.has(String(ex.id)));
     }
-
     return base;
   }, [items, muscleFilters, selectedOnly, selectedIds]);
 
@@ -290,7 +273,6 @@ export default function ExercisePickerModal({
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
-
     setSelectedRefs((prev) => {
       const next = new Map(prev);
       next.has(id) ? next.delete(id) : next.set(id, ref);
@@ -315,13 +297,12 @@ export default function ExercisePickerModal({
 
   if (!open) return null;
 
-  // If opened from workout: never show list, only info (or not-found)
+  /* ── Info-only mode (opened from workout page) ── */
   if (infoOnlyMode) {
     return (
       <div className={gymStyles.sheetOverlay} onClick={onClose}>
         <div className={gymStyles.infoSheet} onClick={(e) => e.stopPropagation()}>
           <div className={gymStyles.sheetHandle} />
-
           <div className={gymStyles.headerBlock}>
             <div className={gymStyles.headerTopRow}>
               <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Sluiten">
@@ -329,57 +310,8 @@ export default function ExercisePickerModal({
               </button>
             </div>
           </div>
-
           {info ? (
-            <div className={gymStyles.infoContainer}>
-              <div className={homeStyles.modalTitle}>{info.name}</div>
-
-
-
-
-
-              <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
-                Instructies
-              </div>
-                            <ExerciseStepPlayer
-  images={info.images}
-  alt={info.name}
-  className={gymStyles.infoStepImg}
-/>
-              {(info.instructions || []).length ? (
-                (info.instructions || []).map((line, idx) => (
-                  <div key={idx} className={homeStyles.normalText} style={{ marginBottom: 8 }}>
-                    {line}
-                  </div>
-                ))
-              ) : (
-                <div className={homeStyles.modalEmptyText}>Geen instructies beschikbaar.</div>
-              )}
-              <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
-                Spieren
-              </div>
-              <div className={homeStyles.normalText} style={{ marginBottom: 10 }}>
-                Primair: {(info.primaryMuscles || []).join(", ") || "—"}
-                <br />
-                Secundair: {(info.secondaryMuscles || []).join(", ") || "—"}
-              </div>
-              {(() => {
-                const slugs = musclesToSlugs(info.primaryMuscles || [], info.secondaryMuscles || []);
-                return (
-<div className={gymStyles.infoMuscleMaps}>
-  <div className={gymStyles.infoMuscleMapItem}>
-    <div className={homeStyles.modalSectionTitle}>Voorkant</div>
-    <MuscleMap view="front" workedSlugs={slugs} height={250} />
-  </div>
-
-  <div className={gymStyles.infoMuscleMapItem}>
-    <div className={homeStyles.modalSectionTitle}>Achterkant</div>
-    <MuscleMap view="back" workedSlugs={slugs} height={250} />
-  </div>
-</div>
-                );
-              })()}
-            </div>
+            <InfoContent info={info} onBack={null} />
           ) : (
             <div style={{ padding: 16 }}>
               <div className={homeStyles.modalTitle}>Oefening niet gevonden</div>
@@ -396,84 +328,104 @@ export default function ExercisePickerModal({
     );
   }
 
-  // Normal picker mode: show list, and if info is set show info overlay on top
+  /* ── Normal picker mode ── */
   return (
-    <div className={gymStyles.sheetOverlay} onClick={onClose}>
-      <div className={gymStyles.sheet} onClick={(e) => e.stopPropagation()}>
-        <div className={gymStyles.sheetHandle} />
+    <>
+      <div className={gymStyles.pickerScreen}>
+        {/* Nav bar */}
+        <div className={gymStyles.pickerNavBar}>
+          <div className={gymStyles.pickerNavSpacer} />
+          <div className={gymStyles.pickerNavTitle}>Oefening kiezen</div>
+          <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Sluiten">
+            <FiX size={18} />
+          </button>
+        </div>
 
-        {/* Header: search + filters */}
-        <div className={gymStyles.headerBlock}>
-          <div className={gymStyles.headerTopRow}>
-            <div className={gymStyles.chipRow}>
-              <button
-                ref={filterBtnRef}
-                type="button"
-                className={`${gymStyles.chipBtn} ${muscleFilters.size ? gymStyles.chipBtnActive : ""}`}
-                onClick={() => setFiltersOpen((v) => !v)}
-                aria-expanded={filtersOpen}
-              >
-                Filter{muscleFilters.size > 0 ? ` (${muscleFilters.size})` : ""}
-              </button>
-              <button
-                type="button"
-                className={`${gymStyles.chipBtn} ${selectedOnly ? gymStyles.chipBtnActive : ""}`}
-                onClick={() => setSelectedOnly((v) => !v)}
-                aria-pressed={selectedOnly}
-                style={selectedCount > 0 ? { color: "#FC9158", background: "rgba(252,145,88,0.1)", borderColor: "rgba(252,145,88,0.35)" } : {}}
-              >
-                Geselecteerd ({selectedCount})
-              </button>
-            </div>
-            <button className={gymStyles.closeX} type="button" onClick={onClose} aria-label="Sluiten">
-              <FiX size={20} />
-            </button>
-          </div>
-
-          {filtersOpen && (
-            <div className={gymStyles.filterPanel}>
-              <div className={gymStyles.filterPanelHeader}>
-                <span className={gymStyles.filterPanelTitle}>Filter</span>
-                <button
-                  className={gymStyles.filterPanelClearBtn}
-                  type="button"
-                  onClick={clearMuscles}
-                  disabled={muscleFilters.size === 0}
-                >
-                  Wissen
-                </button>
-              </div>
-              <div className={gymStyles.filterChipGrid}>
-                {availableMuscleSlugs.map((slug) => {
-                  const active = muscleFilters.has(slug);
-                  return (
-                    <button
-                      key={slug}
-                      type="button"
-                      className={`${gymStyles.popoverOption} ${active ? gymStyles.popoverOptionActive : ""}`}
-                      onClick={() => toggleMuscle(slug)}
-                      aria-pressed={active}
-                    >
-                      {niceLabel(slug)}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <div className={gymStyles.searchRow}>
+        {/* Search */}
+        <div className={gymStyles.pickerSearchZone}>
+          <div className={gymStyles.pickerSearchWrap}>
+            <span className={gymStyles.pickerSearchIcon}>
+              <FiSearch size={16} />
+            </span>
             <input
-              className={gymStyles.searchInput}
-              placeholder="Zoeken"
+              className={gymStyles.pickerSearchInput}
+              placeholder="Zoek oefening…"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />
+            {q && (
+              <button
+                className={gymStyles.pickerSearchClear}
+                type="button"
+                onClick={() => setQ("")}
+                aria-label="Wissen"
+              >
+                <FiX size={12} />
+              </button>
+            )}
           </div>
         </div>
 
-        {/* List */}
-        <div className={gymStyles.sheetExercise}>
+        {/* Filter chips */}
+        <div className={gymStyles.pickerChipScroll}>
+          <button
+            ref={filterBtnRef}
+            type="button"
+            className={`${gymStyles.pickerChip} ${muscleFilters.size > 0 ? gymStyles.pickerChipActive : ""}`}
+            onClick={() => setFiltersOpen((v) => !v)}
+            aria-expanded={filtersOpen}
+          >
+            {muscleFilters.size > 0 ? `Spieren (${muscleFilters.size})` : "Spieren"}
+          </button>
+          {selectedCount > 0 && (
+            <button
+              type="button"
+              className={`${gymStyles.pickerChip} ${selectedOnly ? gymStyles.pickerChipActive : gymStyles.pickerChipSelected}`}
+              onClick={() => setSelectedOnly((v) => !v)}
+              aria-pressed={selectedOnly}
+            >
+              {selectedCount} geselecteerd
+            </button>
+          )}
+        </div>
+
+        {/* Muscle filter panel */}
+        {filtersOpen && (
+          <div className={gymStyles.pickerFilterPanel}>
+            <div className={gymStyles.pickerFilterHeader}>
+              <span className={gymStyles.pickerFilterTitle}>Spiergroep</span>
+              <button
+                className={gymStyles.pickerFilterClear}
+                type="button"
+                onClick={clearMuscles}
+                disabled={muscleFilters.size === 0}
+              >
+                Wissen
+              </button>
+            </div>
+            <div className={gymStyles.pickerFilterGrid}>
+              {availableMuscleSlugs.map((slug) => {
+                const active = muscleFilters.has(slug);
+                return (
+                  <button
+                    key={slug}
+                    type="button"
+                    className={`${gymStyles.pickerChip} ${active ? gymStyles.pickerChipActive : ""}`}
+                    onClick={() => toggleMuscle(slug)}
+                    aria-pressed={active}
+                  >
+                    {niceLabel(slug)}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div className={gymStyles.pickerSeparator} />
+
+        {/* Exercise list */}
+        <div className={gymStyles.pickerScroll}>
           {rows.map((model) => (
             <ExerciseRow
               key={model.ref.exerciseId}
@@ -483,120 +435,130 @@ export default function ExercisePickerModal({
               onInfo={onInfoFromList}
             />
           ))}
-          {filteredItems.length > 100 ? (
-            <div className={homeStyles.modalInfoText} style={{ padding: "25px 0 15px" }}>
+
+          {filteredItems.length > 100 && (
+            <div className={gymStyles.pickerOverflowNote}>
               Alleen de eerste 100 resultaten worden getoond. Verfijn je zoekopdracht.
             </div>
-          ) : null}
-          {rows.length === 0 ? (
-            <div className={homeStyles.modalEmptyText} style={{ padding: "12px 0" }}>
-              Geen oefeningen gevonden met deze filters.
+          )}
+
+          {rows.length === 0 && (
+            <div className={gymStyles.pickerEmptyState}>
+              Geen oefeningen gevonden. Pas je zoekopdracht of filters aan.
             </div>
-          ) : null}
+          )}
         </div>
 
-        {/* Sticky footer with confirm button */}
-        <div className={gymStyles.sheetFooter}>
+        {/* Footer CTA */}
+        <div className={gymStyles.pickerFooterBar}>
           <button
             className={gymStyles.sheetFooterBtn}
             type="button"
             onClick={() => onStart({ exercises: selectedArr, musclesWorked: allMusclesWorked })}
             disabled={selectedCount === 0}
           >
-            {selectedCount === 0 ? "Selecteer oefeningen" : `Toevoegen (${selectedCount})`}
+            {selectedCount === 0
+              ? "Selecteer oefeningen om te beginnen"
+              : `Start workout · ${selectedCount} oefening${selectedCount !== 1 ? "en" : ""}`}
           </button>
         </div>
       </div>
 
-      {/* Info overlay ONLY when user clicked info from list */}
-      {info && infoSource === "list" ? (
-        <div className={gymStyles.sheetOverlay} onClick={() => setInfo(null)}>
+      {/* Info overlay — stacks above the fullscreen picker */}
+      {info && infoSource === "list" && (
+        <div className={gymStyles.pickerInfoOverlay} onClick={() => setInfo(null)}>
           <div className={gymStyles.infoSheet} onClick={(e) => e.stopPropagation()}>
             <div className={gymStyles.sheetHandle} />
-
             <div className={gymStyles.headerBlock}>
               <div className={gymStyles.headerTopRow}>
-                {/* ✅ chevron: back to list */}
                 <button
                   className={gymStyles.closeX}
                   type="button"
                   onClick={() => setInfo(null)}
                   aria-label="Terug"
-                  title="Terug"
                 >
                   <FiChevronLeft size={22} />
                 </button>
-
-                {/* Optional: keep an X on the right to close modal entirely */}
                 <div style={{ flex: 1 }} />
-
                 <button
                   className={gymStyles.closeX}
                   type="button"
                   onClick={onClose}
-                  aria-label="Close"
-                  title="Close"
+                  aria-label="Sluiten"
                 >
                   <FiX size={20} />
                 </button>
               </div>
             </div>
-
-            <div className={gymStyles.infoContainer}>
-              <div className={homeStyles.modalTitle}>{info.name}</div>
-
-
-              <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
-                Instructies
-              </div>
-                                          <ExerciseStepPlayer
-  images={info.images}
-  alt={info.name}
-  className={gymStyles.infoStepImg}
-/>
-              {(info.instructions || []).length ? (
-                (info.instructions || []).map((line, idx) => (
-                  <div key={idx} className={homeStyles.normalText} style={{ marginBottom: 8 }}>
-                    {line}
-                  </div>
-                ))
-              ) : (
-                <div className={homeStyles.modalEmptyText}>Geen instructies beschikbaar.</div>
-              )}
-              <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
-                Spieren
-              </div>
-              <div className={homeStyles.normalText} style={{ marginBottom: 10 }}>
-                Primair: {(info.primaryMuscles || []).join(", ") || "—"}
-                <br />
-                Secundair: {(info.secondaryMuscles || []).join(", ") || "—"}
-              </div>
-              {(() => {
-                const slugs = musclesToSlugs(info.primaryMuscles || [], info.secondaryMuscles || []);
-                return (
-<div className={gymStyles.infoMuscleMaps}>
-  <div className={gymStyles.infoMuscleMapItem}>
-    <div className={homeStyles.modalSectionTitle}>Voorkant</div>
-    <MuscleMap view="front" workedSlugs={slugs} height={250} />
-  </div>
-
-  <div className={gymStyles.infoMuscleMapItem}>
-    <div className={homeStyles.modalSectionTitle}>Achterkant</div>
-    <MuscleMap view="back" workedSlugs={slugs} height={250} />
-  </div>
-</div>
-
-
-                );
-              })()}
-
-              <button className={gymStyles.secondaryBtn} type="button" onClick={() => setInfo(null)}>
-                Terug naar lijst
-              </button>
-            </div>
+            <InfoContent
+              info={info}
+              onBack={() => setInfo(null)}
+            />
           </div>
         </div>
-      ) : null}
+      )}
+    </>
+  );
+}
+
+/* ── Shared info panel ── */
+function InfoContent({
+  info,
+  onBack,
+}: {
+  info: FreeExercise;
+  onBack: (() => void) | null;
+}) {
+  const slugs = musclesToSlugs(info.primaryMuscles || [], info.secondaryMuscles || []);
+
+  return (
+    <div className={gymStyles.infoContainer}>
+      <div className={homeStyles.modalTitle}>{info.name}</div>
+
+      <ExerciseStepPlayer
+        images={info.images}
+        alt={info.name}
+        className={gymStyles.infoStepImg}
+      />
+
+      <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
+        Instructies
+      </div>
+      {(info.instructions || []).length ? (
+        (info.instructions || []).map((line, idx) => (
+          <div key={idx} className={homeStyles.normalText} style={{ marginBottom: 8 }}>
+            {line}
+          </div>
+        ))
+      ) : (
+        <div className={homeStyles.modalEmptyText}>Geen instructies beschikbaar.</div>
+      )}
+
+      <div className={`${homeStyles.modalSectionTitle} ${homeStyles.modalSectionTitleSpaced}`}>
+        Spieren
+      </div>
+      <div className={homeStyles.normalText} style={{ marginBottom: 10 }}>
+        Primair: {(info.primaryMuscles || []).join(", ") || "—"}
+        <br />
+        Secundair: {(info.secondaryMuscles || []).join(", ") || "—"}
+      </div>
+
+      <div className={gymStyles.infoMuscleMaps}>
+        <div className={gymStyles.infoMuscleMapItem}>
+          <div className={homeStyles.modalSectionTitle}>Voorkant</div>
+          <MuscleMap view="front" workedSlugs={slugs} height={250} />
+        </div>
+        <div className={gymStyles.infoMuscleMapItem}>
+          <div className={homeStyles.modalSectionTitle}>Achterkant</div>
+          <MuscleMap view="back" workedSlugs={slugs} height={250} />
+        </div>
+      </div>
+
+      {onBack && (
+        <button className={gymStyles.secondaryBtn} type="button" onClick={onBack}>
+          Terug naar lijst
+        </button>
+      )}
     </div>
   );
 }
