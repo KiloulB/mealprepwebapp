@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import { onAuthStateChanged, User, signOut } from "firebase/auth";
@@ -75,7 +75,7 @@ const EMPTY_REC_FORM: RecipeForm = {
   ingredients: "", steps: "",
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function AdminPage() {
   const [authUser, setAuthUser] = useState<User | null>(null);
@@ -132,7 +132,7 @@ export default function AdminPage() {
     return () => unsubs.forEach((u) => u());
   }, [authUser]);
 
-  // ── Exercise modal ──────────────────────────────────────────────────────────
+  // â”€â”€ Exercise modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const openExModal = useCallback((mode: "add" | "edit", item?: GlobalExercise) => {
     setExForm(
@@ -173,7 +173,7 @@ export default function AdminPage() {
     }
   };
 
-  // ── Recipe modal ────────────────────────────────────────────────────────────
+  // â”€â”€ Recipe modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const openRecModal = useCallback((mode: "add" | "edit", item?: GlobalRecipe) => {
     setRecForm(
@@ -230,7 +230,7 @@ export default function AdminPage() {
     }
   };
 
-  // ── Delete ──────────────────────────────────────────────────────────────────
+  // â”€â”€ Delete â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const handleConfirmDelete = async () => {
     if (!confirmDelete || deleteBusy) return;
@@ -245,7 +245,7 @@ export default function AdminPage() {
     }
   };
 
-  // ── Seed built-in recipes ───────────────────────────────────────────────────
+  // â”€â”€ Seed built-in recipes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const handleSeed = async () => {
     if (seeding) return;
@@ -259,7 +259,7 @@ export default function AdminPage() {
     }
   };
 
-  // ── Filtered lists ──────────────────────────────────────────────────────────
+  // â”€â”€ Filtered lists â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const filteredUsers = users.filter(
     (u) =>
@@ -280,10 +280,10 @@ export default function AdminPage() {
       (r.category ?? "").toLowerCase().includes(recSearch.toLowerCase())
   );
 
-  // ── Auth guard ──────────────────────────────────────────────────────────────
+  // â”€â”€ Auth guard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   if (authLoading) {
-    return <div className={styles.loading}>Laden…</div>;
+    return <div className={styles.loading}>Ladenâ€¦</div>;
   }
 
   if (!authUser) {
@@ -299,7 +299,7 @@ export default function AdminPage() {
     return <div className={styles.denied}>Geen toegang tot het admin dashboard.</div>;
   }
 
-  // ── Render ──────────────────────────────────────────────────────────────────
+  // â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   const navItems: { key: Tab; icon: React.ReactNode; label: string }[] = [
     { key: "overview", icon: <IoGridOutline />, label: "Overzicht" },
@@ -310,10 +310,10 @@ export default function AdminPage() {
 
   return (
     <div className={styles.page}>
-      {/* ── Sidebar ── */}
+      {/* â”€â”€ Sidebar â”€â”€ */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarLogo}>
-          <span className={styles.sidebarLogoIcon}>⚙️</span>
+          <span className={styles.sidebarLogoIcon}>âš™ï¸</span>
           <span className={styles.sidebarLogoText}>Peak Admin</span>
         </div>
 
@@ -342,7 +342,7 @@ export default function AdminPage() {
         </div>
       </aside>
 
-      {/* ── Main ── */}
+      {/* â”€â”€ Main â”€â”€ */}
       <main className={styles.main}>
 
         {/* OVERVIEW */}
@@ -352,8 +352,8 @@ export default function AdminPage() {
 
             <div className={styles.statsGrid}>
               <StatCard label="Gebruikers" value={users.length} icon={<IoPeopleOutline />} color="#FC9158" />
-              <StatCard label="Oefeningen" value={exercises.length} icon={<IoFitnessOutline />} color="#8DCF42" />
-              <StatCard label="Recepten" value={recipes.length} icon={<IoRestaurantOutline />} color="#08B6DC" />
+              <StatCard label="Oefeningen" value={exercises.length} icon={<IoFitnessOutline />} color="#72A82C" />
+              <StatCard label="Recepten" value={recipes.length} icon={<IoRestaurantOutline />} color="#2A9DB5" />
             </div>
 
             {users.length > 0 && (
@@ -363,11 +363,11 @@ export default function AdminPage() {
                   {users.slice(0, 8).map((u) => (
                     <div key={u.uid} className={styles.listRow}>
                       <div>
-                        <div className={styles.listRowName}>{u.username || "–"}</div>
+                        <div className={styles.listRowName}>{u.username || "â€“"}</div>
                         <div className={styles.listRowMeta}>{u.uid}</div>
                       </div>
                       <div className={styles.listRowDate}>
-                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString("nl-NL") : "–"}
+                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString("nl-NL") : "â€“"}
                       </div>
                     </div>
                   ))}
@@ -388,7 +388,7 @@ export default function AdminPage() {
               <IoSearchOutline className={styles.searchIcon} size={16} />
               <input
                 className={styles.searchInput}
-                placeholder="Zoek op gebruikersnaam of UID…"
+                placeholder="Zoek op gebruikersnaam of UIDâ€¦"
                 value={userSearch}
                 onChange={(e) => setUserSearch(e.target.value)}
               />
@@ -406,7 +406,7 @@ export default function AdminPage() {
                 <div key={u.uid} className={styles.listRow}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div className={styles.listRowName}>
-                      {u.username || "–"}
+                      {u.username || "â€“"}
                       {u.isAdmin && <span className={styles.badge} style={{ marginLeft: 8 }}>admin</span>}
                     </div>
                     <div className={styles.listRowMeta}>{u.uid}</div>
@@ -445,7 +445,7 @@ export default function AdminPage() {
               <IoSearchOutline className={styles.searchIcon} size={16} />
               <input
                 className={styles.searchInput}
-                placeholder="Zoek op naam, spiergroep of categorie…"
+                placeholder="Zoek op naam, spiergroep of categorieâ€¦"
                 value={exSearch}
                 onChange={(e) => setExSearch(e.target.value)}
               />
@@ -466,12 +466,12 @@ export default function AdminPage() {
                     <div className={styles.listRowMeta}>
                       {[...(ex.primaryMuscles ?? []), ...(ex.secondaryMuscles ?? [])]
                         .slice(0, 5)
-                        .join(", ") || "–"}
+                        .join(", ") || "â€“"}
                     </div>
                     {(ex.equipment ?? []).length > 0 && (
                       <div className={styles.listRowMeta}>
                         {(ex.equipment ?? []).join(", ")}
-                        {ex.category ? ` · ${ex.category}` : ""}
+                        {ex.category ? ` Â· ${ex.category}` : ""}
                       </div>
                     )}
                   </div>
@@ -512,7 +512,7 @@ export default function AdminPage() {
                   title="Importeer alle ingebouwde recepten naar Firestore"
                 >
                   <IoDownloadOutline size={15} />
-                  {seeding ? "Importeren…" : "Import ingebouwd"}
+                  {seeding ? "Importerenâ€¦" : "Import ingebouwd"}
                 </button>
                 <button className={styles.primaryBtn} onClick={() => openRecModal("add")}>
                   <IoAddOutline size={16} /> Toevoegen
@@ -524,7 +524,7 @@ export default function AdminPage() {
               <IoSearchOutline className={styles.searchIcon} size={16} />
               <input
                 className={styles.searchInput}
-                placeholder="Zoek op naam of categorie…"
+                placeholder="Zoek op naam of categorieâ€¦"
                 value={recSearch}
                 onChange={(e) => setRecSearch(e.target.value)}
               />
@@ -543,10 +543,10 @@ export default function AdminPage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div className={styles.listRowName}>{r.title}</div>
                     <div className={styles.listRowMeta}>
-                      {r.category ? `${r.category} · ` : ""}{r.portions} porties
+                      {r.category ? `${r.category} Â· ` : ""}{r.portions} porties
                     </div>
                     <div className={styles.listRowMeta}>
-                      {r.kcal} kcal · {r.protein}g eiwit · {r.carbs}g koolh. · {r.fat}g vet
+                      {r.kcal} kcal Â· {r.protein}g eiwit Â· {r.carbs}g koolh. Â· {r.fat}g vet
                     </div>
                   </div>
                   <div className={styles.rowActions}>
@@ -574,7 +574,7 @@ export default function AdminPage() {
         )}
       </main>
 
-      {/* ── Exercise modal ── */}
+      {/* â”€â”€ Exercise modal â”€â”€ */}
       {exModal && (
         <div className={styles.modalOverlay} onClick={() => setExModal(null)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -648,7 +648,7 @@ export default function AdminPage() {
                   rows={3}
                   value={exForm.description}
                   onChange={(e) => setExForm((f) => ({ ...f, description: e.target.value }))}
-                  placeholder="Optionele uitleg of instructies…"
+                  placeholder="Optionele uitleg of instructiesâ€¦"
                 />
               </div>
             </div>
@@ -662,14 +662,14 @@ export default function AdminPage() {
                 disabled={!exForm.name.trim() || exBusy}
                 onClick={handleExSave}
               >
-                {exBusy ? "Opslaan…" : "Opslaan"}
+                {exBusy ? "Opslaanâ€¦" : "Opslaan"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Recipe modal ── */}
+      {/* â”€â”€ Recipe modal â”€â”€ */}
       {recModal && (
         <div className={styles.modalOverlay} onClick={() => setRecModal(null)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -733,7 +733,7 @@ export default function AdminPage() {
 
               <div className={styles.formField}>
                 <label className={styles.formLabel}>
-                  Ingrediënten (één per regel — formaat: Naam: hoeveelheid)
+                  IngrediÃ«nten (Ã©Ã©n per regel â€” formaat: Naam: hoeveelheid)
                 </label>
                 <textarea
                   className={styles.formTextarea}
@@ -745,13 +745,13 @@ export default function AdminPage() {
               </div>
 
               <div className={styles.formField}>
-                <label className={styles.formLabel}>Bereiding (één stap per regel)</label>
+                <label className={styles.formLabel}>Bereiding (Ã©Ã©n stap per regel)</label>
                 <textarea
                   className={styles.formTextarea}
                   rows={6}
                   value={recForm.steps}
                   onChange={(e) => setRecForm((f) => ({ ...f, steps: e.target.value }))}
-                  placeholder={"Kook de pasta gaar.\nBak de ui en knoflook glazig.\nVoeg gehakt toe…"}
+                  placeholder={"Kook de pasta gaar.\nBak de ui en knoflook glazig.\nVoeg gehakt toeâ€¦"}
                 />
               </div>
             </div>
@@ -765,14 +765,14 @@ export default function AdminPage() {
                 disabled={!recForm.title.trim() || recBusy}
                 onClick={handleRecSave}
               >
-                {recBusy ? "Opslaan…" : "Opslaan"}
+                {recBusy ? "Opslaanâ€¦" : "Opslaan"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Confirm delete ── */}
+      {/* â”€â”€ Confirm delete â”€â”€ */}
       {confirmDelete && (
         <div className={styles.modalOverlay} onClick={() => setConfirmDelete(null)}>
           <div className={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
@@ -793,7 +793,7 @@ export default function AdminPage() {
                 onClick={handleConfirmDelete}
                 disabled={deleteBusy}
               >
-                {deleteBusy ? "Verwijderen…" : "Verwijderen"}
+                {deleteBusy ? "Verwijderenâ€¦" : "Verwijderen"}
               </button>
             </div>
           </div>
@@ -803,7 +803,7 @@ export default function AdminPage() {
   );
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function splitList(s: string): string[] {
   return s.split(",").map((x) => x.trim()).filter(Boolean);

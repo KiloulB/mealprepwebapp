@@ -1,8 +1,8 @@
 // app/gym/workout/[sessionId]/page.tsx
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { deleteDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase/config";
@@ -86,6 +86,9 @@ export default function WorkoutSessionPage() {
   const params = useParams<{ sessionId?: string | string[] }>();
   const sessionId = useMemo(() => normalizeParam(params?.sessionId), [params?.sessionId]);
 
+  const searchParams = useSearchParams();
+  const tidFromUrl = searchParams?.get("tid") ?? "";
+
   const [uid, setUid] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -164,21 +167,14 @@ export default function WorkoutSessionPage() {
     return () => unsub();
   }, [sessionId, uid]);
 
+  const templateId = tidFromUrl || session?.templateId;
+
   useEffect(() => {
-    async function run() {
-      if (!uid || !sessionId || !session?.templateId) {
-        setPrevSession(null);
-        return;
-      }
-      try {
-        const prev = await getPreviousSessionForTemplate(uid, session.templateId, sessionId);
-        setPrevSession(prev as any);
-      } catch {
-        setPrevSession(null);
-      }
-    }
-    run();
-  }, [uid, sessionId, session?.templateId]);
+    if (!uid || !sessionId || !templateId) { setPrevSession(null); return; }
+    getPreviousSessionForTemplate(uid, templateId, sessionId)
+      .then((prev) => setPrevSession(prev as any))
+      .catch(() => setPrevSession(null));
+  }, [uid, sessionId, templateId]);
 
   useEffect(() => {
     if (!session?.startedAt) return;
@@ -186,6 +182,13 @@ export default function WorkoutSessionPage() {
     const id = setInterval(() => setTick((t) => t + 1), 1000);
     return () => clearInterval(id);
   }, [session?.startedAt, session?.status]);
+
+  const persistTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function debouncedPersist(nextExercises: WorkoutExercise[]) {
+    if (persistTimeout.current) clearTimeout(persistTimeout.current);
+    persistTimeout.current = setTimeout(() => persistExercises(nextExercises), 600);
+  }
 
   async function persistExercises(nextExercises: WorkoutExercise[]) {
     if (!sessionId || !uid) return;
@@ -211,7 +214,7 @@ export default function WorkoutSessionPage() {
       return { ...ex, sets: nextSets, done: nextSets.length > 0 && nextSets.every((s) => !!s.done) };
     });
     setSession((prev) => (prev ? { ...prev, exercises: nextExercises } : prev));
-    await persistExercises(nextExercises);
+    debouncedPersist(nextExercises);
   }
 
   async function updateSetField(exerciseId: string, setId: string, field: "targetKg" | "targetReps", raw: string) {
@@ -223,7 +226,7 @@ export default function WorkoutSessionPage() {
       return { ...ex, sets: nextSets, done: nextSets.length > 0 && nextSets.every((s) => !!s.done) };
     });
     setSession((prev) => (prev ? { ...prev, exercises: nextExercises } : prev));
-    await persistExercises(nextExercises);
+    debouncedPersist(nextExercises);
   }
 
   async function addSet(exerciseId: string) {
@@ -240,7 +243,7 @@ export default function WorkoutSessionPage() {
       return { ...ex, sets: [...(ex.sets ?? []), newSet] };
     });
     setSession((prev) => (prev ? { ...prev, exercises: nextExercises } : prev));
-    persistExercises(nextExercises);
+    debouncedPersist(nextExercises);
   }
 
   async function addExercises(picked: WorkoutExerciseRef[], musclesWorked: string[]) {
@@ -278,7 +281,7 @@ export default function WorkoutSessionPage() {
       return { ...ex, sets: nextSets, done: nextSets.length > 0 && nextSets.every((s) => !!s.done) };
     });
     setSession((prev) => (prev ? { ...prev, exercises: nextExercises } : prev));
-    await persistExercises(nextExercises);
+    debouncedPersist(nextExercises);
   }
 
   async function deleteWorkout() {

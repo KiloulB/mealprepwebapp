@@ -193,11 +193,11 @@
 
 .primaryBtn {
   width: 100%;
-  padding: 15px 0;
+  padding: 13px 0;
   background: #FC9158;
   border: none;
-  border-radius: 14px;
-  color: #000;
+  border-radius: 10px;
+  color: #fff;
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;

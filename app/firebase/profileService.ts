@@ -115,3 +115,16 @@ export const addWeightEntry = async (uid: string, entry: WeightEntry) => {
   await setDoc(ref, { weightHistory: updated }, { merge: true });
   await updateProfile(uid, { weight: entry.weight });
 };
+
+export const removeWeightEntry = async (uid: string, date: string) => {
+  const ref = doc(db, "users", uid, "settings", "plan");
+  const snap = await getDoc(ref);
+  const data = snap.exists() ? snap.data() : {};
+  const history: WeightEntry[] = (data.weightHistory as WeightEntry[]) || [];
+  const updated = history.filter((e) => e.date !== date);
+  await setDoc(ref, { weightHistory: updated }, { merge: true });
+  if (updated.length > 0) {
+    const last = updated[updated.length - 1];
+    await updateProfile(uid, { weight: last.weight });
+  }
+};

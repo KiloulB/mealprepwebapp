@@ -16,10 +16,10 @@
 
 /* ── Top bar ───────────────────────────────────────────────────────────── */
 .topBar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
   align-items: center;
-  justify-content: space-between;
-  padding: 52px 20px 16px;
+  padding: calc(env(safe-area-inset-top) + 16px) 20px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   flex-shrink: 0;
 }
@@ -43,7 +43,7 @@
 .nextBtn:disabled { color: #444; cursor: default; }
 
 .saveBtn {
-  background: none; border: none; color: #8DCF42; font-size: 15px; font-weight: 700;
+  background: none; border: none; color: #72A82C; font-size: 15px; font-weight: 700;
   cursor: pointer; padding: 4px; width: 80px; text-align: right; white-space: nowrap;
 }
 .saveBtn:disabled { color: #444; cursor: default; }
@@ -137,7 +137,7 @@
   background: none; border: none; color: #666; cursor: pointer; display: flex; align-items: center;
   padding: 4px; flex-shrink: 0; transition: color 150ms ease;
 }
-.removeBtn:active { color: #E4222A; }
+.removeBtn:active { color: #C13232; }
 
 .patternRow { display: flex; flex-wrap: wrap; gap: 6px; }
 

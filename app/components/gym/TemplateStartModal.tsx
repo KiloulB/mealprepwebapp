@@ -6,7 +6,6 @@ import gymStyles from "../../gym/gym.module.css";
 import { FiChevronLeft } from "react-icons/fi";
 import { IoChevronForward, IoListOutline, IoFlashOutline, IoClose } from "react-icons/io5";
 import type { GymExerciseRef, GymSessionExercise, GymSet, GymTemplate } from "../../types/gym";
-import { subscribeToGymTemplates } from "../../firebase/gymTemplateService";
 import { getLatestSessionForTemplate } from "../../firebase/gymSessionQueries";
 import { createGymSession } from "../../firebase/gymService";
 import ExercisePickerModal from "./ExercisePickerModal";
@@ -30,24 +29,20 @@ type View = "choice" | "templates" | "picker";
 export default function TemplateStartModal({
   open,
   uid: firebaseUid,
+  templates,
   onClose,
   onStarted,
 }: {
   open: boolean;
   uid: string;
+  templates: GymTemplate[];
   onClose: () => void;
   onStarted: (sessionId: string) => void;
   initialTemplate?: GymTemplate;
 }) {
   const [view, setView] = useState<View>("choice");
-  const [templates, setTemplates] = useState<GymTemplate[]>([]);
   const [busyId, setBusyId] = useState<string>("");
   const [busyEmpty, setBusyEmpty] = useState(false);
-
-  useEffect(() => {
-    if (!open || !firebaseUid) return;
-    return subscribeToGymTemplates(firebaseUid, setTemplates);
-  }, [open, firebaseUid]);
 
   useEffect(() => {
     if (!open) setView("choice");

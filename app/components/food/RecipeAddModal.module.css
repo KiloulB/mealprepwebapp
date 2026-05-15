@@ -22,10 +22,10 @@
 /* ── Top bar ─────────────────────────────────────────────────── */
 
 .topBar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
   align-items: center;
-  justify-content: space-between;
-  padding: 52px 20px 16px;
+  padding: calc(env(safe-area-inset-top) + 16px) 20px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   flex-shrink: 0;
   width: 100%;
@@ -88,7 +88,7 @@
 .saveBtn {
   background: none;
   border: none;
-  color: #8DCF42;
+  color: #72A82C;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
@@ -557,7 +557,7 @@
 }
 
 .removeBtn:active {
-  color: #E4222A;
+  color: #C13232;
 }
 
 .addRowBtn {
@@ -581,11 +581,11 @@
 
 .errorMsg {
   background: rgba(228, 34, 42, 0.12);
-  border: 1px solid #E4222A;
+  border: 1px solid #C13232;
   border-radius: 10px;
   padding: 12px 14px;
   font-size: 13px;
-  color: #E4222A;
+  color: #C13232;
   margin-top: 16px;
   width: 100%;
 }

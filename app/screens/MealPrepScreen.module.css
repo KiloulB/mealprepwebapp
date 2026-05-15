@@ -1,316 +1,357 @@
-﻿.screen {
+.screen {
   min-height: 100vh;
   background: #18181A;
   color: #fff;
   font-family: system-ui, sans-serif;
-  padding: 0 0 90px;
+  padding: 0 0 100px;
 }
+
+/* ── Header ───────────────────────────────────────────────────────────── */
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: calc(env(safe-area-inset-top) + 40px) 20px 16px;
+  padding: calc(env(safe-area-inset-top) + 44px) 20px 20px;
 }
 
 .headerTitle {
   font-size: 28px;
   font-weight: 700;
   color: #fff;
+  letter-spacing: -0.3px;
 }
 
 .addBtn {
-  background: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: none;
-  color: #666;
+  background: rgba(252,145,88,0.14);
+  color: #FC9158;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  padding: 0;
+  transition: background 150ms ease;
 }
+.addBtn:hover { background: rgba(252,145,88,0.22); }
 
-/* ── Reminder banner ─────────────────────────────────────────────────── */
+/* ── Progress strip ───────────────────────────────────────────────────── */
 
-.reminderBanner {
-  background: #2C1F0E;
-  border: 1px solid #FC9158;
-  border-radius: 14px;
-  margin: 0 20px 16px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.reminderIcon { font-size: 22px; flex-shrink: 0; line-height: 1; }
-.reminderText { display: flex; flex-direction: column; gap: 2px; }
-.reminderTitle { font-size: 15px; font-weight: 700; color: #FC9158; }
-.reminderSub { font-size: 13px; color: #A1A1A1; }
-
-/* ── Active plan card ─────────────────────────────────────────────────── */
-
-.planCard {
-  background: #232325;
-  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 18px;
-  margin: 0 20px 16px;
-  padding: 16px 18px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
-}
-
-.planCardRow {
+.progressStrip {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #2e2e30;
+  gap: 10px;
+  padding: 0 20px 28px;
 }
 
-.planCardRow:last-of-type { border-bottom: none; }
-.planCardLabel { font-size: 13px; color: #A1A1A1; }
-.planCardValue { font-size: 15px; font-weight: 600; color: #fff; }
+.progressLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
-.planCardActions {
+.progressTrack {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #FC9158;
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.progressDays {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.progressDaysWarn {
+  color: #FC9158;
+}
+
+/* ── Today card ───────────────────────────────────────────────────────── */
+
+.todayCard {
+  margin: 0 20px 28px;
+  background: #232325;
+  background-image: linear-gradient(160deg, rgba(252,145,88,0.06) 0%, transparent 60%);
+  border: 1px solid rgba(252,145,88,0.12);
+  border-radius: 22px;
+  padding: 22px 20px 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.todayMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 20px;
+}
+
+.todayTag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #FC9158;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+}
+
+.todayDate {
+  font-size: 15px;
+  font-weight: 600;
+  color: #A1A1A1;
+}
+
+.todayRecipeBtn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: none;
+  border: none;
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: opacity 120ms ease;
+}
+.todayRecipeBtn:active { opacity: 0.7; }
+
+.todayRecipeInner {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.todayRecipeName {
+  font-size: 23px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.todayRecipeMacros {
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+}
+
+.todayChevronWrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #555;
+}
+
+.todayEmpty {
+  font-size: 15px;
+  color: #444;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Week section ─────────────────────────────────────────────────────── */
+
+.weekSection {
+  padding: 0 20px 28px;
+}
+
+.weekTitle {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9f9f9f;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+}
+
+.weekStrip {
+  display: flex;
+  gap: 5px;
+}
+
+.weekBtn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid transparent;
+  border-radius: 13px;
+  padding: 10px 2px 9px;
+  cursor: pointer;
+  min-width: 0;
+  transition: border-color 150ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.weekBtnToday {
+  background: rgba(252,145,88,0.08);
+  border-color: rgba(252,145,88,0.35);
+}
+
+.weekBtnEmpty {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.weekBtn:active:not(.weekBtnEmpty) { opacity: 0.65; }
+
+.weekBtnDay {
+  font-size: 10px;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.weekBtnToday .weekBtnDay { color: #FC9158; }
+
+.weekBtnNum {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.weekBtnToday .weekBtnNum { color: #FC9158; }
+
+.weekBtnDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Cook info ────────────────────────────────────────────────────────── */
+
+.cookInfo {
+  padding: 0 20px 24px;
+}
+
+.cookInfoText {
+  font-size: 13px;
+  color: #444;
+}
+
+.cookInfoText strong {
+  color: #666;
+  font-weight: 600;
+}
+
+/* ── Plan actions ─────────────────────────────────────────────────────── */
+
+.actionsRow {
   display: flex;
   gap: 8px;
-  margin-top: 14px;
+  padding: 0 20px;
 }
 
 .completeBtn {
   flex: 1;
-  padding: 10px 0;
+  padding: 11px 0;
   background: none;
-  border: 1px solid #2C2C2E;
-  border-radius: 14px;
-  color: #A1A1A1;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 12px;
+  color: #666;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
+  transition: background 150ms ease, border-color 150ms ease;
 }
-.completeBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.completeBtn:hover  { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.16); }
+.completeBtn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .deleteBtn {
   flex: 1;
-  padding: 10px 0;
+  padding: 11px 0;
   background: none;
-  border: 1px solid color-mix(in srgb, #E4222A 30%, transparent);
-  border-radius: 14px;
-  color: #E4222A;
+  border: 1px solid rgba(193,50,50,0.18);
+  border-radius: 12px;
+  color: rgba(193,50,50,0.7);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
+  transition: background 150ms ease;
 }
-.deleteBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.deleteBtn:hover    { background: rgba(193,50,50,0.06); }
+.deleteBtn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.confirmDeleteRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #2e2e30;
-}
+/* ── Confirm card ─────────────────────────────────────────────────────── */
 
-.confirmDeleteText {
-  font-size: 13px;
-  color: #A1A1A1;
-  flex: 1;
-}
-
-.confirmDeleteYes {
-  background: #E4222A;
-  border: none;
-  border-radius: 10px;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 7px 12px;
-  cursor: pointer;
-}
-.confirmDeleteYes:disabled { opacity: 0.6; }
-
-.confirmDeleteNo {
-  background: #2e2e30;
-  border: none;
-  border-radius: 10px;
-  color: #A1A1A1;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 7px 12px;
-  cursor: pointer;
-}
-
-/* ── Week calendar ────────────────────────────────────────────────────── */
-
-.weekCard {
-  background: #232325;
-  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 18px;
-  margin: 0 20px 16px;
-  padding: 16px 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
-}
-
-.weekCardTitle {
-  font-size: 15px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 12px;
-  padding: 0 4px;
-}
-
-.weekRow {
-  display: flex;
-  justify-content: space-between;
-  gap: 4px;
-}
-
-.weekDay {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: #2e2e30;
-  border: 1.5px solid transparent;
-  border-radius: 10px;
-  padding: 8px 4px;
-  min-width: 0;
-  cursor: pointer;
-  transition: border-color 150ms ease, background 150ms ease;
-}
-
-.weekDayToday {
-  background: #3a2a1a;
-  border-color: #FC9158;
-}
-
-.weekDaySelected {
-  border-color: #FC9158;
-  background: color-mix(in srgb, #FC9158 12%, transparent);
-}
-
-.weekDayLabel {
-  font-size: 11px;
-  font-weight: 700;
-  color: #A1A1A1;
-}
-
-.weekDayToday .weekDayLabel,
-.weekDaySelected .weekDayLabel {
-  color: #FC9158;
-}
-
-.weekDayMeal {
-  font-size: 10px;
-  color: #fff;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-.dayDetail {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid #2e2e30;
-}
-
-.dayDetailTitle {
-  font-size: 13px;
-  font-weight: 700;
-  color: #FC9158;
-  margin-bottom: 6px;
-}
-
-.dayDetailRecipe {
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 3px;
-}
-
-.dayDetailMeta {
-  font-size: 12px;
-  color: #666;
-}
-
-.dayDetailEmpty {
-  font-size: 13px;
-  color: #666;
-}
-
-/* ── Meals list ───────────────────────────────────────────────────────── */
-
-.mealsCard {
-  background: #232325;
-  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 18px;
-  margin: 0 20px 16px;
+.confirmCard {
+  margin: 0 20px;
+  background: rgba(193,50,50,0.07);
+  border: 1px solid rgba(193,50,50,0.16);
+  border-radius: 16px;
   padding: 16px 18px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
-.mealsCardTitle {
-  font-size: 15px;
-  font-weight: 700;
+.confirmQ {
+  font-size: 14px;
+  font-weight: 600;
   color: #fff;
-  margin-bottom: 12px;
+  margin: 0 0 14px;
 }
 
-.mealRow {
+.confirmBtns {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #2e2e30;
   gap: 8px;
 }
-.mealRow:last-child { border-bottom: none; }
 
-.mealInfo {
+.confirmYes {
   flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.mealTitle {
-  font-size: 15px;
-  font-weight: 600;
+  background: #C13232;
+  border: none;
+  border-radius: 10px;
   color: #fff;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 11px 0;
+  cursor: pointer;
+  transition: opacity 150ms ease;
 }
+.confirmYes:hover    { opacity: 0.88; }
+.confirmYes:disabled { opacity: 0.5; }
 
-.mealMeta { font-size: 12px; color: #A1A1A1; }
-
-.mealPattern {
-  font-size: 12px;
-  color: #FC9158;
+.confirmNo {
+  flex: 1;
+  background: rgba(255,255,255,0.07);
+  border: none;
+  border-radius: 10px;
+  color: #A1A1A1;
+  font-size: 13px;
   font-weight: 600;
-  flex-shrink: 0;
-  background: color-mix(in srgb, #FC9158 12%, transparent);
-  padding: 3px 8px;
-  border-radius: 9999px;
+  padding: 11px 0;
+  cursor: pointer;
 }
 
 /* ── Empty state ──────────────────────────────────────────────────────── */
@@ -319,14 +360,56 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  gap: 8px;
+  padding: 80px 32px 40px;
+  gap: 10px;
 }
 
-.emptyIcon { font-size: 48px; margin-bottom: 8px; }
-.emptyTitle { font-size: 17px; font-weight: 700; color: #fff; }
-.emptySub { font-size: 13px; color: #A1A1A1; text-align: center; }
+.emptyIcon {
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: rgba(252,145,88,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.emptyTitle {
+  font-size: 19px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.2px;
+}
+
+.emptySub {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  line-height: 1.55;
+  max-width: 270px;
+}
+
+.emptyBtn {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 13px 28px;
+  background: #FC9158;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(252,145,88,0.28);
+  transition: opacity 150ms ease, transform 100ms ease;
+}
+.emptyBtn:hover  { opacity: 0.9; }
+.emptyBtn:active { transform: scale(0.97); }
+
+/* ── Help button ──────────────────────────────────────────────────────── */
 
 .helpBtn {
   position: fixed;
@@ -343,5 +426,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
 }

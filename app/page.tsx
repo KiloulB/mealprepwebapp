@@ -12,7 +12,7 @@ const FoodScreen = dynamicImport(() => import("./screens/FoodScreen"), { ssr: fa
 const ProfileScreen = dynamicImport(() => import("./screens/ProfileScreen"), { ssr: false });
 const MealPrepScreen = dynamicImport(() => import("./screens/MealPrepScreen"), { ssr: false });
 
-// Preload all screen chunks immediately so tab switches are instant
+// Kick off all chunk downloads immediately — tabs are ready before the user taps them
 if (typeof window !== "undefined") {
   void import("./screens/GymScreen");
   void import("./screens/FoodScreen");
@@ -22,10 +22,6 @@ if (typeof window !== "undefined") {
 
 import BottomNav from "./components/BottomNav/BottomNav";
 import styles from "./home.module.css";
-
-function cx(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function HomeScreenWrapper() {
   return (
@@ -38,23 +34,16 @@ export default function HomeScreenWrapper() {
 function HomeScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const activeTab = searchParams.get("tab") || "gym";
   const { authUser, loading, mealPrepEnabled } = useUser();
   useFont();
 
-  const ANIM_MS = 80;
-  const [displayedTab, setDisplayedTab] = useState(activeTab);
-  const [isExiting, setIsExiting] = useState(false);
+  const initialTab = searchParams.get("tab") || "gym";
 
-  useEffect(() => {
-    if (activeTab === displayedTab) return;
-    setIsExiting(true);
-    const t = setTimeout(() => {
-      setDisplayedTab(activeTab);
-      setIsExiting(false);
-    }, ANIM_MS);
-    return () => clearTimeout(t);
-  }, [activeTab, displayedTab]);
+  // Local state is the source of truth — no router round-trip on every tap
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  // Track which tabs have been visited so we keep them mounted (never re-render)
+  const [mountedTabs, setMountedTabs] = useState<Set<string>>(() => new Set([initialTab]));
 
   useEffect(() => {
     if (loading) return;
@@ -84,24 +73,29 @@ function HomeScreen() {
   }
 
   const handleTabChange = (nextValue: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", nextValue);
-    router.push(`/?${params.toString()}`);
+    setActiveTab(nextValue);
+    setMountedTabs(prev => new Set([...prev, nextValue]));
+    // Update URL without triggering a Next.js navigation or re-render
+    window.history.replaceState(null, "", `/?tab=${nextValue}`);
   };
+
+  const hide = (tab: string): React.CSSProperties | undefined =>
+    activeTab !== tab ? { display: "none" } : undefined;
 
   return (
     <div className={styles.screen}>
-      <div className={cx(styles.tabPage, isExiting && styles.tabPageExit)}>
-        {displayedTab === "gym" ? (
-          <GymScreen />
-        ) : displayedTab === "food" ? (
-          <FoodScreen />
-        ) : displayedTab === "prep" ? (
-          <MealPrepScreen />
-        ) : (
-          <ProfileScreen />
-        )}
-      </div>
+      {mountedTabs.has("gym") && (
+        <div style={hide("gym")}><GymScreen /></div>
+      )}
+      {mountedTabs.has("food") && (
+        <div style={hide("food")}><FoodScreen /></div>
+      )}
+      {mealPrepEnabled && mountedTabs.has("prep") && (
+        <div style={hide("prep")}><MealPrepScreen /></div>
+      )}
+      {mountedTabs.has("profile") && (
+        <div style={hide("profile")}><ProfileScreen /></div>
+      )}
       <BottomNav value={activeTab} onChange={handleTabChange} mealPrepEnabled={mealPrepEnabled} />
     </div>
   );

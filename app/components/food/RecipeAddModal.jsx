@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -9,17 +9,17 @@ import { saveRecipe, updateRecipe } from "../../firebase/dataService";
 import styles from "./RecipeAddModal.module.css";
 
 const SECTION_OPTIONS = [
-  { id: "macros",       emoji: "📊", label: "Macrowaarden" },
-  { id: "portions",     emoji: "🍽️", label: "Porties" },
-  { id: "ingredients",  emoji: "📝", label: "Ingrediënten" },
-  { id: "steps",        emoji: "👨‍🍳", label: "Stappen" },
+  { id: "macros",       emoji: "ðŸ“Š", label: "Macrowaarden" },
+  { id: "portions",     emoji: "ðŸ½ï¸", label: "Porties" },
+  { id: "ingredients",  emoji: "ðŸ“", label: "IngrediÃ«nten" },
+  { id: "steps",        emoji: "ðŸ‘¨â€ðŸ³", label: "Stappen" },
 ];
 
 const MACRO_FIELDS = [
   { key: "kcal",    label: "Kcal",   unit: "kcal", color: "#FC9158" },
-  { key: "protein", label: "Eiwit",  unit: "g",    color: "#E4222A" },
-  { key: "fat",     label: "Vet",    unit: "g",    color: "#8DCF42" },
-  { key: "carbs",   label: "Koolh.", unit: "g",    color: "#08B6DC" },
+  { key: "protein", label: "Eiwit",  unit: "g",    color: "#C13232" },
+  { key: "fat",     label: "Vet",    unit: "g",    color: "#72A82C" },
+  { key: "carbs",   label: "Koolh.", unit: "g",    color: "#2A9DB5" },
 ];
 
 function emptyForm() {
@@ -88,7 +88,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
   const [error, setError]       = useState("");
   const imageInputRef           = useRef(null);
 
-  /* ── helpers ─────────────────────────────────────────────── */
+  /* â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
   const toggleSection = (id) =>
     setSections((prev) =>
@@ -145,7 +145,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
       steps: f.steps.length > 1 ? f.steps.filter((_, i) => i !== idx) : [""],
     }));
 
-  /* ── save ─────────────────────────────────────────────────── */
+  /* â”€â”€ save â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
   const handleSave = async () => {
     if (!authUser || !form.title.trim()) return;
@@ -185,11 +185,11 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
   const canNext = form.title.trim().length > 0;
   const canSave = canNext && !saving;
 
-  /* ── render ───────────────────────────────────────────────── */
+  /* â”€â”€ render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
   return createPortal(
     <div className={styles.overlay}>
-      {/* ── Top bar ── */}
+      {/* â”€â”€ Top bar â”€â”€ */}
       <div className={styles.topBar}>
         {step === 1 ? (
           <button className={styles.cancelBtn} onClick={onClose}>
@@ -207,25 +207,25 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
 
         {step === 1 ? (
           <button className={styles.nextBtn} disabled={!canNext} onClick={() => setStep(2)}>
-            Volgende →
+            Volgende â†’
           </button>
         ) : (
           <button className={styles.saveBtn} disabled={!canSave} onClick={handleSave}>
-            {saving ? "Opslaan…" : "Opslaan"}
+            {saving ? "Opslaanâ€¦" : "Opslaan"}
           </button>
         )}
       </div>
 
-      {/* ── Step dots ── */}
+      {/* â”€â”€ Step dots â”€â”€ */}
       <div className={styles.stepDots}>
         <div className={`${styles.dot} ${step === 1 ? styles.dotActive : ""}`} />
         <div className={`${styles.dot} ${step === 2 ? styles.dotActive : ""}`} />
       </div>
 
-      {/* ── Body ── */}
+      {/* â”€â”€ Body â”€â”€ */}
       <div className={styles.body}>
 
-        {/* ════ STEP 1 ════ */}
+        {/* â•â•â•â• STEP 1 â•â•â•â• */}
         {step === 1 && (
           <>
             {/* Photo picker */}
@@ -286,7 +286,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
                   >
                     <span className={styles.chipEmoji}>{opt.emoji}</span>
                     <span className={styles.chipLabel}>{opt.label}</span>
-                    {active && <span className={styles.chipCheck}>✓</span>}
+                    {active && <span className={styles.chipCheck}>âœ“</span>}
                   </button>
                 );
               })}
@@ -300,7 +300,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
           </>
         )}
 
-        {/* ════ STEP 2 ════ */}
+        {/* â•â•â•â• STEP 2 â•â•â•â• */}
         {step === 2 && (
           <>
             {/* Name + optional photo thumb */}
@@ -316,7 +316,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
               <span className={styles.recipeNameBadge}>{form.title}</span>
             </div>
 
-            {/* ── Macrowaarden ── */}
+            {/* â”€â”€ Macrowaarden â”€â”€ */}
             {sections.includes("macros") && (
               <div className={styles.section}>
                 <div className={styles.sectionRow}>
@@ -345,7 +345,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
               </div>
             )}
 
-            {/* ── Porties ── */}
+            {/* â”€â”€ Porties â”€â”€ */}
             {sections.includes("portions") && (
               <div className={styles.section}>
                 <span className={styles.sectionTitle}>Porties</span>
@@ -370,10 +370,10 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
               </div>
             )}
 
-            {/* ── Ingrediënten ── */}
+            {/* â”€â”€ IngrediÃ«nten â”€â”€ */}
             {sections.includes("ingredients") && (
               <div className={styles.section}>
-                <span className={styles.sectionTitle}>Ingrediënten</span>
+                <span className={styles.sectionTitle}>IngrediÃ«nten</span>
                 {form.ingredients.map((ing, idx) => (
                   <div key={idx} className={styles.listRow}>
                     <input
@@ -394,12 +394,12 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
                   </div>
                 ))}
                 <button className={styles.addRowBtn} onClick={addIngredient}>
-                  <IoAdd size={15} /> Ingrediënt toevoegen
+                  <IoAdd size={15} /> IngrediÃ«nt toevoegen
                 </button>
               </div>
             )}
 
-            {/* ── Stappen ── */}
+            {/* â”€â”€ Stappen â”€â”€ */}
             {sections.includes("steps") && (
               <div className={styles.section}>
                 <span className={styles.sectionTitle}>Bereidingsstappen</span>
@@ -408,7 +408,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
                     <div className={styles.stepNum}>{idx + 1}</div>
                     <input
                       className={styles.listInputFull}
-                      placeholder={`Stap ${idx + 1}…`}
+                      placeholder={`Stap ${idx + 1}â€¦`}
                       value={s}
                       onChange={(e) => updateStep(idx, e.target.value)}
                     />
@@ -425,7 +425,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
 
             {sections.length === 0 && (
               <p className={styles.noFieldsHint}>
-                Geen velden geselecteerd — er wordt alleen een naam opgeslagen.
+                Geen velden geselecteerd â€” er wordt alleen een naam opgeslagen.
               </p>
             )}
 

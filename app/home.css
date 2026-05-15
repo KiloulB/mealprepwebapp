@@ -1,4 +1,4 @@
-/* Home Page Styles */
+﻿/* Home Page Styles */
 
 .home-container {
   min-height: 100vh;
@@ -99,7 +99,7 @@
   font-size: 1rem;
   line-height: 1.5rem;
   font-weight: 600;
-  color: #8DCF42;
+  color: #72A82C;
 }
 
 .kcal-display {
@@ -133,7 +133,7 @@
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #E4222A 0%, #08B6DC 50%, #F1A500 100%);
+  background: linear-gradient(90deg, #C13232 0%, #2A9DB5 50%, #C28A00 100%);
   border-radius: 4px;
   transition: width 0.5s ease-in-out;
 }
@@ -154,19 +154,19 @@
   line-height: 1.25rem;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #E4222A;
+  color: #C13232;
 }
 
 .macro-label.protein {
-  color: #E4222A;
+  color: #C13232;
 }
 
 .macro-label.fat {
-  color: #F1A500;
+  color: #C28A00;
 }
 
 .macro-label.carbs {
-  color: #08B6DC;
+  color: #2A9DB5;
 }
 
 .macro-value {
@@ -249,7 +249,7 @@
 .meal-stats {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: #8DCF42;
+  color: #72A82C;
 }
 
 .add-food-button {

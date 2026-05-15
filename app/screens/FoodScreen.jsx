@@ -123,10 +123,10 @@ function ActivityRings({ kcal, protein, fat, carbs, kcalTarget, proteinTarget, f
   const radius = (ringSize - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const rings = [
-    { targetProgress: Math.min(kcal / kcalTarget, 1), color: "#E4222A",    backgroundColor: "#4A1C1E" },
-    { targetProgress: Math.min(protein / proteinTarget, 1), color: "#08B6DC", backgroundColor: "#16424C" },
-    { targetProgress: Math.min(fat / fatTarget, 1), color: "#F1A500",    backgroundColor: "#4E4021" },
-    { targetProgress: Math.min(carbs / carbsTarget, 1), color: "#8DCF42", backgroundColor: "#323C28" },
+    { targetProgress: Math.min(kcal / kcalTarget, 1), color: "#C13232",    backgroundColor: "#4A1C1E" },
+    { targetProgress: Math.min(protein / proteinTarget, 1), color: "#2A9DB5", backgroundColor: "#16424C" },
+    { targetProgress: Math.min(fat / fatTarget, 1), color: "#C28A00",    backgroundColor: "#4E4021" },
+    { targetProgress: Math.min(carbs / carbsTarget, 1), color: "#72A82C", backgroundColor: "#323C28" },
   ];
   useEffect(() => {
     const duration = 1300;
@@ -560,17 +560,17 @@ export default function FoodScreen() {
         <div className={styles.macroBreakdownRow}>
           <div className={styles.macroItems}>
             <div className={styles.macroItem}>
-              <span className={styles.macroLabel} style={{ color: "#E4222A" }}>Eiwit</span>
+              <span className={styles.macroLabel} style={{ color: "#C13232" }}>Eiwit</span>
               <span className={styles.macroVal}>{Math.round(currentIntake.protein)} g</span>
               <span className={styles.macroTarget}>{proteinTarget} g</span>
             </div>
             <div className={styles.macroItem}>
-              <span className={styles.macroLabel} style={{ color: "#F1A500" }}>Vet</span>
+              <span className={styles.macroLabel} style={{ color: "#C28A00" }}>Vet</span>
               <span className={styles.macroVal}>{Math.round(currentIntake.fat)} g</span>
               <span className={styles.macroTarget}>{fatTarget} g</span>
             </div>
             <div className={styles.macroItem}>
-              <span className={styles.macroLabel} style={{ color: "#08B6DC" }}>Carb</span>
+              <span className={styles.macroLabel} style={{ color: "#2A9DB5" }}>Carb</span>
               <span className={styles.macroVal}>{Math.round(currentIntake.carbs)} g</span>
               <span className={styles.macroTarget}>{carbsTarget} g</span>
             </div>
@@ -723,8 +723,8 @@ export default function FoodScreen() {
               </button>
 
               <button className={styles.choiceRow} onClick={() => openRecipes(activeMealType)}>
-                <span className={styles.choiceIcon} style={{ background: "rgba(8,182,220,0.15)" }}>
-                  <IoBookSharp size={18} color="#08B6DC" />
+                <span className={styles.choiceIcon} style={{ background: "rgba(42,157,181,0.15)" }}>
+                  <IoBookSharp size={18} color="#2A9DB5" />
                 </span>
                 <span className={styles.choiceText}>
                   <span className={styles.choiceTitle}>Vanuit recept</span>
@@ -739,7 +739,7 @@ export default function FoodScreen() {
                   onClick={() => { setMealChoiceModalOpen(false); setMealPrepPickerOpen(true); }}
                 >
                   <span className={styles.choiceIcon} style={{ background: "rgba(141,207,66,0.15)" }}>
-                    <IoCalendarOutline size={20} color="#8DCF42" />
+                    <IoCalendarOutline size={20} color="#72A82C" />
                   </span>
                   <span className={styles.choiceText}>
                     <span className={styles.choiceTitle}>Meal prep plan</span>
@@ -1060,15 +1060,15 @@ export default function FoodScreen() {
                 <span className={styles.recipeDetailMacroVal}>{Math.round(selectedRecipe.kcal)} g</span>
               </div>
               <div className={styles.recipeDetailMacroItem}>
-                <span className={styles.recipeDetailMacroLabel} style={{ color: "#E4222A" }}>Eiwit</span>
+                <span className={styles.recipeDetailMacroLabel} style={{ color: "#C13232" }}>Eiwit</span>
                 <span className={styles.recipeDetailMacroVal}>{formatNumber(selectedRecipe.protein)} g</span>
               </div>
               <div className={styles.recipeDetailMacroItem}>
-                <span className={styles.recipeDetailMacroLabel} style={{ color: "#F1A500" }}>Vet</span>
+                <span className={styles.recipeDetailMacroLabel} style={{ color: "#C28A00" }}>Vet</span>
                 <span className={styles.recipeDetailMacroVal}>{formatNumber(selectedRecipe.fat)} g</span>
               </div>
               <div className={styles.recipeDetailMacroItem}>
-                <span className={styles.recipeDetailMacroLabel} style={{ color: "#08B6DC" }}>Carb</span>
+                <span className={styles.recipeDetailMacroLabel} style={{ color: "#2A9DB5" }}>Carb</span>
                 <span className={styles.recipeDetailMacroVal}>{formatNumber(selectedRecipe.carbs)} g</span>
               </div>
             </div>

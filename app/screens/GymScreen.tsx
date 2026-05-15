@@ -282,8 +282,8 @@ const weekMuscles = useMemo(() => {
                   role="button"
                   tabIndex={0}
                   style={{ cursor: historyEditMode ? "default" : "pointer" }}
-                  onClick={() => { if (!historyEditMode) router.push(`/gym/workout/${s.id}`); }}
-                  onKeyDown={(e) => { if (e.key === "Enter" && !historyEditMode) router.push(`/gym/workout/${s.id}`); }}
+                  onClick={() => { if (!historyEditMode) router.push(`/gym/workout/${s.id}${s.templateId ? `?tid=${s.templateId}` : ''}`); }}
+                  onKeyDown={(e) => { if (e.key === "Enter" && !historyEditMode) router.push(`/gym/workout/${s.id}${s.templateId ? `?tid=${s.templateId}` : ''}`); }}
                 >
                   <div>
                     <div className={gymStyles.historyRowName}>{s.name || "Workout"}</div>
@@ -366,6 +366,7 @@ const weekMuscles = useMemo(() => {
       <TemplateStartModal
         open={templatePickerOpen}
         uid={uid}
+        templates={templates}
         onClose={() => { setTemplatePickerOpen(false); setPreviewTemplate(null); }}
         onStarted={(sessionId) => router.push(`/gym/workout/${sessionId}`)}
         initialTemplate={previewTemplate ?? undefined}
@@ -477,7 +478,7 @@ const weekMuscles = useMemo(() => {
             </button>
             <button
               className={gymStyles.templateMenuItem}
-              style={{ color: "#E4222A" }}
+              style={{ color: "#C13232" }}
               onClick={() => {
                 const t = menuTemplate;
                 closeTemplateMenu();

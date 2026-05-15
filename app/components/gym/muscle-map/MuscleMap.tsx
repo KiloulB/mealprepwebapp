@@ -64,7 +64,7 @@ export default function MuscleMap({
           const isWorked = worked.has(slug);
 
           const fill = isWorked ? "#FC9158" : "#3f3f3f";
-          const stroke = isWorked ? "#E4222A" : "#2b2b2b";
+          const stroke = isWorked ? "#C13232" : "#2b2b2b";
           const opacity = isWorked ? 0.95 : 0.55;
 
           const paths = partPaths(part);

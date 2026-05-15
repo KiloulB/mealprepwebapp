@@ -394,9 +394,9 @@
   color: #A1A1A1;
 }
 
-.macroProtein { color: #E4222A; }
-.macroFat     { color: #F1A500; }
-.macroCarbs   { color: #08B6DC; }
+.macroProtein { color: #C13232; }
+.macroFat     { color: #C28A00; }
+.macroCarbs   { color: #2A9DB5; }
 
 /* ── Footer / button area ────────────────────────────────────────────────── */
 
@@ -408,11 +408,11 @@
 
 .primaryBtn {
   width: 100%;
-  padding: 17px 0;
+  padding: 13px 0;
   background: #FC9158;
   border: none;
-  border-radius: 14px;
-  color: #000;
+  border-radius: 10px;
+  color: #fff;
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
@@ -426,19 +426,24 @@
 .backBtn {
   background: none;
   border: none;
-  color: #A1A1A1;
-  font-size: 13px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 12px;
-  padding: 0;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 4px 0;
+  border-radius: 8px;
+  transition: opacity 100ms ease;
 }
+
+.backBtn:hover { opacity: 0.7; }
 
 .errorText {
   font-size: 13px;
-  color: #E4222A;
+  color: #C13232;
   margin-bottom: 12px;
   text-align: center;
 }
@@ -467,7 +472,7 @@
 
 .fieldError {
   font-size: 12px;
-  color: #E4222A;
+  color: #C13232;
   margin-top: 6px;
 }
 

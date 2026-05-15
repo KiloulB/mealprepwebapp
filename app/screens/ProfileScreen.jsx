@@ -17,8 +17,10 @@ import {
   IoCheckmark,
   IoCalendarOutline,
   IoInformationCircleOutline,
+  IoTrashOutline,
 } from "react-icons/io5";
 
+import { calcBMR, calcTDEE, calcAge } from "../lib/nutritionCalc";
 import { auth } from "../firebase/config";
 import { useUser } from "../context/UserContext";
 import {
@@ -27,6 +29,7 @@ import {
   updateProfile,
   updatePlan,
   addWeightEntry,
+  removeWeightEntry,
   toggleMealPrep,
   toggleHelpMode,
 } from "../firebase/profileService";
@@ -158,6 +161,188 @@ function formatAxisDate(isoDate) {
   return `${d.getDate()} ${months[d.getMonth()]} ${String(d.getFullYear()).slice(2)}`;
 }
 
+function formatLongDate(isoDate) {
+  if (!isoDate) return "";
+  const d = new Date(isoDate);
+  const months = ["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+const PERIODS = ["1W", "1M", "3M", "6M", "Alles"];
+
+function filterByPeriod(entries, period) {
+  if (!entries) return [];
+  if (period === "Alles") return entries;
+  const days = { "1W": 7, "1M": 30, "3M": 90, "6M": 180 }[period];
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+  const cutoffStr = cutoff.toISOString().split("T")[0];
+  return entries.filter((e) => e.date >= cutoffStr);
+}
+
+// ─── WeightChartLarge ─────────────────────────────────────────────────────────
+
+function WeightChartLarge({ entries, targetWeight }) {
+  if (!entries || entries.length < 2) {
+    return (
+      <div className={styles.chartEmpty} style={{ padding: "32px 0" }}>
+        {entries?.length === 1
+          ? "Voeg meer metingen toe voor een grafiek."
+          : "Nog geen data voor deze periode."}
+      </div>
+    );
+  }
+
+  const W = 300;
+  const H = 180;
+  const PAD_L = 10;
+  const PAD_R = 44;
+  const PAD_T = 14;
+  const PAD_B = 22;
+
+  const allW = [...entries.map((e) => e.weight), ...(targetWeight != null ? [targetWeight] : [])];
+  const minW = Math.min(...allW);
+  const maxW = Math.max(...allW);
+  const range = maxW - minW || 1;
+  const pad = range * 0.25 + 0.5;
+  const lo = Math.floor((minW - pad) * 2) / 2;
+  const hi = Math.ceil((maxW + pad) * 2) / 2;
+  const total = hi - lo;
+
+  const toX = (i) => PAD_L + (i / (entries.length - 1)) * (W - PAD_L - PAD_R);
+  const toY = (w) => PAD_T + ((hi - w) / total) * (H - PAD_T - PAD_B);
+
+  const pts = entries.map((e, i) => ({ x: toX(i), y: toY(e.weight) }));
+
+  let pathD = `M ${pts[0].x} ${pts[0].y}`;
+  for (let i = 1; i < pts.length; i++) {
+    const cx = (pts[i - 1].x + pts[i].x) / 2;
+    pathD += ` C ${cx} ${pts[i - 1].y}, ${cx} ${pts[i].y}, ${pts[i].x} ${pts[i].y}`;
+  }
+
+  const yLabels = [hi, hi - total / 3, hi - (2 * total) / 3, lo].map((w) => ({
+    val: Math.round(w * 10) / 10,
+    y: toY(w),
+  }));
+
+  const targetY = targetWeight != null ? toY(targetWeight) : null;
+
+  return (
+    <svg
+      width="100%"
+      viewBox={`0 0 ${W} ${H}`}
+      style={{ display: "block", touchAction: "none", userSelect: "none" }}
+    >
+      {yLabels.map((l, i) => (
+        <line key={i} x1={PAD_L} y1={l.y} x2={W - PAD_R} y2={l.y} stroke="#2e2e30" strokeWidth={1} />
+      ))}
+      {yLabels.map((l, i) => (
+        <text key={i} x={W - PAD_R + 4} y={l.y + 4} fontSize={9} fill="#666" textAnchor="start">{l.val}</text>
+      ))}
+      {targetY != null && (
+        <>
+          <line x1={PAD_L} y1={targetY} x2={W - PAD_R} y2={targetY} stroke="#72A82C" strokeWidth={1.5} strokeDasharray="5 4" />
+          <text x={W - PAD_R + 4} y={targetY + 4} fontSize={9} fill="#72A82C" textAnchor="start">doel</text>
+        </>
+      )}
+      <path d={pathD} fill="none" stroke="#FC9158" strokeWidth={2.5} strokeLinecap="round" />
+      {pts.map((p, i) => (
+        <circle key={i} cx={p.x} cy={p.y} r={4} fill="#FC9158" />
+      ))}
+      <text x={PAD_L} y={H - 4} fontSize={9} fill="#666" textAnchor="start">{formatAxisDate(entries[0].date)}</text>
+      <text x={W - PAD_R} y={H - 4} fontSize={9} fill="#666" textAnchor="end">{formatAxisDate(entries[entries.length - 1].date)}</text>
+    </svg>
+  );
+}
+
+// ─── WeightHistorySheet ───────────────────────────────────────────────────────
+
+function WeightHistorySheet({ entries, targetWeight, onClose, onDelete }) {
+  const [period, setPeriod] = useState("1M");
+  const [deletingDate, setDeletingDate] = useState(null);
+  const swipeStartX = useRef(null);
+
+  const filtered = filterByPeriod(entries, period);
+  const sorted = [...(entries || [])].reverse();
+  const periodIdx = PERIODS.indexOf(period);
+
+  const handlePointerDown = (e) => { swipeStartX.current = e.clientX; };
+  const handlePointerUp = (e) => {
+    if (swipeStartX.current === null) return;
+    const dx = e.clientX - swipeStartX.current;
+    swipeStartX.current = null;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0 && periodIdx < PERIODS.length - 1) setPeriod(PERIODS[periodIdx + 1]);
+    else if (dx > 0 && periodIdx > 0) setPeriod(PERIODS[periodIdx - 1]);
+  };
+
+  const handleDelete = async (date) => {
+    setDeletingDate(date);
+    await onDelete(date);
+    setDeletingDate(null);
+  };
+
+  return createPortal(
+    <div className={styles.whOverlay} onClick={onClose}>
+      <div className={styles.whSheet} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.whHandle} />
+        <div className={styles.whHeader}>
+          <span className={styles.whTitle}>Gewichtsvoortgang</span>
+          <button className={styles.whCloseBtn} onClick={onClose}><IoClose size={20} /></button>
+        </div>
+
+        <div className={styles.whScroll}>
+          {/* Period selector */}
+          <div className={styles.whPeriodRow}>
+            {PERIODS.map((p) => (
+              <button
+                key={p}
+                className={`${styles.whPeriodBtn} ${period === p ? styles.whPeriodBtnActive : ""}`}
+                onClick={() => setPeriod(p)}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+
+          {/* Swipeable chart */}
+          <div
+            className={styles.whChartWrap}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
+          >
+            <WeightChartLarge entries={filtered} targetWeight={targetWeight} />
+          </div>
+          {filtered.length >= 2 && (
+            <div className={styles.whSwipeHint}>Swipe de grafiek om van periode te wisselen</div>
+          )}
+
+          {/* History list */}
+          <div className={styles.whListSection}>
+            <div className={styles.whListTitle}>Alle metingen</div>
+            {sorted.length === 0 ? (
+              <div className={styles.whEmpty}>Nog geen metingen</div>
+            ) : sorted.map((e) => (
+              <div key={e.date} className={styles.whRow}>
+                <div className={styles.whRowDate}>{formatLongDate(e.date)}</div>
+                <div className={styles.whRowWeight}>{e.weight} kg</div>
+                <button
+                  className={styles.whDeleteBtn}
+                  onClick={() => handleDelete(e.date)}
+                  disabled={deletingDate === e.date}
+                >
+                  {deletingDate === e.date ? "…" : <IoTrashOutline size={15} />}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 // ─── Goal card ────────────────────────────────────────────────────────────────
 
 function GoalCard({ planData, onClick }) {
@@ -187,8 +372,8 @@ function GoalCard({ planData, onClick }) {
 
   const title = "Jouw plan";
 
-  const badgeColor = isLoss ? "#FC9158" : isGain ? "#8DCF42" : "#08B6DC";
-  const badgeBg   = isLoss ? "rgba(252,145,88,0.12)" : isGain ? "rgba(141,207,66,0.12)" : "rgba(8,182,220,0.12)";
+  const badgeColor = isLoss ? "#FC9158" : isGain ? "#72A82C" : "#2A9DB5";
+  const badgeBg   = isLoss ? "rgba(252,145,88,0.12)" : isGain ? "rgba(141,207,66,0.12)" : "rgba(42,157,181,0.12)";
   const badgeLabel = noWeightGoal
     ? (goalType === "Recomp" ? "Body Recomp" : "Op gewicht blijven")
     : `${goalAmount ?? 0} kg ${isGain ? "aankomen" : "afvallen"}`;
@@ -346,10 +531,10 @@ function WeekProgressCard({ planData }) {
     statusColor = "#FC9158";
   } else if (goodDiff) {
     statusLabel = "Voorop schema";
-    statusColor = "#8DCF42";
+    statusColor = "#72A82C";
   } else {
     statusLabel = `${Math.abs(diff).toFixed(1)} kg achter`;
-    statusColor = "#E4222A";
+    statusColor = "#C13232";
   }
 
   return (
@@ -382,6 +567,163 @@ function WeekProgressCard({ planData }) {
   );
 }
 
+// ─── PlanNutritionCard ────────────────────────────────────────────────────────
+
+function getActivityLabel(days) {
+  if (!days || days === 0) return "sedentair";
+  if (days <= 2) return `${days}×/week licht actief`;
+  if (days <= 4) return `${days}×/week matig actief`;
+  if (days <= 6) return `${days}×/week zeer actief`;
+  return `${days}×/week extreem actief`;
+}
+
+function getActivityMultiplier(days) {
+  if (!days || days === 0) return "×1.20";
+  if (days <= 2) return "×1.375";
+  if (days <= 4) return "×1.55";
+  if (days <= 6) return "×1.725";
+  return "×1.90";
+}
+
+function getProteinPerKg(goalType) {
+  if (goalType === "Toename") return 1.8;
+  if (goalType === "Afname" || goalType === "Afvallen") return 2.0;
+  if (goalType === "Recomp") return 2.2;
+  return 1.6;
+}
+
+function PlanNutritionCard({ macros, profileData, planData }) {
+  const { kcal, protein, fat, carbs } = macros || {};
+  const { weight, height, birthDate, gender, exerciseDaysPerWeek, jobType, sleepHours } = profileData || {};
+  const { goalType, dailyCalories } = planData || {};
+
+  let bmr = null, tdee = null, delta = null;
+  if (weight && height && birthDate && gender) {
+    try {
+      const age = calcAge(birthDate);
+      bmr = Math.round(calcBMR(weight, height, age, gender));
+      tdee = calcTDEE(bmr, exerciseDaysPerWeek || 0, jobType || "sedentair", sleepHours || 7);
+      if (dailyCalories) delta = Math.round(dailyCalories - tdee);
+    } catch {}
+  }
+
+  const proteinPerKg = getProteinPerKg(goalType);
+
+  if (!kcal) return null;
+
+  return (
+    <div className={styles.nutritionCard}>
+      {/* Kcal + macros */}
+      <div className={styles.nutritionTop}>
+        <div>
+          <div className={styles.planCalorieValue}>{Math.round(kcal)}</div>
+          <div className={styles.planCalorieLabel}>kcal per dag</div>
+        </div>
+      </div>
+
+      <div className={styles.nutritionMacroRow}>
+        {[
+          { label: "Eiwit",  val: protein, unit: "g", color: "#C13232" },
+          { label: "Vet",    val: fat,     unit: "g", color: "#FC9158" },
+          { label: "Koolh.", val: carbs,   unit: "g", color: "#2A9DB5" },
+        ].map(({ label, val, unit, color }) => (
+          <div key={label} className={styles.nutritionMacroItem}>
+            <span className={styles.nutritionMacroVal} style={{ color }}>{val}</span>
+            <span className={styles.nutritionMacroUnit}>{unit}</span>
+            <span className={styles.nutritionMacroLabel}>{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Onderbouwing */}
+      <div className={styles.nutritionSep} />
+      <div className={styles.nutritionUnderpinTitle}>Onderbouwing</div>
+
+      {bmr && (
+        <div className={styles.nutritionRow}>
+          <div className={styles.nutritionRowLabel}>Basismetabolisme</div>
+          <div className={styles.nutritionRowVal}>{bmr.toLocaleString("nl-NL")} kcal</div>
+        </div>
+      )}
+
+      {tdee && (
+        <div className={styles.nutritionRow}>
+          <div className={styles.nutritionRowLabel}>Totaal verbruik</div>
+          <div className={styles.nutritionRowVal}>{tdee.toLocaleString("nl-NL")} kcal</div>
+        </div>
+      )}
+
+      {delta != null && Math.abs(delta) > 0 && (
+        <div className={styles.nutritionRow}>
+          <div className={styles.nutritionRowLabel}>Doelcorrectie</div>
+          <div className={styles.nutritionRowVal} style={{ color: delta > 0 ? "#72A82C" : "#FC9158" }}>
+            {delta > 0 ? "+" : ""}{delta} kcal
+          </div>
+        </div>
+      )}
+
+      <div className={styles.nutritionRow}>
+        <div className={styles.nutritionRowLabel}>Eiwitdoelstelling</div>
+        <div className={styles.nutritionRowVal}>{proteinPerKg} g/kg</div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PlanUnderpinExplain ──────────────────────────────────────────────────────
+
+function PlanUnderpinExplain({ profileData, planData }) {
+  const { weight, height, birthDate, gender, exerciseDaysPerWeek, jobType, sleepHours } = profileData || {};
+  const { goalType, dailyCalories } = planData || {};
+
+  let bmr = null, tdee = null, delta = null;
+  if (weight && height && birthDate && gender) {
+    try {
+      const age = calcAge(birthDate);
+      bmr = Math.round(calcBMR(weight, height, age, gender));
+      tdee = calcTDEE(bmr, exerciseDaysPerWeek || 0, jobType || "sedentair", sleepHours || 7);
+      if (dailyCalories) delta = Math.round(dailyCalories - tdee);
+    } catch {}
+  }
+
+  const items = [
+    bmr && {
+      title: "Basismetabolisme (BMR)",
+      desc: "Je basismetabolisme is de hoeveelheid calorieën die je lichaam per dag verbrandt terwijl je volledig in rust bent. Denk aan ademhaling, je hartslag, lichaamstemperatuur en alle andere processen die je lichaam automatisch uitvoert. Dit getal verandert nauwelijks op dagelijkse basis en vormt de basis van je caloriebehoefte.",
+      sub: "Berekend via Mifflin-St Jeor (1990)",
+    },
+    tdee && {
+      title: "Totaal dagverbruik (TDEE)",
+      desc: `Je totale dagverbruik is je basismetabolisme vermenigvuldigd met een activiteitsfactor. Die factor houdt rekening met hoe actief je bent in het dagelijks leven en hoeveel je sport. Op basis van jouw ingestelde activiteitsniveau (${getActivityLabel(exerciseDaysPerWeek)}) wordt een factor van ${getActivityMultiplier(exerciseDaysPerWeek)} gebruikt. Dit is de hoeveelheid calorieën die je per dag nodig hebt om op gewicht te blijven.`,
+      sub: "Total Daily Energy Expenditure",
+    },
+    delta != null && Math.abs(delta) > 0 && {
+      title: "Doelcorrectie",
+      desc: goalType === "Toename"
+        ? "Omdat je wilt aankomen, eet je bewust iets meer dan je verbruikt. Dit kleine overschot aan calorieën geeft je lichaam de energie en bouwstoffen die nodig zijn voor spiergroei en gewichtstoename. Zonder dit overschot is het lastig om spiermassa op te bouwen."
+        : "Omdat je wilt afvallen, eet je bewust iets minder dan je verbruikt. Je lichaam haalt de ontbrekende energie dan uit je vetreserves. Het tekort is bewust klein gehouden zodat je spiermassa zoveel mogelijk behoudt terwijl je toch afvalt.",
+      sub: goalType === "Toename" ? "Calorie-surplus" : "Calorie-deficit",
+    },
+    {
+      title: "Eiwitdoelstelling",
+      desc: "Eiwit is het belangrijkste voedingsstof voor spierherstel en spieropbouw. Na het sporten heeft je lichaam eiwit nodig om spiervezels te herstellen en sterker te maken. Hoe actiever je bent en hoe groter je doel, hoe meer eiwit je per kilogram lichaamsgewicht nodig hebt. De aanbeveling is gebaseerd op uitgebreid wetenschappelijk onderzoek naar sporters.",
+      sub: "Morton et al. (2018), British Journal of Sports Medicine",
+    },
+  ].filter(Boolean);
+
+  return (
+    <div className={styles.underpinSection}>
+      {items.map((item) => (
+        <div key={item.title} className={styles.underpinItem}>
+          <div className={styles.planTypeTitle}>{item.title}</div>
+          <div className={styles.underpinItemDesc}>{item.desc}</div>
+          <div className={styles.underpinItemSub}>{item.sub}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function ProfileScreen() {
@@ -409,6 +751,9 @@ export default function ProfileScreen() {
   const [addWeightOpen, setAddWeightOpen] = useState(false);
   const [addWeightValue, setAddWeightValue] = useState("");
   const [addingWeight, setAddingWeight] = useState(false);
+
+  // Weight history sheet
+  const [weightHistoryOpen, setWeightHistoryOpen] = useState(false);
 
   // Help overlay
   const [helpOpen, setHelpOpen] = useState(false);
@@ -501,6 +846,11 @@ export default function ProfileScreen() {
     }
   };
 
+  const handleDeleteWeight = async (date) => {
+    if (!authUser) return;
+    await removeWeightEntry(authUser.uid, date);
+  };
+
   const openPlanEdit = () => {
     router.push("/onboarding?mode=edit");
   };
@@ -571,7 +921,7 @@ export default function ProfileScreen() {
       description: (
         <>
           <p><strong>Wat berekent de app?</strong><br />De kaart &apos;Gewichtsdoel&apos; vergelijkt je huidige gewicht met het gewicht dat je op dit punt in je plan zou moeten hebben. De berekening gaat uit van een rechte lijn van je startgewicht naar je doelgewicht.</p>
-          <p><strong>Kleuren</strong><br /><strong style={{color: "#8DCF42"}}>Groen</strong> = je loopt voor op schema. <strong style={{color: "#FC9158"}}>Oranje</strong> = je zit precies op schema. <strong style={{color: "#E4222A"}}>Rood</strong> = je loopt iets achter.</p>
+          <p><strong>Kleuren</strong><br /><strong style={{color: "#72A82C"}}>Groen</strong> = je loopt voor op schema. <strong style={{color: "#FC9158"}}>Oranje</strong> = je zit precies op schema. <strong style={{color: "#C13232"}}>Rood</strong> = je loopt iets achter.</p>
           <p><strong>Voortgangsbalk</strong><br />Onderaan de kaart zie je hoeveel procent van je plan al verstreken is. Zo zie je in één oogopslag hoe ver je al bent.</p>
         </>
       ),
@@ -806,7 +1156,7 @@ export default function ProfileScreen() {
                 <button className={styles.progressHeaderBtn} onClick={() => { setAddWeightValue(""); setAddWeightOpen(true); }}>
                   <IoAdd size={20} />
                 </button>
-                <button className={styles.progressHeaderBtn}>
+                <button className={styles.progressHeaderBtn} onClick={() => setWeightHistoryOpen(true)}>
                   <IoChevronForward size={18} />
                 </button>
               </div>
@@ -819,13 +1169,11 @@ export default function ProfileScreen() {
               <WeightChart entries={planData.weightHistory} />
             </div>
 
-            {/* Calorie advice + plan description */}
-            {planData.dailyCalories ? (
-              <>
-                <div className={styles.planCalorieValue}>{Math.round(planData.dailyCalories)}</div>
-                <div className={styles.planCalorieLabel}>Dagelijkse calorie-advies</div>
-              </>
-            ) : null}
+            <PlanNutritionCard
+              macros={macroTargets}
+              profileData={profileData}
+              planData={planData}
+            />
 
             {planData.planName && (
               <div className={styles.planTypeTitle}>{planData.planName}</div>
@@ -833,6 +1181,8 @@ export default function ProfileScreen() {
             {planData.planDescription && (
               <div className={styles.planDescription}>{planData.planDescription}</div>
             )}
+
+            <PlanUnderpinExplain profileData={profileData} planData={planData} />
 
             {!planData.goalType && (
               <div style={{ color: "#555", fontSize: 14, textAlign: "center", paddingTop: 24 }}>
@@ -843,6 +1193,16 @@ export default function ProfileScreen() {
         </>
       )}
 
+
+      {/* ── Weight history sheet ── */}
+      {weightHistoryOpen && (
+        <WeightHistorySheet
+          entries={planData.weightHistory || []}
+          targetWeight={planData.targetWeight}
+          onClose={() => setWeightHistoryOpen(false)}
+          onDelete={handleDeleteWeight}
+        />
+      )}
 
       {/* ── Add weight modal ── */}
       {addWeightOpen && createPortal(

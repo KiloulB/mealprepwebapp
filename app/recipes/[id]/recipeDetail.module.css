@@ -97,7 +97,7 @@
 }
 
 .favBtnActive {
-  background: #8DCF42;
+  background: #72A82C;
   color: #000;
 }
 
@@ -110,7 +110,7 @@
 }
 
 .timeInline {
-  color: #8DCF42;
+  color: #72A82C;
   font-weight:700;
 }
 
@@ -178,7 +178,7 @@
 
 .tabActive {
   background: #232325;
-  color: #8DCF42;
+  color: #72A82C;
 }
 
 /* Servings row */
@@ -263,7 +263,7 @@
   width: 28px;
   height: 28px;
   border-radius: 9999px;
-  background: #8DCF42;
+  background: #72A82C;
   color: #000;
   font-weight:700;
   display: flex;
@@ -311,7 +311,7 @@
   padding: 12px 14px;
   border-radius: 14px;
   border: 0;
-  background: #8DCF42;
+  background: #72A82C;
   color: #000;
   font-weight:700;
   cursor: pointer;

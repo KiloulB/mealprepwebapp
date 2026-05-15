@@ -140,8 +140,11 @@ body::-webkit-scrollbar {
 }
 
 .cardTitle {
-  font-size: 17px;
+  font-size: 11px;
   font-weight: 700;
+  color: #9f9f9f;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
 
 .cardTitleActivity {
@@ -150,7 +153,7 @@ body::-webkit-scrollbar {
 }
 
 .cardTitleFood {
-  color: #8DCF42;
+  color: #72A82C;
 }
 
 .activityValueRow {
@@ -186,7 +189,7 @@ body::-webkit-scrollbar {
 .progressFill {
   height: 100%;
   border-radius: 9999px;
-  background: linear-gradient(90deg, #8DCF42, #a8e060);
+  background: linear-gradient(90deg, #72A82C, #a8e060);
   width: 0%;
   transition: width 0.4s ease;
 }
@@ -240,9 +243,9 @@ body::-webkit-scrollbar {
   margin-bottom: 8px;
 }
 
-.macroLabelProtein { color: #E4222A; }
-.macroLabelFat { color: #F1A500; }
-.macroLabelCarbs { color: #08B6DC; }
+.macroLabelProtein { color: #C13232; }
+.macroLabelFat { color: #C28A00; }
+.macroLabelCarbs { color: #2A9DB5; }
 
 .macroValue {
   font-size: 17px;
@@ -329,7 +332,7 @@ body::-webkit-scrollbar {
 }
 
 .mealMetaHas {
-  color: #8DCF42;
+  color: #72A82C;
 }
 
 .mealMetaEmpty {
@@ -591,7 +594,7 @@ body::-webkit-scrollbar {
 }
 
 .overTarget {
-  color: #E4222A; /* your red */
+  color: #C13232; /* your red */
 }
 
 .normalText {

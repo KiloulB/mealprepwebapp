@@ -16,7 +16,7 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 52px 16px 14px;
+  padding: calc(env(safe-area-inset-top) + 14px) 16px 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   flex-shrink: 0;
 }
@@ -79,7 +79,7 @@
   border-radius: 10px;
   border: 1px solid rgba(228, 34, 42, 0.28);
   background: rgba(228, 34, 42, 0.08);
-  color: #E4222A;
+  color: #C13232;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -350,7 +350,7 @@
   border-radius: 8px;
   background: rgba(228, 34, 42, 0.10);
   border: 1px solid rgba(228, 34, 42, 0.28);
-  color: #E4222A;
+  color: #C13232;
   font-size: 22px;
   font-weight: 400;
   line-height: 1;
@@ -591,7 +591,7 @@
 }
 
 .error {
-  color: #E4222A;
+  color: #C13232;
   margin: 10px 0 0;
   font-size: 13px;
 }
