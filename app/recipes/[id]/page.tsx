@@ -11,6 +11,7 @@ import {
 
 import { useUser } from "../../context/UserContext";
 import { getRecipeById } from "../../firebase/dataService";
+import { builtinRecipes } from "../../data/builtinRecipes";
 import type { Recipe } from "../../types/user";
 
 import styles from "./recipeDetail.module.css";
@@ -75,7 +76,16 @@ export default function RecipeDetailPage({
     if (!authUser) return;
     if (!id) return;
 
-    getRecipeById(authUser.uid, id).then(setRecipe).catch(console.error);
+    getRecipeById(authUser.uid, id)
+      .then((r) => {
+        if (r) { setRecipe(r); return; }
+        const builtin = builtinRecipes.find((b) => b.id === id);
+        setRecipe(builtin ?? null);
+      })
+      .catch(() => {
+        const builtin = builtinRecipes.find((b) => b.id === id);
+        setRecipe(builtin ?? null);
+      });
   }, [authUser, loading, id]);
 
   const description = useMemo(() => {
@@ -104,7 +114,7 @@ export default function RecipeDetailPage({
           </div>
         )}
 
-       <button className={styles.backBtn} onClick={() => router.push("/?tab=recepten")}>
+        <button className={styles.backBtn} onClick={() => router.back()}>
           <IoChevronBack size={22} />
         </button>
       </div>
