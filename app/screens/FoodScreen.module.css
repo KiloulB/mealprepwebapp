@@ -194,13 +194,13 @@
   height: 32px;
   border-radius: 10px;
   border: none;
-  background: rgba(252,145,88,0.12);
-  color: #FC9158;
+  background: rgba(255,255,255,0.06);
+  color: #A1A1A1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 150ms ease;
+  transition: background 150ms ease, color 150ms ease;
 }
 
 .mealsAddBtn:hover {
@@ -706,15 +706,14 @@
 .addBtn {
   width: 100%;
   padding: 13px 0;
-  background: #FC9158;
-  color: #fff;
+  background: rgba(255,255,255,0.06);
+  color: #A1A1A1;
   border: none;
   border-radius: 10px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: opacity 180ms ease, transform 100ms ease;
-  box-shadow: 0 4px 16px rgba(252,145,88,0.22);
 }
 
 .addBtn:hover:not(:disabled) {

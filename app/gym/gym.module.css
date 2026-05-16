@@ -698,21 +698,24 @@
 }
 
 .addBtn {
-  height: 36px;
-  padding: 0 18px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: 10px;
   border: none;
-  background: #FC9158;
-  color: #fff;
+  background: rgba(255,255,255,0.06);
+  color: #A1A1A1;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
-  transition: opacity 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms ease, color 150ms ease;
 }
+.addBtn:hover { background: rgba(255,255,255,0.1); }
 
 .addBtn:disabled {
-  background: rgba(252, 145, 88, 0.22);
-  color: rgba(255, 255, 255, 0.35);
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
