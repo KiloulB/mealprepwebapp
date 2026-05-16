@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -682,7 +682,7 @@ export default function FoodScreen() {
                   <span className={styles.recipeMacroCell}>{formatNumber(recipe.fat)}g vet</span>
                 </div>
               </div>
-              <IoChevronForward size={16} color="#555" />
+              <IoChevronForward size={16} color="var(--text-muted)" />
             </div>
           ))
         )}
@@ -712,14 +712,14 @@ export default function FoodScreen() {
 
             <div className={styles.choiceList}>
               <button className={styles.choiceRow} onClick={() => openSearch(activeMealType)}>
-                <span className={styles.choiceIcon} style={{ background: "rgba(252,145,88,0.15)" }}>
+                <span className={styles.choiceIcon} style={{ background: "rgba(var(--accent-rgb),0.15)" }}>
                   <IoSearchOutline size={20} style={{ color: "var(--accent)" }} />
                 </span>
                 <span className={styles.choiceText}>
                   <span className={styles.choiceTitle}>Zoeken</span>
                   <span className={styles.choiceSub}>Producten zoeken op naam of barcode</span>
                 </span>
-                <IoChevronForward size={16} color="#555" />
+                <IoChevronForward size={16} color="var(--text-muted)" />
               </button>
 
               <button className={styles.choiceRow} onClick={() => openRecipes(activeMealType)}>
@@ -730,7 +730,7 @@ export default function FoodScreen() {
                   <span className={styles.choiceTitle}>Vanuit recept</span>
                   <span className={styles.choiceSub}>Gebruik een opgeslagen recept</span>
                 </span>
-                <IoChevronForward size={16} color="#555" />
+                <IoChevronForward size={16} color="var(--text-muted)" />
               </button>
 
               {mealPrepPlan?.status === "active" && (mealPrepPlan?.meals?.length ?? 0) > 0 && (
@@ -745,7 +745,7 @@ export default function FoodScreen() {
                     <span className={styles.choiceTitle}>Meal prep plan</span>
                     <span className={styles.choiceSub}>Voeg je geplande maaltijd toe</span>
                   </span>
-                  <IoChevronForward size={16} color="#555" />
+                  <IoChevronForward size={16} color="var(--text-muted)" />
                 </button>
               )}
             </div>

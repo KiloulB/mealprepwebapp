@@ -1,4 +1,4 @@
-﻿/* --- Gym Home Page Layout --- */
+/* --- Gym Home Page Layout --- */
 .gymPage {
   min-height: 100vh;
   background: var(--bg-page);
@@ -199,12 +199,12 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #666;
+  color: var(--text-muted);
   font-size: 12px;
 }
 
 .historyEmpty, .historyLoading, .historyNotLoggedIn {
-  color: #666;
+  color: var(--text-muted);
   font-size: 13px;
   padding: 8px 0;
 }
@@ -629,7 +629,7 @@
 
 .sheetFooterBtn:disabled {
   background: var(--bg-card-2);
-  color: #666;
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -1261,7 +1261,7 @@
 }
 
 .templateRowExercises {
-  color: #666;
+  color: var(--text-muted);
   font-size: 12px;
   margin-top: 3px;
   white-space: nowrap;
@@ -1301,7 +1301,7 @@
 .templateDotBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px 6px;
   flex-shrink: 0;
@@ -1445,7 +1445,7 @@
 .choiceCloseBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -1609,7 +1609,7 @@
 }
 
 .tmNextBtn:disabled {
-  color: #666;
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -1624,7 +1624,7 @@
 }
 
 .tmSaveBtn:disabled {
-  color: #666;
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -1680,7 +1680,7 @@
   justify-content: center;
   font-size: 13px;
   font-weight: 700;
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* Kg/Reps input in step 2 */
@@ -1741,7 +1741,7 @@
 }
 
 .tmNameInput::placeholder {
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* Add exercise chip in step 1 */
@@ -1764,7 +1764,7 @@
 /* Empty state in step 1 */
 .tmEmptyEx {
   text-align: center;
-  color: #666;
+  color: var(--text-muted);
   font-size: 13px;
   padding: 24px 0;
 }
@@ -1790,7 +1790,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   flex-shrink: 0;
   margin-left: auto;
@@ -1838,7 +1838,7 @@
   align-items: center;
   gap: 12px;
   margin: 24px 0 16px;
-  color: #444;
+  color: var(--text-dim);
   font-size: 13px;
   font-weight: 500;
 }
@@ -1852,7 +1852,7 @@
 }
 
 .wsfDividerLabel {
-  color: #666;
+  color: var(--text-muted);
   font-size: 13px;
 }
 
@@ -2022,7 +2022,7 @@
 
 .tsSubtitle {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   margin-top: 5px;
   font-weight: 500;
 }
@@ -2085,7 +2085,7 @@
 
 .tsChoiceSub {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   margin-top: 3px;
   font-weight: 400;
 }
@@ -2188,7 +2188,7 @@
 
 .tsTemplateExs {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   margin-top: 3px;
   white-space: nowrap;
   overflow: hidden;
@@ -2225,14 +2225,14 @@
 }
 
 .tsEmptyIcon {
-  color: #333;
+  color: var(--text-dim);
   margin-bottom: 10px;
 }
 
 .tsEmptyText {
   font-size: 15px;
   font-weight: 600;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .tsEmptySub {
@@ -2289,7 +2289,7 @@
 .pickerSearchIcon {
   position: absolute;
   left: 12px;
-  color: #666;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   pointer-events: none;
@@ -2316,7 +2316,7 @@
 }
 
 .pickerSearchInput::placeholder {
-  color: #666;
+  color: var(--text-muted);
 }
 
 .pickerSearchClear {
@@ -2327,7 +2327,7 @@
   border-radius: 50%;
   border: none;
   background: rgba(255,255,255,0.1);
-  color: #666;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2357,7 +2357,7 @@
   border-radius: 9999px;
   border: 1px solid rgba(255,255,255,0.09);
   background: rgba(255,255,255,0.05);
-  color: #666;
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -2526,7 +2526,7 @@
 
 .pickerExSub {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
   margin-top: 3px;
   white-space: nowrap;
   overflow: hidden;
@@ -2557,7 +2557,7 @@
   border-radius: 8px;
   border: none;
   background: rgba(255,255,255,0.06);
-  color: #666;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2577,7 +2577,7 @@
   justify-content: center;
   padding: 48px 24px;
   gap: 8px;
-  color: #666;
+  color: var(--text-muted);
   font-size: 13px;
   text-align: center;
 }
@@ -2585,7 +2585,7 @@
 .pickerOverflowNote {
   padding: 20px 16px 12px;
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   text-align: center;
 }
 

@@ -1,4 +1,4 @@
-﻿/* Auth Page — redesigned */
+/* Auth Page — redesigned */
 
 .page {
   min-height: 100vh;
@@ -70,7 +70,7 @@
 
 .subtitle {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   text-align: center;
   margin: 0 0 28px;
   font-weight: 500;
@@ -101,7 +101,7 @@
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: #666;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   pointer-events: none;
@@ -126,7 +126,7 @@
 }
 
 .input::placeholder {
-  color: #444;
+  color: var(--text-dim);
 }
 
 /* â”€â”€ PIN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -237,7 +237,7 @@
 
 .dividerText {
   font-size: 12px;
-  color: #444;
+  color: var(--text-dim);
   font-weight: 500;
 }
 
@@ -250,7 +250,7 @@
 
 .switchText {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .switchBtn {

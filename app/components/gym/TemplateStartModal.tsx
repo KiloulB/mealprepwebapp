@@ -1,4 +1,4 @@
-﻿// components/gym/TemplateStartModal.tsx
+// components/gym/TemplateStartModal.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -186,7 +186,7 @@ export default function TemplateStartModal({
                       <div className={gymStyles.tsChoiceLabel}>Vanuit template</div>
                       <div className={gymStyles.tsChoiceSub}>Start met een opgeslagen schema</div>
                     </div>
-                    <IoChevronForward size={18} color="#555" />
+                    <IoChevronForward size={18} color="var(--text-muted)" />
                   </button>
 
                   <button
@@ -200,7 +200,7 @@ export default function TemplateStartModal({
                       <div className={gymStyles.tsChoiceLabel}>Zonder template</div>
                       <div className={gymStyles.tsChoiceSub}>Kies oefeningen en start direct</div>
                     </div>
-                    <IoChevronForward size={18} color="#555" />
+                    <IoChevronForward size={18} color="var(--text-muted)" />
                   </button>
                 </div>
               </>

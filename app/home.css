@@ -1,4 +1,4 @@
-﻿/* Home Page Styles */
+/* Home Page Styles */
 
 .home-container {
   min-height: 100vh;
@@ -310,7 +310,7 @@
   justify-content: center;
   margin-right: 12px;
   border-width: 2px;
-  border-color: #666666;
+  border-color: var(--text-muted);
   background-color: transparent;
   border-style: solid;
   cursor: pointer;

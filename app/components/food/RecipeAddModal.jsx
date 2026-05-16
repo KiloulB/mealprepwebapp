@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -247,7 +247,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
                 </>
               ) : (
                 <div className={styles.photoPlaceholder}>
-                  <IoCamera size={26} color="#555" />
+                  <IoCamera size={26} color="var(--text-muted)" />
                   <span className={styles.photoPlaceholderText}>Foto toevoegen</span>
                   <span className={styles.photoPlaceholderHint}>Optioneel</span>
                 </div>

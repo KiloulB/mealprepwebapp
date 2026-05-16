@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -226,14 +226,14 @@ export default function TemplateMakerModal({
                         {ex.ref.name}
                       </div>
                       {(ex.ref.primaryMuscles || []).length > 0 && (
-                        <div style={{ fontSize: 12, color: "#666", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {(ex.ref.primaryMuscles || []).join(", ")}
                         </div>
                       )}
                     </div>
                     <button
                       onClick={() => removeExercise(ex.id)}
-                      style={{ background: "none", border: "none", color: "#555", cursor: "pointer", padding: 4, flexShrink: 0, display: "flex", alignItems: "center" }}
+                      style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", padding: 4, flexShrink: 0, display: "flex", alignItems: "center" }}
                       aria-label="Verwijder"
                     >
                       <FaRegTrashAlt size={14} />
@@ -306,7 +306,7 @@ export default function TemplateMakerModal({
                       aria-label="Reps"
                     />
                     <button
-                      style={{ background: "none", border: "none", color: ex.sets.length <= 1 ? "#444" : "#A1A1A1", cursor: ex.sets.length <= 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
+                      style={{ background: "none", border: "none", color: ex.sets.length <= 1 ? "var(--text-dim)" : "#A1A1A1", cursor: ex.sets.length <= 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                       onClick={() => deleteSet(ex.id, s.id)}
                       disabled={busy || ex.sets.length <= 1}
                       aria-label="Verwijder set"

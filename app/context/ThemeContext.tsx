@@ -16,6 +16,8 @@ interface ThemeTokens {
   bgCard2: string;
   bgCard3: string;
   borderSep: string;
+  textMuted: string;
+  textDim: string;
 }
 
 export interface Theme {
@@ -44,6 +46,8 @@ export const THEMES: Theme[] = [
       bgCard2: '#2C2C2E',
       bgCard3: '#3A3A3C',
       borderSep: '#2e2e30',
+      textMuted: '#666666',
+      textDim: '#444444',
     },
     swatchColors: ['#FC9158', '#f07d3f', 'rgba(252,145,88,0.55)', 'rgba(252,145,88,0.25)'],
     accentRgb: '252, 145, 88',
@@ -64,6 +68,8 @@ export const THEMES: Theme[] = [
       bgCard2: '#3e303f',
       bgCard3: '#4a3a4b',
       borderSep: '#3a2a3b',
+      textMuted: '#868383',
+      textDim: '#868383',
     },
     swatchColors: ['#281e29', '#342835', '#D4728E', '#BC5876'],
     accentRgb: '212, 114, 142',
@@ -84,6 +90,8 @@ export const THEMES: Theme[] = [
       bgCard2: '#152232',
       bgCard3: '#1c2c3e',
       borderSep: '#131f2e',
+      textMuted: '#868383',
+      textDim: '#868383',
     },
     swatchColors: ['#09111c', '#0f1a28', '#4A6880', '#385669'],
     accentRgb: '74, 104, 128',
@@ -104,6 +112,8 @@ function applyThemeVars(theme: Theme) {
   root.style.setProperty('--bg-card-2', theme.tokens.bgCard2);
   root.style.setProperty('--bg-card-3', theme.tokens.bgCard3);
   root.style.setProperty('--border-sep', theme.tokens.borderSep);
+  root.style.setProperty('--text-muted', theme.tokens.textMuted);
+  root.style.setProperty('--text-dim', theme.tokens.textDim);
 }
 
 interface ThemeContextType {

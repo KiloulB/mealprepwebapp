@@ -1,4 +1,4 @@
-﻿/* Admin Dashboard */
+/* Admin Dashboard */
 
 .page {
   display: flex;
@@ -45,7 +45,7 @@
 
 .sidebarAppName {
   font-size: 11px;
-  color: #666;
+  color: var(--text-muted);
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
@@ -247,7 +247,7 @@
 }
 
 .searchInput::placeholder {
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* â”€â”€â”€ Card / List â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -292,7 +292,7 @@
 
 .listRowDate {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -350,7 +350,7 @@
   padding: 32px 18px;
   text-align: center;
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* â”€â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */

@@ -1,4 +1,4 @@
-﻿/* app/home.module.css */
+/* app/home.module.css */
 
 
 
@@ -254,7 +254,7 @@ body::-webkit-scrollbar {
 
 .macroRemaining {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .macroDivider {
@@ -432,7 +432,7 @@ body::-webkit-scrollbar {
 }
 
 .checkBtnUnchecked {
-  border-color: #666;
+  border-color: var(--text-muted);
   background: transparent;
 }
 

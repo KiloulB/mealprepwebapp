@@ -1,4 +1,4 @@
-﻿.overlay {
+.overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.72);
@@ -27,7 +27,7 @@
 
 .counter {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   font-weight: 600;
 }
 
@@ -109,7 +109,7 @@
 .prevBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;

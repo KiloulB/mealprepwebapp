@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -138,7 +138,7 @@ function WeightChart({ entries }) {
         {/* Y-axis labels (right side) */}
         {yLabels.map((l, i) => (
           <text key={i} x={W - PAD_RIGHT + 4} y={l.y + 4}
-            fontSize={9} fill="#666" textAnchor="start">
+            fontSize={9} style={{ fill: "var(--text-muted)" }} textAnchor="start">
             {l.val}
           </text>
         ))}
@@ -149,8 +149,8 @@ function WeightChart({ entries }) {
           <circle key={i} cx={p.x} cy={p.y} r={3.5} style={{ fill: "var(--accent)" }} />
         ))}
         {/* X-axis labels */}
-        <text x={PAD_LEFT} y={H - 4} fontSize={9} fill="#666" textAnchor="start">{firstDate}</text>
-        <text x={W - PAD_RIGHT} y={H - 4} fontSize={9} fill="#666" textAnchor="end">{lastDate}</text>
+        <text x={PAD_LEFT} y={H - 4} fontSize={9} style={{ fill: "var(--text-muted)" }} textAnchor="start">{firstDate}</text>
+        <text x={W - PAD_RIGHT} y={H - 4} fontSize={9} style={{ fill: "var(--text-muted)" }} textAnchor="end">{lastDate}</text>
       </svg>
     </div>
   );
@@ -239,7 +239,7 @@ function WeightChartLarge({ entries, targetWeight }) {
         <line key={i} x1={PAD_L} y1={l.y} x2={W - PAD_R} y2={l.y} style={{ stroke: "var(--border-sep)" }} strokeWidth={1} />
       ))}
       {yLabels.map((l, i) => (
-        <text key={i} x={W - PAD_R + 4} y={l.y + 4} fontSize={9} fill="#666" textAnchor="start">{l.val}</text>
+        <text key={i} x={W - PAD_R + 4} y={l.y + 4} fontSize={9} style={{ fill: "var(--text-muted)" }} textAnchor="start">{l.val}</text>
       ))}
       {targetY != null && (
         <>
@@ -251,8 +251,8 @@ function WeightChartLarge({ entries, targetWeight }) {
       {pts.map((p, i) => (
         <circle key={i} cx={p.x} cy={p.y} r={4} style={{ fill: "var(--accent)" }} />
       ))}
-      <text x={PAD_L} y={H - 4} fontSize={9} fill="#666" textAnchor="start">{formatAxisDate(entries[0].date)}</text>
-      <text x={W - PAD_R} y={H - 4} fontSize={9} fill="#666" textAnchor="end">{formatAxisDate(entries[entries.length - 1].date)}</text>
+      <text x={PAD_L} y={H - 4} fontSize={9} style={{ fill: "var(--text-muted)" }} textAnchor="start">{formatAxisDate(entries[0].date)}</text>
+      <text x={W - PAD_R} y={H - 4} fontSize={9} style={{ fill: "var(--text-muted)" }} textAnchor="end">{formatAxisDate(entries[entries.length - 1].date)}</text>
     </svg>
   );
 }
@@ -362,7 +362,7 @@ function GoalCard({ planData, onClick }) {
             <div className={styles.goalCardTitle}>Geen doel ingesteld</div>
             <div className={styles.goalCardDate}>Tik om je plan in te stellen</div>
           </div>
-          <IoChevronForward size={16} color="#555" />
+          <IoChevronForward size={16} color="var(--text-muted)" />
         </div>
       </div>
     );
@@ -391,7 +391,7 @@ function GoalCard({ planData, onClick }) {
       {/* Title row */}
       <div className={styles.goalCardRow}>
         <div className={styles.goalCardTitle}>{title}</div>
-        <IoChevronForward size={16} color="#555" style={{ flexShrink: 0 }} />
+        <IoChevronForward size={16} color="var(--text-muted)" style={{ flexShrink: 0 }} />
       </div>
 
       {/* Badge + date row */}
@@ -1244,7 +1244,7 @@ export default function ProfileScreen() {
             <PlanUnderpinExplain profileData={profileData} planData={planData} />
 
             {!planData.goalType && (
-              <div style={{ color: "#555", fontSize: 14, textAlign: "center", paddingTop: 24 }}>
+              <div style={{ color: "var(--text-muted)", fontSize: 14, textAlign: "center", paddingTop: 24 }}>
                 Geen plan ingesteld. Druk op &quot;Wijzig&quot; om te beginnen.
               </div>
             )}

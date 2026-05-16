@@ -1,4 +1,4 @@
-﻿.overlay {
+.overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.72);
@@ -35,7 +35,7 @@
 .closeBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -52,7 +52,7 @@
 }
 
 .searchIcon {
-  color: #666;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -66,7 +66,7 @@
 }
 
 .searchInput::placeholder {
-  color: #666;
+  color: var(--text-muted);
 }
 
 .tabs {
@@ -104,7 +104,7 @@
 
 .empty {
   padding: 32px 20px;
-  color: #666;
+  color: var(--text-muted);
   font-size: 13px;
   text-align: center;
 }

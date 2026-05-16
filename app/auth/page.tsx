@@ -99,23 +99,20 @@ export default function AuthPage() {
     return () => unsubscribe();
   }, [router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const doSubmit = async (currentPin: string) => {
     setError("");
-
     const usernameErr = validateUsername(username);
     if (usernameErr) { setError(usernameErr); return; }
-    if (pin.length < PIN_LENGTH) { setError("Vul een 4-cijferige PIN in."); return; }
 
     const email = toFirebaseEmail(username);
-    const password = toFirebasePassword(pin);
+    const password = toFirebasePassword(currentPin);
 
     setLoading(true);
     try {
       if (isSignUp) {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         const cleanUsername = username.toLowerCase().trim();
-        await saveRegistrationProfile(cred.user.uid, cleanUsername, pin);
+        await saveRegistrationProfile(cred.user.uid, cleanUsername, currentPin);
         await saveToUserRegistry(cred.user.uid, { username: cleanUsername, createdAt: Date.now() });
         router.replace("/onboarding");
       } else {
@@ -131,6 +128,20 @@ export default function AuthPage() {
       else setError("Er is iets misgegaan. Probeer het opnieuw.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pin.length < PIN_LENGTH) { setError("Vul een 4-cijferige PIN in."); return; }
+    doSubmit(pin);
+  };
+
+  const handlePinChange = (v: string) => {
+    setPin(v);
+    setError("");
+    if (!isSignUp && v.length === PIN_LENGTH && !validateUsername(username)) {
+      doSubmit(v);
     }
   };
 
@@ -183,7 +194,7 @@ export default function AuthPage() {
           <div className={styles.formGroup}>
             <label className={styles.label}>PIN-code</label>
             <div className={styles.pinWrap}>
-              <PinInput value={pin} onChange={(v) => { setPin(v); setError(""); }} />
+              <PinInput value={pin} onChange={handlePinChange} />
             </div>
           </div>
 

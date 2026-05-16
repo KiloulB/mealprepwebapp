@@ -1,4 +1,4 @@
-﻿/* Make RecipeScreen match FoodScreen.module.css look & feel */
+/* Make RecipeScreen match FoodScreen.module.css look & feel */
 
 .grid {
   display: flex;
@@ -80,7 +80,7 @@
 }
 
 .dot {
-  color: #444;
+  color: var(--text-dim);
 }
 
 .emptyState {
@@ -186,7 +186,7 @@
 .trashBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -317,7 +317,7 @@
 .circleBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -361,7 +361,7 @@
 .removeBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;

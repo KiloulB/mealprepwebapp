@@ -1,4 +1,4 @@
-﻿/* ── Page ──────────────────────────────────────────────────────────────── */
+/* ── Page ──────────────────────────────────────────────────────────────── */
 
 .foodPage {
   min-height: 100vh;
@@ -124,7 +124,7 @@
 
 .kcalOver {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
   margin-bottom: 14px;
 }
 
@@ -239,7 +239,7 @@
 
 .mealMeta {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .mealMetaActive {
@@ -261,7 +261,7 @@
 .mealRowAddBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   padding: 4px 6px;
   cursor: pointer;
   display: flex;
@@ -272,7 +272,7 @@
 .mealItemDeleteBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   padding: 4px;
   cursor: pointer;
   display: flex;
@@ -359,7 +359,7 @@
 
 .choiceSub {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* ── Shared modal overlay ──────────────────────────────────────────────── */
@@ -468,7 +468,7 @@
   font-size: 15px;
 }
 
-.searchInput::placeholder { color: #666; }
+.searchInput::placeholder { color: var(--text-muted); }
 
 .searchBtn {
   width: 34px;
@@ -501,7 +501,7 @@
 
 .emptyText {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* ── Result rows ───────────────────────────────────────────────────────── */
@@ -547,13 +547,13 @@
 
 .resultBrand {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
   margin-top: 2px;
 }
 
 .resultHint {
   font-size: 11px;
-  color: #444;
+  color: var(--text-dim);
   margin-top: 2px;
 }
 
@@ -629,7 +629,7 @@
   font-size: 15px;
 }
 
-.customInput::placeholder { color: #666; }
+.customInput::placeholder { color: var(--text-muted); }
 
 .customUnit {
   font-size: 13px;
@@ -806,7 +806,7 @@
 
 .recipeMeta {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
   font-weight: 500;
   margin-top: 3px;
 }
@@ -820,7 +820,7 @@
 
 .recipeMacroCell {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
   font-weight: 500;
 }
 
@@ -854,7 +854,7 @@
 
 .recipeImagePlaceholderText {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .recipeFormGroup {
@@ -893,7 +893,7 @@
   box-sizing: border-box;
 }
 
-.recipeFormInput::placeholder { color: #666; }
+.recipeFormInput::placeholder { color: var(--text-muted); }
 
 .recipeFormUnit {
   position: absolute;
@@ -921,7 +921,7 @@
   outline: none;
 }
 
-.recipeIngredientInput::placeholder { color: #666; }
+.recipeIngredientInput::placeholder { color: var(--text-muted); }
 
 .recipeIngredientAmountInput {
   flex: 1;
@@ -934,12 +934,12 @@
   outline: none;
 }
 
-.recipeIngredientAmountInput::placeholder { color: #666; }
+.recipeIngredientAmountInput::placeholder { color: var(--text-muted); }
 
 .recipeRemoveBtn {
   background: none;
   border: none;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -995,7 +995,7 @@
   outline: none;
 }
 
-.recipeStepInput::placeholder { color: #666; }
+.recipeStepInput::placeholder { color: var(--text-muted); }
 
 /* ── Recipe detail full-screen ─────────────────────────────────────────────── */
 
@@ -1074,7 +1074,7 @@
 
 .recipeDetailPortions {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   margin-bottom: 18px;
 }
 
@@ -1121,7 +1121,7 @@
   border-radius: 9px;
   font-size: 13px;
   font-weight: 600;
-  color: #666;
+  color: var(--text-muted);
   cursor: pointer;
   transition: background 150ms ease, color 150ms ease;
 }
@@ -1189,7 +1189,7 @@
 
 .recipeDetailEmpty {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   padding: 16px 0;
   text-align: center;
 }

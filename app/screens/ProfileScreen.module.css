@@ -1,4 +1,4 @@
-﻿/* ── Shared ──────────────────────────────────────────────────────────────── */
+/* ── Shared ──────────────────────────────────────────────────────────────── */
 
 .profilePage {
   min-height: 100vh;
@@ -113,7 +113,7 @@
 
 .goalCardDate {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .goalProgressWrap {
@@ -289,12 +289,12 @@
 
 .settingsRowSub {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
   font-weight: 400;
 }
 
 .settingsRowArrow {
-  color: #666;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -355,7 +355,7 @@
 }
 
 .accountRowArrow {
-  color: #666;
+  color: var(--text-muted);
 }
 
 /* ── Edit field ──────────────────────────────────────────────────────────── */
@@ -382,7 +382,7 @@
 }
 
 .editInput::placeholder {
-  color: #666;
+  color: var(--text-muted);
 }
 
 .editVisibilityBtn {
@@ -505,7 +505,7 @@
 
 .chartEmpty {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   text-align: center;
   padding: 24px 0;
 }
@@ -561,7 +561,7 @@
 
 .nutritionMacroUnit {
   font-size: 11px;
-  color: #555;
+  color: var(--text-muted);
   font-weight: 600;
   margin-top: 1px;
 }
@@ -569,7 +569,7 @@
 .nutritionMacroLabel {
   font-size: 10px;
   font-weight: 700;
-  color: #555;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.6px;
   margin-top: 2px;
@@ -611,7 +611,7 @@
 
 .nutritionRowSub {
   font-size: 11px;
-  color: #555;
+  color: var(--text-muted);
   margin-top: 2px;
 }
 
@@ -646,7 +646,7 @@
 
 .underpinItemSub {
   font-size: 11px;
-  color: #555;
+  color: var(--text-muted);
   margin-top: 3px;
 }
 
@@ -891,7 +891,7 @@
 }
 
 .modalInput::placeholder {
-  color: #666;
+  color: var(--text-muted);
 }
 
 .modalUnit {
@@ -961,7 +961,7 @@
   box-sizing: border-box;
 }
 
-.planFormInput::placeholder { color: #666; }
+.planFormInput::placeholder { color: var(--text-muted); }
 
 .planFormTextarea {
   width: 100%;
@@ -977,7 +977,7 @@
   resize: none;
 }
 
-.planFormTextarea::placeholder { color: #666; }
+.planFormTextarea::placeholder { color: var(--text-muted); }
 
 .helpBtn {
   position: fixed;
@@ -1351,7 +1351,7 @@
   border-radius: 8px;
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.04);
-  color: #666;
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -1380,7 +1380,7 @@
 .whSwipeHint {
   text-align: center;
   font-size: 11px;
-  color: #444;
+  color: var(--text-dim);
   margin-bottom: 20px;
   letter-spacing: 0.2px;
 }
@@ -1444,6 +1444,6 @@
 
 .whEmpty {
   font-size: 13px;
-  color: #555;
+  color: var(--text-muted);
   padding: 16px 0;
 }
