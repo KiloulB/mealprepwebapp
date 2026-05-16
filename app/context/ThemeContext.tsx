@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type ThemeId = 'standard' | 'feminine';
+export type ThemeId = 'standard' | 'feminine' | 'masculine';
 
 interface ThemeTokens {
   accent: string;
@@ -31,7 +31,7 @@ export const THEMES: Theme[] = [
   {
     id: 'standard',
     name: 'Standard',
-    description: 'Oranje accent — het originele Peak thema',
+    description: 'Oranje accent, het originele Peak thema',
     tokens: {
       accent: '#FC9158',
       accentHover: '#f07d3f',
@@ -50,8 +50,8 @@ export const THEMES: Theme[] = [
   },
   {
     id: 'feminine',
-    name: 'Feminine',
-    description: 'Roze accent — zachte vrouwelijke tinten',
+    name: 'Rose',
+    description: 'Roze accent, zachte gedempte tinten',
     tokens: {
       accent: '#D4728E',
       accentHover: '#BC5876',
@@ -67,6 +67,26 @@ export const THEMES: Theme[] = [
     },
     swatchColors: ['#281e29', '#342835', '#D4728E', '#BC5876'],
     accentRgb: '212, 114, 142',
+  },
+  {
+    id: 'masculine',
+    name: 'Night Owl',
+    description: 'Blauw accent, donker navy en staalgrijs',
+    tokens: {
+      accent: '#4A6880',
+      accentHover: '#385669',
+      accentMuted: 'rgba(74, 104, 128, 0.12)',
+      accentBorder: 'rgba(74, 104, 128, 0.28)',
+      shadowAccent: '0 4px 20px rgba(74, 104, 128, 0.22)',
+      bgBase: '#060b12',
+      bgPage: '#09111c',
+      bgCard: '#0f1a28',
+      bgCard2: '#152232',
+      bgCard3: '#1c2c3e',
+      borderSep: '#131f2e',
+    },
+    swatchColors: ['#09111c', '#0f1a28', '#4A6880', '#385669'],
+    accentRgb: '74, 104, 128',
   },
 ];
 

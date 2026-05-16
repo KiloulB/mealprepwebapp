@@ -283,7 +283,7 @@ export default function AdminPage() {
   // â”€â”€ Auth guard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   if (authLoading) {
-    return <div className={styles.loading}>Ladenâ€¦</div>;
+    return <div className={styles.loading}>Laden…</div>;
   }
 
   if (!authUser) {
@@ -363,11 +363,11 @@ export default function AdminPage() {
                   {users.slice(0, 8).map((u) => (
                     <div key={u.uid} className={styles.listRow}>
                       <div>
-                        <div className={styles.listRowName}>{u.username || "â€“"}</div>
+                        <div className={styles.listRowName}>{u.username || "–"}</div>
                         <div className={styles.listRowMeta}>{u.uid}</div>
                       </div>
                       <div className={styles.listRowDate}>
-                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString("nl-NL") : "â€“"}
+                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString("nl-NL") : "–"}
                       </div>
                     </div>
                   ))}
@@ -388,7 +388,7 @@ export default function AdminPage() {
               <IoSearchOutline className={styles.searchIcon} size={16} />
               <input
                 className={styles.searchInput}
-                placeholder="Zoek op gebruikersnaam of UIDâ€¦"
+                placeholder="Zoek op gebruikersnaam of UID…"
                 value={userSearch}
                 onChange={(e) => setUserSearch(e.target.value)}
               />
@@ -406,7 +406,7 @@ export default function AdminPage() {
                 <div key={u.uid} className={styles.listRow}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div className={styles.listRowName}>
-                      {u.username || "â€“"}
+                      {u.username || "–"}
                       {u.isAdmin && <span className={styles.badge} style={{ marginLeft: 8 }}>admin</span>}
                     </div>
                     <div className={styles.listRowMeta}>{u.uid}</div>
@@ -445,7 +445,7 @@ export default function AdminPage() {
               <IoSearchOutline className={styles.searchIcon} size={16} />
               <input
                 className={styles.searchInput}
-                placeholder="Zoek op naam, spiergroep of categorieâ€¦"
+                placeholder="Zoek op naam, spiergroep of categorie…"
                 value={exSearch}
                 onChange={(e) => setExSearch(e.target.value)}
               />
@@ -466,7 +466,7 @@ export default function AdminPage() {
                     <div className={styles.listRowMeta}>
                       {[...(ex.primaryMuscles ?? []), ...(ex.secondaryMuscles ?? [])]
                         .slice(0, 5)
-                        .join(", ") || "â€“"}
+                        .join(", ") || "–"}
                     </div>
                     {(ex.equipment ?? []).length > 0 && (
                       <div className={styles.listRowMeta}>
@@ -512,7 +512,7 @@ export default function AdminPage() {
                   title="Importeer alle ingebouwde recepten naar Firestore"
                 >
                   <IoDownloadOutline size={15} />
-                  {seeding ? "Importerenâ€¦" : "Import ingebouwd"}
+                  {seeding ? "Importeren…" : "Import ingebouwd"}
                 </button>
                 <button className={styles.primaryBtn} onClick={() => openRecModal("add")}>
                   <IoAddOutline size={16} /> Toevoegen
@@ -524,7 +524,7 @@ export default function AdminPage() {
               <IoSearchOutline className={styles.searchIcon} size={16} />
               <input
                 className={styles.searchInput}
-                placeholder="Zoek op naam of categorieâ€¦"
+                placeholder="Zoek op naam of categorie…"
                 value={recSearch}
                 onChange={(e) => setRecSearch(e.target.value)}
               />
@@ -648,7 +648,7 @@ export default function AdminPage() {
                   rows={3}
                   value={exForm.description}
                   onChange={(e) => setExForm((f) => ({ ...f, description: e.target.value }))}
-                  placeholder="Optionele uitleg of instructiesâ€¦"
+                  placeholder="Optionele uitleg of instructies…"
                 />
               </div>
             </div>
@@ -662,7 +662,7 @@ export default function AdminPage() {
                 disabled={!exForm.name.trim() || exBusy}
                 onClick={handleExSave}
               >
-                {exBusy ? "Opslaanâ€¦" : "Opslaan"}
+                {exBusy ? "Opslaan…" : "Opslaan"}
               </button>
             </div>
           </div>
@@ -733,7 +733,7 @@ export default function AdminPage() {
 
               <div className={styles.formField}>
                 <label className={styles.formLabel}>
-                  IngrediÃ«nten (Ã©Ã©n per regel â€” formaat: Naam: hoeveelheid)
+                  Ingrediënten (één per regel — formaat: Naam: hoeveelheid)
                 </label>
                 <textarea
                   className={styles.formTextarea}
@@ -745,13 +745,13 @@ export default function AdminPage() {
               </div>
 
               <div className={styles.formField}>
-                <label className={styles.formLabel}>Bereiding (Ã©Ã©n stap per regel)</label>
+                <label className={styles.formLabel}>Bereiding (één stap per regel)</label>
                 <textarea
                   className={styles.formTextarea}
                   rows={6}
                   value={recForm.steps}
                   onChange={(e) => setRecForm((f) => ({ ...f, steps: e.target.value }))}
-                  placeholder={"Kook de pasta gaar.\nBak de ui en knoflook glazig.\nVoeg gehakt toeâ€¦"}
+                  placeholder={"Kook de pasta gaar.\nBak de ui en knoflook glazig.\nVoeg gehakt toe…"}
                 />
               </div>
             </div>
@@ -765,7 +765,7 @@ export default function AdminPage() {
                 disabled={!recForm.title.trim() || recBusy}
                 onClick={handleRecSave}
               >
-                {recBusy ? "Opslaanâ€¦" : "Opslaan"}
+                {recBusy ? "Opslaan…" : "Opslaan"}
               </button>
             </div>
           </div>
@@ -793,7 +793,7 @@ export default function AdminPage() {
                 onClick={handleConfirmDelete}
                 disabled={deleteBusy}
               >
-                {deleteBusy ? "Verwijderenâ€¦" : "Verwijderen"}
+                {deleteBusy ? "Verwijderen…" : "Verwijderen"}
               </button>
             </div>
           </div>

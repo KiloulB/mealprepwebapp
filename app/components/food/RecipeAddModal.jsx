@@ -9,10 +9,10 @@ import { saveRecipe, updateRecipe } from "../../firebase/dataService";
 import styles from "./RecipeAddModal.module.css";
 
 const SECTION_OPTIONS = [
-  { id: "macros",       emoji: "ðŸ“Š", label: "Macrowaarden" },
-  { id: "portions",     emoji: "ðŸ½ï¸", label: "Porties" },
-  { id: "ingredients",  emoji: "ðŸ“", label: "IngrediÃ«nten" },
-  { id: "steps",        emoji: "ðŸ‘¨â€ðŸ³", label: "Stappen" },
+  { id: "macros",       emoji: "📊", label: "Macrowaarden" },
+  { id: "portions",     emoji: "🍽️", label: "Porties" },
+  { id: "ingredients",  emoji: "📝", label: "Ingrediënten" },
+  { id: "steps",        emoji: "👨‍🍳", label: "Stappen" },
 ];
 
 const MACRO_FIELDS = [
@@ -207,11 +207,11 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
 
         {step === 1 ? (
           <button className={styles.nextBtn} disabled={!canNext} onClick={() => setStep(2)}>
-            Volgende â†’
+            Volgende →
           </button>
         ) : (
           <button className={styles.saveBtn} disabled={!canSave} onClick={handleSave}>
-            {saving ? "Opslaanâ€¦" : "Opslaan"}
+            {saving ? "Opslaan…" : "Opslaan"}
           </button>
         )}
       </div>
@@ -370,10 +370,10 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
               </div>
             )}
 
-            {/* â”€â”€ IngrediÃ«nten â”€â”€ */}
+            {/* â”€â”€ Ingrediënten â”€â”€ */}
             {sections.includes("ingredients") && (
               <div className={styles.section}>
-                <span className={styles.sectionTitle}>IngrediÃ«nten</span>
+                <span className={styles.sectionTitle}>Ingrediënten</span>
                 {form.ingredients.map((ing, idx) => (
                   <div key={idx} className={styles.listRow}>
                     <input
@@ -394,7 +394,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
                   </div>
                 ))}
                 <button className={styles.addRowBtn} onClick={addIngredient}>
-                  <IoAdd size={15} /> IngrediÃ«nt toevoegen
+                  <IoAdd size={15} /> Ingrediënt toevoegen
                 </button>
               </div>
             )}
@@ -408,7 +408,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
                     <div className={styles.stepNum}>{idx + 1}</div>
                     <input
                       className={styles.listInputFull}
-                      placeholder={`Stap ${idx + 1}â€¦`}
+                      placeholder={`Stap ${idx + 1}…`}
                       value={s}
                       onChange={(e) => updateStep(idx, e.target.value)}
                     />
@@ -425,7 +425,7 @@ export default function RecipeAddModal({ authUser, onClose, initialRecipe, recip
 
             {sections.length === 0 && (
               <p className={styles.noFieldsHint}>
-                Geen velden geselecteerd â€” er wordt alleen een naam opgeslagen.
+                Geen velden geselecteerd — er wordt alleen een naam opgeslagen.
               </p>
             )}
 

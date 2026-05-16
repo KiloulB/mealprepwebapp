@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import type { BodyPart } from "./bodyTypes";
 import { bodyFront } from "./bodyFront";
 import { bodyBack } from "./bodyBack";
@@ -63,8 +63,8 @@ export default function MuscleMap({
           const slug = String(part.slug || "").toLowerCase();
           const isWorked = worked.has(slug);
 
-          const fill = isWorked ? "var(--accent)" : "#3f3f3f";
-          const stroke = isWorked ? "#C13232" : "#2b2b2b";
+          const fill = isWorked ? "var(--accent)" : "rgba(255,255,255,0.18)";
+          const stroke = isWorked ? "var(--accent-hover)" : "rgba(255,255,255,0.09)";
           const opacity = isWorked ? 0.95 : 0.55;
 
           const paths = partPaths(part);

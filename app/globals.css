@@ -1,7 +1,7 @@
 ﻿@import "tailwindcss";
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   DESIGN TOKENS â€” Peak App
+   DESIGN TOKENS — Peak App
    Single source of truth for all design values.
 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
@@ -107,7 +107,7 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* REMOVED: body { transition: 0.5s } â€” was applying to ALL properties globally */
+  /* REMOVED: body { transition: 0.5s } — was applying to ALL properties globally */
 }
 
 /* â”€â”€ Accessible focus rings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */

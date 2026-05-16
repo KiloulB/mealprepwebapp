@@ -1,4 +1,4 @@
-﻿/* Auth Page â€” redesigned */
+﻿/* Auth Page — redesigned */
 
 .page {
   min-height: 100vh;
@@ -21,9 +21,9 @@
 .card {
   width: 100%;
   max-width: 380px;
-  background: #1c1c1e;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 50%);
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--border-sep);
   border-radius: 24px;
   padding: 36px 28px 28px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.07);
@@ -160,7 +160,7 @@
 
 .pinBox:focus {
   border-color: var(--accent);
-  background: #333335;
+  background: var(--bg-card-3);
   box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.12);
 }
 

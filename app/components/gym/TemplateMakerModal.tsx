@@ -153,11 +153,11 @@ export default function TemplateMakerModal({
 
         {step === 1 ? (
           <button className={styles.nextBtn} disabled={!canNext} onClick={() => setStep(2)}>
-            Volgende â†’
+            Volgende →
           </button>
         ) : (
           <button className={styles.saveBtn} disabled={!canSave} onClick={handleSave}>
-            {busy ? "Opslaanâ€¦" : "Opslaan"}
+            {busy ? "Opslaan…" : "Opslaan"}
           </button>
         )}
       </div>

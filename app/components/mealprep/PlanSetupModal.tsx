@@ -15,9 +15,9 @@ const DAY_LABELS_SHORT = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
 const DAY_LABELS_FULL  = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"];
 
 const MEAL_TYPE_OPTIONS: { value: "breakfast" | "lunch" | "dinner"; emoji: string; label: string }[] = [
-  { value: "breakfast", emoji: "ðŸŒ…", label: "Ontbijt" },
-  { value: "lunch",     emoji: "â˜€ï¸",  label: "Lunch" },
-  { value: "dinner",    emoji: "ðŸŒ™",  label: "Avondeten" },
+  { value: "breakfast", emoji: "🌅", label: "Ontbijt" },
+  { value: "lunch",     emoji: "☀️",  label: "Lunch" },
+  { value: "dinner",    emoji: "🌙",  label: "Avondeten" },
 ];
 
 const PATTERN_OPTIONS: { value: PrepMeal["pattern"]; label: string }[] = [
@@ -157,11 +157,11 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
             disabled={!canNext[step]}
             onClick={() => setStep((s) => (s + 1) as 1|2|3|4)}
           >
-            Volgende â†’
+            Volgende →
           </button>
         ) : (
           <button className={styles.saveBtn} disabled={saving} onClick={handleSave}>
-            {saving ? "Opslaanâ€¦" : "Opslaan"}
+            {saving ? "Opslaan…" : "Opslaan"}
           </button>
         )}
       </div>
@@ -191,7 +191,7 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
                   >
                     <span className={styles.mealTypeEmoji}>{opt.emoji}</span>
                     <span className={styles.mealTypeLabel}>{opt.label}</span>
-                    {active && <span className={styles.chipCheck}>âœ“</span>}
+                    {active && <span className={styles.chipCheck}>✓</span>}
                   </button>
                 );
               })}
@@ -242,7 +242,7 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
             )}
 
             <div className={styles.sectionLabel} style={{ marginTop: 28 }}>
-              Tijdspan â€”{" "}
+              Tijdspan —{" "}
               <span style={{ color: "var(--accent)" }}>{timeSpanWeeks} {timeSpanWeeks !== 1 ? "weken" : "week"}</span>
             </div>
             <p className={styles.sectionHint}>Hoe lang wil je dit meal prep schema volhouden?</p>

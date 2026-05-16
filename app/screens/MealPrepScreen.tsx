@@ -214,7 +214,7 @@ export default function MealPrepScreen() {
               <div className={styles.actionsRow}>
                 <button className={styles.completeBtn} onClick={doComplete} disabled={completing}>
                   <IoCheckmarkCircle size={15} />
-                  {completing ? "Bezigâ€¦" : "Voltooien"}
+                  {completing ? "Bezig…" : "Voltooien"}
                 </button>
                 <button className={styles.deleteBtn} onClick={() => setConfirmDelete(true)} disabled={deleting}>
                   <IoTrashOutline size={15} />
@@ -226,7 +226,7 @@ export default function MealPrepScreen() {
                 <p className={styles.confirmQ}>Plan verwijderen?</p>
                 <div className={styles.confirmBtns}>
                   <button className={styles.confirmYes} onClick={doDelete} disabled={deleting}>
-                    {deleting ? "Bezigâ€¦" : "Ja, verwijder"}
+                    {deleting ? "Bezig…" : "Ja, verwijder"}
                   </button>
                   <button className={styles.confirmNo} onClick={() => setConfirmDelete(false)}>
                     Annuleer

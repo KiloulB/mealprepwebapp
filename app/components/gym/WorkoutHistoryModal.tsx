@@ -248,7 +248,7 @@ export default function WorkoutHistoryModal({
         )}
       </div>
 
-      {saving && <div className={gymStyles.savingToast}>Opslaanâ€¦</div>}
+      {saving && <div className={gymStyles.savingToast}>Opslaan…</div>}
     </div>,
     document.body
   );

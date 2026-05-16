@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IoChevronBack, IoCheckmark } from "react-icons/io5";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { db } from "../firebase/config";
 import { doc, getDoc } from "firebase/firestore";
@@ -105,7 +105,7 @@ function OnboardingPage() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      if (!user) { router.push("/auth"); return; }
+      if (!user) { router.replace("/auth"); return; }
       setUid(user.uid);
     });
     return () => unsub();
@@ -267,10 +267,15 @@ function OnboardingPage() {
     setStep((s) => s + 1);
   };
 
-  const back = () => {
+  const back = async () => {
     setError("");
-    if (editMode && step === 1) { router.push("/?tab=profile"); return; }
-    setStep((s) => Math.max(1, s - 1));
+    if (step === 1) {
+      if (editMode) { router.replace("/?tab=profile"); return; }
+      await signOut(auth);
+      router.replace("/auth");
+      return;
+    }
+    setStep((s) => s - 1);
   };
 
   // ── Save & finish ─────────────────────────────────────────────────────────
@@ -327,7 +332,7 @@ function OnboardingPage() {
         },
         macros,
       });
-      router.push(editMode ? "/?tab=profile" : "/?tab=gym");
+      router.replace(editMode ? "/?tab=profile" : "/?tab=gym");
     } catch {
       setError("Opslaan mislukt. Probeer het opnieuw.");
     } finally {
@@ -347,11 +352,9 @@ function OnboardingPage() {
       </div>
 
       <div className={styles.content}>
-        {(step > 1 || editMode) && (
-          <button className={styles.backBtn} onClick={back}>
-            <IoChevronBack size={16} /> {editMode && step === 1 ? "Annuleren" : "Terug"}
-          </button>
-        )}
+        <button className={styles.backBtn} onClick={back}>
+          <IoChevronBack size={16} /> {editMode && step === 1 ? "Annuleren" : "Terug"}
+        </button>
 
         <div className={styles.stepLabel}>
           {editMode ? "Plan bijwerken" : `Stap ${step} van ${TOTAL_STEPS}`}

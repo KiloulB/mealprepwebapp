@@ -93,7 +93,7 @@ export default function AuthPage() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const done = await checkOnboardingComplete(user.uid);
-        router.push(done ? "/" : "/onboarding");
+        router.replace(done ? "/" : "/onboarding");
       }
     });
     return () => unsubscribe();
@@ -117,11 +117,11 @@ export default function AuthPage() {
         const cleanUsername = username.toLowerCase().trim();
         await saveRegistrationProfile(cred.user.uid, cleanUsername, pin);
         await saveToUserRegistry(cred.user.uid, { username: cleanUsername, createdAt: Date.now() });
-        router.push("/onboarding");
+        router.replace("/onboarding");
       } else {
         const cred = await signInWithEmailAndPassword(auth, email, password);
         const done = await checkOnboardingComplete(cred.user.uid);
-        router.push(done ? "/" : "/onboarding");
+        router.replace(done ? "/" : "/onboarding");
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "";
