@@ -1,8 +1,8 @@
-/* Auth Page — redesigned */
+﻿/* Auth Page â€” redesigned */
 
 .page {
   min-height: 100vh;
-  background: #111113;
+  background: var(--bg-base);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,12 +11,12 @@
   /* Subtle warm bloom at top */
   background-image: radial-gradient(
     ellipse 900px 420px at 50% -60px,
-    rgba(252, 145, 88, 0.07) 0%,
+    rgba(var(--accent-rgb), 0.07) 0%,
     transparent 70%
   );
 }
 
-/* ── Card ─────────────────────────────────────────────────────────────────── */
+/* â”€â”€ Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .card {
   width: 100%;
@@ -29,7 +29,7 @@
   box-shadow: 0 8px 32px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.07);
 }
 
-/* ── Logo ─────────────────────────────────────────────────────────────────── */
+/* â”€â”€ Logo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .logoWrap {
   display: flex;
@@ -43,12 +43,12 @@
   width: 38px;
   height: 38px;
   border-radius: 11px;
-  background: linear-gradient(145deg, #FC9158 0%, #e0722e 100%);
+  background: linear-gradient(145deg, var(--accent) 0%, var(--accent-hover) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 6px 20px rgba(252, 145, 88, 0.28);
+  box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.28);
 }
 
 .logoName {
@@ -58,7 +58,7 @@
   letter-spacing: -0.4px;
 }
 
-/* ── Heading ──────────────────────────────────────────────────────────────── */
+/* â”€â”€ Heading â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .title {
   font-size: 21px;
@@ -76,7 +76,7 @@
   font-weight: 500;
 }
 
-/* ── Form ─────────────────────────────────────────────────────────────────── */
+/* â”€â”€ Form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .formGroup {
   margin-bottom: 18px;
@@ -109,7 +109,7 @@
 
 .input {
   width: 100%;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   border: 1.5px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   padding: 14px 16px 14px 42px;
@@ -121,15 +121,15 @@
 }
 
 .input:focus {
-  border-color: #FC9158;
-  box-shadow: 0 0 0 3px rgba(252,145,88,0.12);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.12);
 }
 
 .input::placeholder {
   color: #444;
 }
 
-/* ── PIN ──────────────────────────────────────────────────────────────────── */
+/* â”€â”€ PIN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .pinWrap {
   display: flex;
@@ -146,7 +146,7 @@
 .pinBox {
   width: 62px;
   height: 62px;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   border: 1.5px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   color: #fff;
@@ -159,17 +159,17 @@
 }
 
 .pinBox:focus {
-  border-color: #FC9158;
+  border-color: var(--accent);
   background: #333335;
-  box-shadow: 0 0 0 3px rgba(252,145,88,0.12);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.12);
 }
 
 .pinBoxFilled {
-  border-color: rgba(252, 145, 88, 0.5);
-  background: rgba(252, 145, 88, 0.06);
+  border-color: rgba(var(--accent-rgb), 0.5);
+  background: rgba(var(--accent-rgb), 0.06);
 }
 
-/* ── Error ────────────────────────────────────────────────────────────────── */
+/* â”€â”€ Error â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .errorBox {
   background: rgba(228, 34, 42, 0.1);
@@ -189,12 +189,12 @@
   flex: 1;
 }
 
-/* ── Submit button ────────────────────────────────────────────────────────── */
+/* â”€â”€ Submit button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .primaryBtn {
   width: 100%;
   padding: 13px 0;
-  background: #FC9158;
+  background: var(--accent);
   border: none;
   border-radius: 10px;
   color: #fff;
@@ -203,7 +203,7 @@
   cursor: pointer;
   margin-top: 10px;
   letter-spacing: -0.2px;
-  box-shadow: 0 4px 20px rgba(252,145,88,0.3);
+  box-shadow: 0 4px 20px rgba(var(--accent-rgb),0.3);
   transition: opacity 150ms ease, transform 100ms ease, box-shadow 150ms ease;
 }
 
@@ -220,7 +220,7 @@
   cursor: not-allowed;
 }
 
-/* ── Divider ──────────────────────────────────────────────────────────────── */
+/* â”€â”€ Divider â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .divider {
   display: flex;
@@ -232,7 +232,7 @@
 .dividerLine {
   flex: 1;
   height: 1px;
-  background: #2e2e30;
+  background: var(--border-sep);
 }
 
 .dividerText {
@@ -241,7 +241,7 @@
   font-weight: 500;
 }
 
-/* ── Switch ───────────────────────────────────────────────────────────────── */
+/* â”€â”€ Switch â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .switchRow {
   margin-top: 16px;
@@ -256,7 +256,7 @@
 .switchBtn {
   background: none;
   border: none;
-  color: #FC9158;
+  color: var(--accent);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -268,5 +268,5 @@
 
 .switchBtn:hover {
   opacity: 0.8;
-  background: rgba(252,145,88,0.08);
+  background: rgba(var(--accent-rgb),0.08);
 }

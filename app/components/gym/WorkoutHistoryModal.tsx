@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { createPortal } from "react-dom";
@@ -176,7 +176,7 @@ export default function WorkoutHistoryModal({
                   style={{ width: 42, height: 42, borderRadius: 10, objectFit: "cover", flexShrink: 0 }}
                 />
               ) : (
-                <div style={{ width: 42, height: 42, borderRadius: 10, background: "#2c2c2e", flexShrink: 0 }} />
+                <div style={{ width: 42, height: 42, borderRadius: 10, background: "var(--bg-card-2)", flexShrink: 0 }} />
               )}
               <div style={{ minWidth: 0 }}>
                 <div className={gymStyles.exerciseName} style={{ fontSize: 16 }}>
@@ -228,7 +228,7 @@ export default function WorkoutHistoryModal({
                   <span
                     className={`${gymStyles.historySetCheck} ${s.done ? gymStyles.historySetCheckOn : gymStyles.historySetCheckOff}`}
                   >
-                    ✓
+                    âœ“
                   </span>
                 </button>
               </div>
@@ -248,7 +248,7 @@ export default function WorkoutHistoryModal({
         )}
       </div>
 
-      {saving && <div className={gymStyles.savingToast}>Opslaan…</div>}
+      {saving && <div className={gymStyles.savingToast}>Opslaanâ€¦</div>}
     </div>,
     document.body
   );

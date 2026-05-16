@@ -1,4 +1,4 @@
-// components/gym/TemplateStartModal.tsx
+﻿// components/gym/TemplateStartModal.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -166,7 +166,7 @@ export default function TemplateStartModal({
           <div className={gymStyles.tsSheet} onClick={(e) => e.stopPropagation()}>
             <div className={gymStyles.sheetHandle} />
 
-            {/* ── Choice view ── */}
+            {/* â”€â”€ Choice view â”€â”€ */}
             {view === "choice" && (
               <>
                 <div className={gymStyles.tsHeader}>
@@ -180,7 +180,7 @@ export default function TemplateStartModal({
                     onClick={() => setView("templates")}
                   >
                     <div className={gymStyles.tsChoiceIcon}>
-                      <IoListOutline size={22} color="#FC9158" />
+                      <IoListOutline size={22} style={{ color: "var(--accent)" }} />
                     </div>
                     <div className={gymStyles.tsChoiceBody}>
                       <div className={gymStyles.tsChoiceLabel}>Vanuit template</div>
@@ -194,7 +194,7 @@ export default function TemplateStartModal({
                     onClick={() => setView("picker")}
                   >
                     <div className={gymStyles.tsChoiceIcon}>
-                      <IoFlashOutline size={22} color="#FC9158" />
+                      <IoFlashOutline size={22} style={{ color: "var(--accent)" }} />
                     </div>
                     <div className={gymStyles.tsChoiceBody}>
                       <div className={gymStyles.tsChoiceLabel}>Zonder template</div>
@@ -206,7 +206,7 @@ export default function TemplateStartModal({
               </>
             )}
 
-            {/* ── Templates view ── */}
+            {/* â”€â”€ Templates view â”€â”€ */}
             {view === "templates" && (
               <>
                 <div className={gymStyles.tsViewBar}>
@@ -250,7 +250,7 @@ export default function TemplateStartModal({
                         <div className={gymStyles.tsTemplateBody}>
                           <div className={gymStyles.tsTemplateName}>{t.name}</div>
                           <div className={gymStyles.tsTemplateExs}>
-                            {(t.exercises || []).map((e) => e.ref.name).join(" · ") || "Geen oefeningen"}
+                            {(t.exercises || []).map((e) => e.ref.name).join(" Â· ") || "Geen oefeningen"}
                           </div>
                           {(t.musclesWorked || []).length > 0 && (
                             <div className={gymStyles.tsMusclePills}>
@@ -263,7 +263,7 @@ export default function TemplateStartModal({
                         {busyId === t.id ? (
                           <div className={gymStyles.tsSpinner} />
                         ) : (
-                          <IoChevronForward size={18} color="#FC9158" />
+                          <IoChevronForward size={18} style={{ color: "var(--accent)" }} />
                         )}
                       </button>
                     ))

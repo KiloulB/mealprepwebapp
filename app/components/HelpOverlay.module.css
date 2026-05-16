@@ -12,7 +12,7 @@
 .sheet {
   width: 100%;
   max-width: 480px;
-  background: #232325;
+  background: var(--bg-card);
   border-radius: 24px;
   padding: 22px 24px 28px;
   margin: 0 12px;
@@ -35,7 +35,7 @@
   width: 32px;
   height: 32px;
   border-radius: 10px;
-  background: #2e2e30;
+  background: var(--border-sep);
   border: none;
   display: flex;
   align-items: center;
@@ -91,12 +91,12 @@
   height: 6px;
   width: 6px;
   border-radius: 999px;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   transition: width 200ms ease, background 200ms ease;
 }
 
 .dotActive {
-  background: #FC9158;
+  background: var(--accent);
   width: 20px;
 }
 
@@ -117,7 +117,7 @@
 }
 
 .nextBtn {
-  background: #FC9158;
+  background: var(--accent);
   border: none;
   border-radius: 14px;
   color: #fff;

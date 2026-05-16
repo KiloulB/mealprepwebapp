@@ -5,7 +5,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: #18181A;
+  background: var(--bg-page);
   z-index: 350;
   display: flex;
   flex-direction: column;
@@ -32,12 +32,12 @@
 }
 
 .backBtn {
-  background: none; border: none; color: #FC9158; font-size: 15px; font-weight: 600;
+  background: none; border: none; color: var(--accent); font-size: 15px; font-weight: 600;
   cursor: pointer; display: flex; align-items: center; gap: 2px; padding: 4px; width: 80px; white-space: nowrap;
 }
 
 .nextBtn {
-  background: none; border: none; color: #FC9158; font-size: 15px; font-weight: 700;
+  background: none; border: none; color: var(--accent); font-size: 15px; font-weight: 700;
   cursor: pointer; padding: 4px; width: 80px; text-align: right; white-space: nowrap;
 }
 .nextBtn:disabled { color: #444; cursor: default; }
@@ -51,7 +51,7 @@
 /* ── Step dots ─────────────────────────────────────────────────────────── */
 .stepDots { display: flex; gap: 6px; justify-content: center; padding: 12px 0 4px; flex-shrink: 0; }
 .dot { height: 6px; width: 6px; border-radius: 999px; background: #444; transition: width 200ms ease, background 200ms ease; }
-.dotActive { background: #FC9158; width: 20px; }
+.dotActive { background: var(--accent); width: 20px; }
 
 /* ── Scrollable body ───────────────────────────────────────────────────── */
 .body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 24px 20px 48px; scrollbar-width: none; }
@@ -65,8 +65,8 @@
 .mealTypeGrid { display: flex; flex-direction: column; gap: 10px; }
 
 .mealTypeChip {
-  background: #232325;
-  border: 1.5px solid #2e2e30;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-sep);
   border-radius: 14px;
   padding: 16px 16px;
   display: flex;
@@ -79,24 +79,24 @@
 }
 
 .mealTypeChipActive {
-  border-color: #FC9158;
-  background: rgba(252,145,88,0.08);
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb),0.08);
 }
 
 .mealTypeEmoji { font-size: 22px; flex-shrink: 0; }
 .mealTypeLabel { font-size: 15px; font-weight: 600; color: #fff; flex: 1; }
-.chipCheck { font-size: 13px; color: #FC9158; font-weight: 700; flex-shrink: 0; }
+.chipCheck { font-size: 13px; color: var(--accent); font-weight: 700; flex-shrink: 0; }
 
 /* ── Pills ─────────────────────────────────────────────────────────────── */
 .pillRow { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .pill {
-  padding: 9px 16px; border-radius: 9999px; border: 1.5px solid #2e2e30; background: #232325;
+  padding: 9px 16px; border-radius: 9999px; border: 1.5px solid var(--border-sep); background: var(--bg-card);
   color: #A1A1A1; font-size: 13px; font-weight: 600; cursor: pointer;
   transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
 }
 
-.pillActive { background: rgba(252,145,88,0.10); border-color: #FC9158; color: #FC9158; }
+.pillActive { background: rgba(var(--accent-rgb),0.10); border-color: var(--accent); color: var(--accent); }
 
 /* ── Custom frequency stepper ──────────────────────────────────────────── */
 .customFreqRow {
@@ -104,7 +104,7 @@
   align-items: center;
   gap: 10px;
   margin-top: 12px;
-  background: #232325;
+  background: var(--bg-card);
   border-radius: 14px;
   padding: 12px 16px;
 }
@@ -112,19 +112,19 @@
 .customFreqLabel { font-size: 13px; color: #A1A1A1; font-weight: 500; }
 
 .stepperBtn {
-  width: 32px; height: 32px; border-radius: 50%; background: #2e2e30; border: none;
+  width: 32px; height: 32px; border-radius: 50%; background: var(--border-sep); border: none;
   color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; display: flex;
   align-items: center; justify-content: center;
 }
 
-.stepperVal { font-size: 22px; font-weight: 700; color: #FC9158; min-width: 28px; text-align: center; }
+.stepperVal { font-size: 22px; font-weight: 700; color: var(--accent); min-width: 28px; text-align: center; }
 
 /* ── Slider ────────────────────────────────────────────────────────────── */
-.slider { width: 100%; accent-color: #FC9158; cursor: pointer; margin-bottom: 4px; }
+.slider { width: 100%; accent-color: var(--accent); cursor: pointer; margin-bottom: 4px; }
 .sliderLabels { display: flex; justify-content: space-between; font-size: 12px; color: #666; }
 
 /* ── Meal cards (step 3) ───────────────────────────────────────────────── */
-.mealCard { background: #232325; border-radius: 18px; padding: 14px; margin-bottom: 12px; }
+.mealCard { background: var(--bg-card); border-radius: 18px; padding: 14px; margin-bottom: 12px; }
 
 .mealCardHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 
@@ -142,26 +142,26 @@
 .patternRow { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .patternPill {
-  padding: 6px 12px; border-radius: 9999px; border: 1.5px solid #2e2e30; background: #2e2e30;
+  padding: 6px 12px; border-radius: 9999px; border: 1.5px solid var(--border-sep); background: var(--border-sep);
   color: #A1A1A1; font-size: 12px; font-weight: 600; cursor: pointer;
   transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
 }
-.patternPillActive { background: rgba(252,145,88,0.10); border-color: #FC9158; color: #FC9158; }
+.patternPillActive { background: rgba(var(--accent-rgb),0.10); border-color: var(--accent); color: var(--accent); }
 
 .manualDayRow { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 
 .addMealBtn {
-  width: 100%; background: none; border: 1px dashed #2C2C2E; border-radius: 14px; padding: 13px;
-  color: #FC9158; font-size: 15px; font-weight: 600; cursor: pointer; display: flex;
+  width: 100%; background: none; border: 1px dashed var(--bg-card-2); border-radius: 14px; padding: 13px;
+  color: var(--accent); font-size: 15px; font-weight: 600; cursor: pointer; display: flex;
   align-items: center; justify-content: center; gap: 6px; margin-top: 4px;
 }
 
 .emptyHint { font-size: 13px; color: #666; text-align: center; margin: 0 0 16px; line-height: 1.6; }
 
 /* ── Summary (step 4) ──────────────────────────────────────────────────── */
-.summaryCard { background: #232325; border-radius: 18px; padding: 4px 16px; margin-bottom: 20px; }
+.summaryCard { background: var(--bg-card); border-radius: 18px; padding: 4px 16px; margin-bottom: 20px; }
 
-.summaryRow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #2e2e30; }
+.summaryRow { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-sep); }
 .summaryRow:last-child { border-bottom: none; }
 .summaryLabel { font-size: 13px; color: #A1A1A1; }
 .summaryValue { font-size: 15px; font-weight: 600; color: #fff; }
@@ -170,4 +170,4 @@
   font-size: 15px; color: #fff; flex: 1; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.summaryMealPattern { font-size: 12px; color: #FC9158; font-weight: 600; flex-shrink: 0; margin-left: 12px; }
+.summaryMealPattern { font-size: 12px; color: var(--accent); font-weight: 600; flex-shrink: 0; margin-left: 12px; }

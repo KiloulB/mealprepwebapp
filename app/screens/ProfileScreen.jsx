@@ -18,7 +18,9 @@ import {
   IoCalendarOutline,
   IoInformationCircleOutline,
   IoTrashOutline,
+  IoColorPaletteOutline,
 } from "react-icons/io5";
+import { useTheme } from "../context/ThemeContext";
 
 import { calcBMR, calcTDEE, calcAge } from "../lib/nutritionCalc";
 import { auth } from "../firebase/config";
@@ -131,7 +133,7 @@ function WeightChart({ entries }) {
         {/* Grid lines */}
         {yLabels.map((l, i) => (
           <line key={i} x1={PAD_LEFT} y1={l.y} x2={W - PAD_RIGHT} y2={l.y}
-            stroke="#2e2e30" strokeWidth={1} />
+            style={{ stroke: "var(--border-sep)" }} strokeWidth={1} />
         ))}
         {/* Y-axis labels (right side) */}
         {yLabels.map((l, i) => (
@@ -141,10 +143,10 @@ function WeightChart({ entries }) {
           </text>
         ))}
         {/* Line */}
-        <path d={pathD} fill="none" stroke="#FC9158" strokeWidth={2} strokeLinecap="round" />
+        <path d={pathD} fill="none" style={{ stroke: "var(--accent)" }} strokeWidth={2} strokeLinecap="round" />
         {/* Dots */}
         {points.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r={3.5} fill="#FC9158" />
+          <circle key={i} cx={p.x} cy={p.y} r={3.5} style={{ fill: "var(--accent)" }} />
         ))}
         {/* X-axis labels */}
         <text x={PAD_LEFT} y={H - 4} fontSize={9} fill="#666" textAnchor="start">{firstDate}</text>
@@ -234,7 +236,7 @@ function WeightChartLarge({ entries, targetWeight }) {
       style={{ display: "block", touchAction: "none", userSelect: "none" }}
     >
       {yLabels.map((l, i) => (
-        <line key={i} x1={PAD_L} y1={l.y} x2={W - PAD_R} y2={l.y} stroke="#2e2e30" strokeWidth={1} />
+        <line key={i} x1={PAD_L} y1={l.y} x2={W - PAD_R} y2={l.y} style={{ stroke: "var(--border-sep)" }} strokeWidth={1} />
       ))}
       {yLabels.map((l, i) => (
         <text key={i} x={W - PAD_R + 4} y={l.y + 4} fontSize={9} fill="#666" textAnchor="start">{l.val}</text>
@@ -245,9 +247,9 @@ function WeightChartLarge({ entries, targetWeight }) {
           <text x={W - PAD_R + 4} y={targetY + 4} fontSize={9} fill="#72A82C" textAnchor="start">doel</text>
         </>
       )}
-      <path d={pathD} fill="none" stroke="#FC9158" strokeWidth={2.5} strokeLinecap="round" />
+      <path d={pathD} fill="none" style={{ stroke: "var(--accent)" }} strokeWidth={2.5} strokeLinecap="round" />
       {pts.map((p, i) => (
-        <circle key={i} cx={p.x} cy={p.y} r={4} fill="#FC9158" />
+        <circle key={i} cx={p.x} cy={p.y} r={4} style={{ fill: "var(--accent)" }} />
       ))}
       <text x={PAD_L} y={H - 4} fontSize={9} fill="#666" textAnchor="start">{formatAxisDate(entries[0].date)}</text>
       <text x={W - PAD_R} y={H - 4} fontSize={9} fill="#666" textAnchor="end">{formatAxisDate(entries[entries.length - 1].date)}</text>
@@ -372,7 +374,7 @@ function GoalCard({ planData, onClick }) {
 
   const title = "Jouw plan";
 
-  const badgeColor = isLoss ? "#FC9158" : isGain ? "#72A82C" : "#2A9DB5";
+  const badgeColor = isLoss ? "var(--accent)" : isGain ? "#72A82C" : "#2A9DB5";
   const badgeBg   = isLoss ? "rgba(252,145,88,0.12)" : isGain ? "rgba(141,207,66,0.12)" : "rgba(42,157,181,0.12)";
   const badgeLabel = noWeightGoal
     ? (goalType === "Recomp" ? "Body Recomp" : "Op gewicht blijven")
@@ -528,7 +530,7 @@ function WeekProgressCard({ planData }) {
   let statusLabel, statusColor;
   if (onTrackDiff) {
     statusLabel = "Op schema";
-    statusColor = "#FC9158";
+    statusColor = "var(--accent)";
   } else if (goodDiff) {
     statusLabel = "Voorop schema";
     statusColor = "#72A82C";
@@ -624,7 +626,7 @@ function PlanNutritionCard({ macros, profileData, planData }) {
       <div className={styles.nutritionMacroRow}>
         {[
           { label: "Eiwit",  val: protein, unit: "g", color: "#C13232" },
-          { label: "Vet",    val: fat,     unit: "g", color: "#FC9158" },
+          { label: "Vet",    val: fat,     unit: "g", color: "var(--accent)" },
           { label: "Koolh.", val: carbs,   unit: "g", color: "#2A9DB5" },
         ].map(({ label, val, unit, color }) => (
           <div key={label} className={styles.nutritionMacroItem}>
@@ -656,7 +658,7 @@ function PlanNutritionCard({ macros, profileData, planData }) {
       {delta != null && Math.abs(delta) > 0 && (
         <div className={styles.nutritionRow}>
           <div className={styles.nutritionRowLabel}>Doelcorrectie</div>
-          <div className={styles.nutritionRowVal} style={{ color: delta > 0 ? "#72A82C" : "#FC9158" }}>
+          <div className={styles.nutritionRowVal} style={{ color: delta > 0 ? "#72A82C" : "var(--accent)" }}>
             {delta > 0 ? "+" : ""}{delta} kcal
           </div>
         </div>
@@ -728,10 +730,11 @@ function PlanUnderpinExplain({ profileData, planData }) {
 
 export default function ProfileScreen() {
   const { authUser, mealPrepEnabled, helpModeEnabled, macroTargets, mealPrepPlan } = useUser();
+  const { theme, themes, setTheme } = useTheme();
   const router = useRouter();
 
   // Navigation
-  const [view, setView] = useState("main"); // main | settings | account | edit | plan
+  const [view, setView] = useState("main"); // main | settings | account | edit | plan | theme
   const [editField, setEditField] = useState(null); // { key, label, type, options }
   const [editValue, setEditValue] = useState("");
   const [editVisible, setEditVisible] = useState(false); // for PIN
@@ -921,7 +924,7 @@ export default function ProfileScreen() {
       description: (
         <>
           <p><strong>Wat berekent de app?</strong><br />De kaart &apos;Gewichtsdoel&apos; vergelijkt je huidige gewicht met het gewicht dat je op dit punt in je plan zou moeten hebben. De berekening gaat uit van een rechte lijn van je startgewicht naar je doelgewicht.</p>
-          <p><strong>Kleuren</strong><br /><strong style={{color: "#72A82C"}}>Groen</strong> = je loopt voor op schema. <strong style={{color: "#FC9158"}}>Oranje</strong> = je zit precies op schema. <strong style={{color: "#C13232"}}>Rood</strong> = je loopt iets achter.</p>
+          <p><strong>Kleuren</strong><br /><strong style={{color: "#72A82C"}}>Groen</strong> = je loopt voor op schema. <strong style={{color: "var(--accent)"}}>Oranje</strong> = je zit precies op schema. <strong style={{color: "#C13232"}}>Rood</strong> = je loopt iets achter.</p>
           <p><strong>Voortgangsbalk</strong><br />Onderaan de kaart zie je hoeveel procent van je plan al verstreken is. Zo zie je in één oogopslag hoe ver je al bent.</p>
         </>
       ),
@@ -985,6 +988,15 @@ export default function ProfileScreen() {
               <span className={styles.settingsRowArrow}><IoChevronForward size={18} /></span>
             </div>
 
+            <div className={styles.settingsRow} onClick={() => setView("theme")}>
+              <span className={styles.settingsRowIcon}><IoColorPaletteOutline size={20} /></span>
+              <div className={styles.settingsRowText}>
+                <span className={styles.settingsRowLabel}>Thema</span>
+                <span className={styles.settingsRowSub}>{theme.name} — tik om te wijzigen</span>
+              </div>
+              <span className={styles.settingsRowArrow}><IoChevronForward size={18} /></span>
+            </div>
+
             <div className={styles.settingsRow} style={{ cursor: "default" }}>
               <span className={styles.settingsRowIcon}><IoCalendarOutline size={20} /></span>
               <div className={styles.settingsRowText}>
@@ -1019,6 +1031,53 @@ export default function ProfileScreen() {
                 <span className={styles.settingsRowLabel}>Uitloggen</span>
                 <span className={styles.settingsRowSub}>Afmelden van Peak</span>
               </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ── Theme ── */}
+      {view === "theme" && (
+        <>
+          <div className={styles.navHeader}>
+            <button className={styles.navBackBtn} onClick={() => setView("settings")}>
+              <IoChevronBack size={22} />
+            </button>
+            <span className={styles.navTitle}>Thema Selecteren</span>
+            <div style={{ minWidth: 36 }} />
+          </div>
+
+          <div className={styles.themePickerContent}>
+            <div className={styles.themePickerCardList}>
+              {themes.map((t) => {
+                const isActive = theme.id === t.id;
+                return (
+                  <div
+                    key={t.id}
+                    className={`${styles.themePickerCard} ${isActive ? styles.themePickerCardActive : ""}`}
+                    onClick={() => setTheme(t.id)}
+                  >
+                    <div className={styles.themePickerCardTop}>
+                      <div className={styles.themePickerCardInfo}>
+                        <div className={styles.themePickerCardName}>{t.name}</div>
+                        <div className={styles.themePickerCardDesc}>{t.description}</div>
+                      </div>
+                      <div className={`${styles.themePickerCheck} ${isActive ? styles.themePickerCheckActive : ""}`}>
+                        {isActive && <IoCheckmark size={14} />}
+                      </div>
+                    </div>
+                    <div className={styles.themePickerSwatches}>
+                      {t.swatchColors.map((color, i) => (
+                        <div
+                          key={i}
+                          className={styles.themePickerSwatch}
+                          style={{ background: color }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </>

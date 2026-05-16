@@ -16,7 +16,7 @@ const SECTION_OPTIONS = [
 ];
 
 const MACRO_FIELDS = [
-  { key: "kcal",    label: "Kcal",   unit: "kcal", color: "#FC9158" },
+  { key: "kcal",    label: "Kcal",   unit: "kcal", color: "var(--accent)" },
   { key: "protein", label: "Eiwit",  unit: "g",    color: "#C13232" },
   { key: "fat",     label: "Vet",    unit: "g",    color: "#72A82C" },
   { key: "carbs",   label: "Koolh.", unit: "g",    color: "#2A9DB5" },

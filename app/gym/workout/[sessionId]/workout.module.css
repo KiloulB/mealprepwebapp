@@ -1,18 +1,18 @@
-/* ── Base ───────────────────────────────────────────── */
+﻿/* â”€â”€ Base â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .screen {
   min-height: 100dvh;
-  background: #18181A;
+  background: var(--bg-page);
   color: #f4f4f5;
   display: flex;
   flex-direction: column;
 }
 
-/* ── Sticky top bar ─────────────────────────────────── */
+/* â”€â”€ Sticky top bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .topBar {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: #18181A;
+  background: var(--bg-page);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -60,7 +60,7 @@
   padding: 10px 20px;
   border-radius: 999px;
   border: none;
-  background: #FC9158;
+  background: var(--accent);
   color: #000;
   font-size: 13px;
   font-weight: 800;
@@ -91,14 +91,14 @@
   background: rgba(228, 34, 42, 0.16);
 }
 
-/* ── Scrollable content ─────────────────────────────── */
+/* â”€â”€ Scrollable content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .content {
   flex: 1;
   padding: 20px 16px 120px;
   overflow-y: auto;
 }
 
-/* ── Meta block ─────────────────────────────────────── */
+/* â”€â”€ Meta block â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .metaBlock {
   margin-bottom: 24px;
 }
@@ -128,7 +128,7 @@
   color: #A1A1A1;
 }
 
-/* ── Progress bar ───────────────────────────────────── */
+/* â”€â”€ Progress bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .progressRow {
   display: flex;
   align-items: center;
@@ -145,7 +145,7 @@
 
 .progressFill {
   height: 100%;
-  background: #FC9158;
+  background: var(--accent);
   border-radius: 999px;
   transition: width 0.4s ease;
 }
@@ -158,16 +158,16 @@
   text-align: right;
 }
 
-/* ── Exercise list ──────────────────────────────────── */
+/* â”€â”€ Exercise list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .list {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-/* ── Exercise card ──────────────────────────────────── */
+/* â”€â”€ Exercise card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .exerciseCard {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border-radius: 18px;
   padding: 16px;
@@ -273,7 +273,7 @@
   color: rgba(235, 235, 245, 0.85);
 }
 
-/* ── Set header ─────────────────────────────────────── */
+/* â”€â”€ Set header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .setHeaderRow {
   display: grid;
   grid-template-columns: 28px 68px 1fr 1fr 40px;
@@ -311,7 +311,7 @@
   white-space: nowrap;
 }
 
-/* ── Set list ───────────────────────────────────────── */
+/* â”€â”€ Set list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .setList {
   display: flex;
   flex-direction: column;
@@ -319,7 +319,7 @@
   margin-bottom: 10px;
 }
 
-/* ── Edit-mode set delete ────────────────────────────── */
+/* â”€â”€ Edit-mode set delete â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .editSetsBtn {
   width: 32px;
   height: 32px;
@@ -374,7 +374,7 @@
   padding: 5px 4px;
   border-radius: 12px;
   border: 1px solid transparent;
-  background: #232325;
+  background: var(--bg-card);
   position: relative;
   z-index: 1;
 }
@@ -387,7 +387,7 @@
   padding: 5px 4px;
   border-radius: 12px;
   border: 1px solid transparent;
-  background: #232325;
+  background: var(--bg-card);
   position: relative;
   z-index: 1;
 }
@@ -426,7 +426,7 @@
   justify-content: center;
 }
 
-/* ── Inputs ─────────────────────────────────────────── */
+/* â”€â”€ Inputs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .kgInput,
 .repsInput {
   width: 100%;
@@ -445,8 +445,8 @@
 
 .kgInput:focus,
 .repsInput:focus {
-  background: rgba(252, 145, 88, 0.12);
-  border-color: rgba(252, 145, 88, 0.30);
+  background: rgba(var(--accent-rgb), 0.12);
+  border-color: rgba(var(--accent-rgb), 0.30);
 }
 
 .kgInput:disabled,
@@ -454,7 +454,7 @@
   opacity: 0.35;
 }
 
-/* ── Check button ───────────────────────────────────── */
+/* â”€â”€ Check button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .checkBtn {
   background: transparent;
   border: 0;
@@ -491,14 +491,14 @@
   color: #fff;
 }
 
-/* ── Add set button ─────────────────────────────────── */
+/* â”€â”€ Add set button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .addSetBtn {
   width: 100%;
   padding: 10px;
   border-radius: 14px;
-  border: 1px dashed rgba(252, 145, 88, 0.30);
-  background: rgba(252, 145, 88, 0.04);
-  color: #FC9158;
+  border: 1px dashed rgba(var(--accent-rgb), 0.30);
+  background: rgba(var(--accent-rgb), 0.04);
+  color: var(--accent);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -507,10 +507,10 @@
 }
 
 .addSetBtn:hover {
-  background: rgba(252, 145, 88, 0.09);
+  background: rgba(var(--accent-rgb), 0.09);
 }
 
-/* ── Add exercise button ────────────────────────────── */
+/* â”€â”€ Add exercise button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .addExerciseBtn {
   width: 100%;
   padding: 14px;
@@ -530,12 +530,12 @@
 }
 
 .addExerciseBtn:hover {
-  color: #FC9158;
-  border-color: rgba(252, 145, 88, 0.25);
-  background: rgba(252, 145, 88, 0.04);
+  color: var(--accent);
+  border-color: rgba(var(--accent-rgb), 0.25);
+  background: rgba(var(--accent-rgb), 0.04);
 }
 
-/* ── Saving toast ───────────────────────────────────── */
+/* â”€â”€ Saving toast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .savingToast {
   position: fixed;
   left: 50%;
@@ -552,7 +552,7 @@
   pointer-events: none;
 }
 
-/* ── Misc ───────────────────────────────────────────── */
+/* â”€â”€ Misc â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .empty {
   color: rgba(235, 235, 245, 0.45);
   padding: 32px 0;
@@ -566,13 +566,13 @@
   font-size: 13px;
 }
 
-/* ── Fallback pages ─────────────────────────────────── */
+/* â”€â”€ Fallback pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .centerCard {
   max-width: 480px;
   margin: 48px auto;
   padding: 28px 20px;
   border-radius: 18px;
-  background: #232325;
+  background: var(--bg-card);
   border: 1px solid rgba(255, 255, 255, 0.06);
   text-align: center;
 }
@@ -601,12 +601,12 @@
   padding: 14px 24px;
   border-radius: 14px;
   border: none;
-  background: #FC9158;
+  background: var(--accent);
   color: #fff;
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(252,145,88,0.26);
+  box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.26);
   transition: opacity 150ms ease, transform 100ms ease;
 }
 

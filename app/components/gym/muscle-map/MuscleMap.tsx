@@ -63,7 +63,7 @@ export default function MuscleMap({
           const slug = String(part.slug || "").toLowerCase();
           const isWorked = worked.has(slug);
 
-          const fill = isWorked ? "#FC9158" : "#3f3f3f";
+          const fill = isWorked ? "var(--accent)" : "#3f3f3f";
           const stroke = isWorked ? "#C13232" : "#2b2b2b";
           const opacity = isWorked ? 0.95 : 0.55;
 
@@ -88,8 +88,7 @@ export default function MuscleMap({
                 <path
                   key={`${slug}-${p.side}-${idx}`}
                   d={p.d}
-                  fill={fill}
-                  stroke={stroke}
+                  style={{ fill, stroke }}
                   strokeWidth={1.5}
                   opacity={opacity}
                 />

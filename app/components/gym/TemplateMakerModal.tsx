@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -153,11 +153,11 @@ export default function TemplateMakerModal({
 
         {step === 1 ? (
           <button className={styles.nextBtn} disabled={!canNext} onClick={() => setStep(2)}>
-            Volgende →
+            Volgende â†’
           </button>
         ) : (
           <button className={styles.saveBtn} disabled={!canSave} onClick={handleSave}>
-            {busy ? "Opslaan…" : "Opslaan"}
+            {busy ? "Opslaanâ€¦" : "Opslaan"}
           </button>
         )}
       </div>
@@ -171,7 +171,7 @@ export default function TemplateMakerModal({
       {/* Body */}
       <div className={styles.body}>
 
-        {/* ── Step 1 ── */}
+        {/* â”€â”€ Step 1 â”€â”€ */}
         {step === 1 && (
           <>
             <input
@@ -192,11 +192,11 @@ export default function TemplateMakerModal({
                 className={`${styles.chip} ${exercises.length > 0 ? styles.chipActive : ""}`}
                 onClick={() => setPickerOpen(true)}
               >
-                <span className={styles.chipEmoji}>💪</span>
+                <span className={styles.chipEmoji}>ðŸ’ª</span>
                 <span className={styles.chipLabel}>
                   {exercises.length > 0 ? `${exercises.length} oefeningen gekozen` : "Oefeningen kiezen"}
                 </span>
-                {exercises.length > 0 && <span className={styles.chipCheck}>✓</span>}
+                {exercises.length > 0 && <span className={styles.chipCheck}>âœ“</span>}
               </button>
             </div>
 
@@ -207,7 +207,7 @@ export default function TemplateMakerModal({
                     display: "flex",
                     alignItems: "center",
                     gap: 12,
-                    background: "#2C2C2E",
+                    background: "var(--bg-card-2)",
                     borderRadius: 14,
                     padding: "10px 12px",
                   }}>
@@ -218,7 +218,7 @@ export default function TemplateMakerModal({
                     }}>
                       {ex.ref.image
                         ? <img src={ex.ref.image} alt={ex.ref.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                        : <span style={{ fontSize: 18 }}>💪</span>
+                        : <span style={{ fontSize: 18 }}>ðŸ’ª</span>
                       }
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -243,7 +243,7 @@ export default function TemplateMakerModal({
 
                 <button
                   style={{
-                    width: "100%", background: "none", border: "1px dashed #3a3a3c",
+                    width: "100%", background: "none", border: "1px dashed var(--bg-card-3)",
                     borderRadius: 12, padding: "10px", color: "#A1A1A1",
                     fontSize: 13, fontWeight: 600, cursor: "pointer", marginTop: 2,
                   }}
@@ -256,7 +256,7 @@ export default function TemplateMakerModal({
           </>
         )}
 
-        {/* ── Step 2 ── */}
+        {/* â”€â”€ Step 2 â”€â”€ */}
         {step === 2 && (
           <>
             {/* Muscle map */}
@@ -288,7 +288,7 @@ export default function TemplateMakerModal({
                   <div key={s.id} style={{ display: "grid", gridTemplateColumns: "36px 1fr 1fr 40px", gap: 8, alignItems: "center", marginBottom: 8 }}>
                     <span style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{idx + 1}</span>
                     <input
-                      style={{ background: "#2C2C2E", border: "1px solid #3a3a3c", borderRadius: 10, color: "#fff", fontSize: 14, padding: "8px", textAlign: "center", outline: "none", width: "100%" }}
+                      style={{ background: "var(--bg-card-2)", border: "1px solid var(--bg-card-3)", borderRadius: 10, color: "#fff", fontSize: 14, padding: "8px", textAlign: "center", outline: "none", width: "100%" }}
                       type="text"
                       inputMode="numeric"
                       value={typeof s.targetKg === "number" ? String(s.targetKg) : ""}
@@ -297,7 +297,7 @@ export default function TemplateMakerModal({
                       aria-label="Kg"
                     />
                     <input
-                      style={{ background: "#2C2C2E", border: "1px solid #3a3a3c", borderRadius: 10, color: "#fff", fontSize: 14, padding: "8px", textAlign: "center", outline: "none", width: "100%" }}
+                      style={{ background: "var(--bg-card-2)", border: "1px solid var(--bg-card-3)", borderRadius: 10, color: "#fff", fontSize: 14, padding: "8px", textAlign: "center", outline: "none", width: "100%" }}
                       type="text"
                       inputMode="numeric"
                       value={typeof s.targetReps === "number" ? String(s.targetReps) : ""}
@@ -317,7 +317,7 @@ export default function TemplateMakerModal({
                 ))}
 
                 <button
-                  style={{ width: "100%", background: "none", border: "1px dashed #3a3a3c", borderRadius: 10, color: "#FC9158", fontSize: 13, fontWeight: 600, padding: "8px", marginTop: 4, cursor: "pointer" }}
+                  style={{ width: "100%", background: "none", border: "1px dashed var(--bg-card-3)", borderRadius: 10, color: "var(--accent)", fontSize: 13, fontWeight: 600, padding: "8px", marginTop: 4, cursor: "pointer" }}
                   onClick={() => addSet(ex.id)}
                   disabled={busy}
                 >

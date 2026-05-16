@@ -9,7 +9,7 @@
 .cardBtn {
   width: 100%;
   border: 0;
-  background: #232325;
+  background: var(--bg-card);
   border-radius: 18px;
   padding: 12px;
   display: flex;
@@ -21,7 +21,7 @@
 }
 
 .cardBtn:hover {
-  background: #232325;
+  background: var(--bg-card);
 }
 
 .cardImg {
@@ -29,7 +29,7 @@
   height: 52px;
   border-radius: 10px;
   object-fit: cover;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   flex: 0 0 52px;
 }
 
@@ -37,7 +37,7 @@
   width: 52px;
   height: 52px;
   border-radius: 10px;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,7 +143,7 @@
 
 .fabMenuItem {
   border: 0;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   color: #fff;
   border-radius: 9999px;
   padding: 10px 14px;
@@ -157,7 +157,7 @@
   width: 32px;
   height: 32px;
   border-radius: 9999px;
-  background: #232325;
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -202,7 +202,7 @@
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 12px;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   cursor: pointer;
   display: block;
 }
@@ -256,16 +256,16 @@
 
 .input {
   width: 100%;
-  border: 1px solid #2e2e30;
+  border: 1px solid var(--border-sep);
   border-radius: 14px;
   padding: 12px 14px;
-  background: #18181A;
+  background: var(--bg-page);
   color: #fff;
   outline: none;
 }
 
 .box {
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   border-radius: 14px;
   padding: 12px;
 }
@@ -305,10 +305,10 @@
 
 .smallInput {
   width: 100%;
-  border: 1px solid #2e2e30;
+  border: 1px solid var(--border-sep);
   border-radius: 14px;
   padding: 10px 12px;
-  background: #18181A;
+  background: var(--bg-page);
   color: #fff;
   outline: none;
   text-align: center;
@@ -340,20 +340,20 @@
 
 .amountInput {
   width: 100px;
-  border: 1px solid #2e2e30;
+  border: 1px solid var(--border-sep);
   border-radius: 14px;
   padding: 12px 14px;
-  background: #18181A;
+  background: var(--bg-page);
   color: #fff;
   outline: none;
 }
 
 .nameInput {
   flex: 1;
-  border: 1px solid #2e2e30;
+  border: 1px solid var(--border-sep);
   border-radius: 14px;
   padding: 12px 14px;
-  background: #18181A;
+  background: var(--bg-page);
   color: #fff;
   outline: none;
 }
@@ -393,10 +393,10 @@
 
 .textarea {
   flex: 1;
-  border: 1px solid #2e2e30;
+  border: 1px solid var(--border-sep);
   border-radius: 14px;
   padding: 12px 14px;
-  background: #18181A;
+  background: var(--bg-page);
   color: #fff;
   outline: none;
   resize: vertical;
@@ -429,7 +429,7 @@
 .selectItem {
   width: 100%;
   border: 0;
-  background: #232325;
+  background: var(--bg-card);
   border-radius: 14px;
   padding: 12px;
   cursor: pointer;
@@ -444,14 +444,14 @@
   height: 52px;
   border-radius: 10px;
   object-fit: cover;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
 }
 
 .selectImgPlaceholder {
   width: 52px;
   height: 52px;
   border-radius: 10px;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -483,9 +483,9 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #232325;
-  border: 1.5px solid #2C2C2E;
-  color: #FC9158;
+  background: var(--bg-card);
+  border: 1.5px solid var(--bg-card-2);
+  color: var(--accent);
   cursor: pointer;
   display: flex;
   align-items: center;

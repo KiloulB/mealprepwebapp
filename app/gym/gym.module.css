@@ -1,7 +1,7 @@
 ﻿/* --- Gym Home Page Layout --- */
 .gymPage {
   min-height: 100vh;
-  background: #18181A;
+  background: var(--bg-page);
   color: #fff;
   font-family: system-ui, -apple-system, sans-serif;
   padding-bottom: 90px;
@@ -21,7 +21,7 @@
 
 .workoutStartBtn {
   width: 100%;
-  background: #FC9158;
+  background: var(--accent);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -32,7 +32,7 @@
   letter-spacing: -0.2px;
   cursor: pointer;
   transition: opacity 180ms ease, transform 100ms ease;
-  box-shadow: 0 4px 18px rgba(252, 145, 88, 0.26);
+  box-shadow: 0 4px 18px rgba(var(--accent-rgb), 0.26);
 }
 
 .workoutStartBtn:hover {
@@ -45,7 +45,7 @@
 }
 
 .muscleCard, .historyCard {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border-radius: 18px;
   border: 1px solid rgba(255,255,255,0.06);
@@ -130,7 +130,7 @@
 }
 
 .weekSelectorBtn:disabled {
-  color: #3a3a3c;
+  color: var(--bg-card-3);
   cursor: not-allowed;
 }
 
@@ -165,7 +165,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 10px;
-  border-bottom: 1px solid #2e2e30;
+  border-bottom: 1px solid var(--border-sep);
   border-radius: 10px;
   cursor: pointer;
   transition: background 150ms ease;
@@ -273,8 +273,8 @@
 }
 
 .historyStatusBezig {
-  background: rgba(252, 145, 88, 0.12);
-  color: #FC9158;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent);
 }
 
 .historyUnfinishedBadge {
@@ -283,9 +283,9 @@
   margin-left: 8px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: color-mix(in srgb, #FC9158 10%, transparent);
-  border: 1px solid color-mix(in srgb, #FC9158 25%, transparent);
-  color: #FC9158;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  color: var(--accent);
   font-size: 11px;
   font-weight: 600;
   vertical-align: middle;
@@ -305,7 +305,7 @@
   position: fixed;
   inset: 0;
   z-index: 600;
-  background: #18181A;
+  background: var(--bg-page);
   color: #f4f4f5;
   display: flex;
   flex-direction: column;
@@ -490,7 +490,7 @@
   margin-top: 12px;
   padding: 12px 14px;
   border-radius: 14px;
-  border: 1px solid #2C2C2E;
+  border: 1px solid var(--bg-card-2);
   background: transparent;
   color: #fff;
   font-weight: 600;
@@ -520,7 +520,7 @@
   width: 100px;
   height: 44px;
   border-radius: 14px;
-  border: 1px solid #2C2C2E;
+  border: 1px solid var(--bg-card-2);
   background: #111;
   color: #fff;
   cursor: pointer;
@@ -531,7 +531,7 @@
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  border: 1px solid #2C2C2E;
+  border: 1px solid var(--bg-card-2);
   background: #111;
   color: #fff;
   cursor: pointer;
@@ -549,7 +549,7 @@
   font-size: 12px;
   padding: 4px 8px;
   border-radius: 9999px;
-  background: #232325;
+  background: var(--bg-card);
   border: 1px solid #333;
   color: #cfcfcf;
 }
@@ -576,7 +576,7 @@
   width: min(520px, 100%);
   height: 92vh;
   height: 92dvh;
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 40%);
   border-radius: 24px 24px 0 0;
   border-top: 1px solid rgba(255,255,255,0.08);
@@ -611,7 +611,7 @@
   padding: 12px 16px;
   padding-bottom: max(20px, env(safe-area-inset-bottom));
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: #232325;
+  background: var(--bg-card);
   flex-shrink: 0;
 }
 
@@ -620,7 +620,7 @@
   height: 48px;
   border-radius: 14px;
   border: none;
-  background: #FC9158;
+  background: var(--accent);
   color: #fff;
   font-size: 15px;
   font-weight: 800;
@@ -628,7 +628,7 @@
 }
 
 .sheetFooterBtn:disabled {
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   color: #666;
   cursor: not-allowed;
 }
@@ -651,7 +651,7 @@
 }
 
 .searchInput:focus {
-  border-color: rgba(252, 145, 88, 0.35);
+  border-color: rgba(var(--accent-rgb), 0.35);
 }
 
 .searchInput::placeholder {
@@ -665,7 +665,7 @@
   top: 0;
   will-change: transform;
   transform: translateZ(0);
-  background: #232325;
+  background: var(--bg-card);
   padding: 10px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   z-index: 99;
@@ -736,16 +736,16 @@
   padding: 0 12px;
   border-radius: 9999px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #232325;
+  background: var(--bg-card);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
 }
 
 .chipBtnActive {
-  border-color: color-mix(in srgb, #FC9158 40%, transparent);
-  background: color-mix(in srgb, #FC9158 12%, transparent);
-  color: #FC9158;
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
 }
 
 /* ===== Inline filter panel ===== */
@@ -772,7 +772,7 @@
 .filterPanelClearBtn {
   border: none;
   background: transparent;
-  color: #FC9158;
+  color: var(--accent);
   font-weight: 600;
   font-size: 13px;
   cursor: pointer;
@@ -802,7 +802,7 @@
   padding: 0 12px;
   border-radius: 9999px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #232325;
+  background: var(--bg-card);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -810,9 +810,9 @@
 }
 
 .popoverOptionActive {
-  border-color: color-mix(in srgb, #FC9158 40%, transparent);
-  background: color-mix(in srgb, #FC9158 12%, transparent);
-  color: #FC9158;
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
 }
 
 /* ===== Exercise list (flat, iOS-like) ===== */
@@ -821,7 +821,7 @@
   display: flex;
   flex-direction: column;
   padding-top: 4px;
-  background: #232325;
+  background: var(--bg-card);
 }
 
 .exerciseRow {
@@ -838,14 +838,14 @@
   align-items: center;
   gap: 12px;
   padding: 12px 15px;
-  background: #2c2c2c;
+  background: var(--bg-card-2);
   border-radius: 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
 }
 
 .exerciseRow[data-selected="true"] {
-  background: color-mix(in srgb, #FC9158 10%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .exerciseImg {
@@ -853,7 +853,7 @@
   height: 56px;
   border-radius: 14px;
   object-fit: cover;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
 }
 
 .exerciseMain {
@@ -1015,8 +1015,8 @@
   height: 34px;
   padding: 0 12px;
   border-radius: 9999px;
-  border: 1px solid #2C2C2E;
-  background: #232325;
+  border: 1px solid var(--bg-card-2);
+  background: var(--bg-card);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -1151,7 +1151,7 @@
 
 .fabMenuItem {
   border: 0;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   color: #fff;
   border-radius: 16px;
   padding: 10px 14px;
@@ -1166,7 +1166,7 @@
   height: 32px;
   padding:8px;
   border-radius: 9999px;
-  background: #232325;
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1197,7 +1197,7 @@
 
 .headerMenuItem {
   border: 0;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   color: #fff;
   border-radius: 9999px;
   padding: 10px 14px;
@@ -1230,8 +1230,8 @@
 }
 
 .templateAddBtn:hover {
-  background: rgba(252,145,88,0.12);
-  color: #FC9158;
+  background: rgba(var(--accent-rgb),0.12);
+  color: var(--accent);
 }
 
 .templateRow {
@@ -1239,7 +1239,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 10px;
-  border-top: 1px solid #2e2e30;
+  border-top: 1px solid var(--border-sep);
   border-radius: 10px;
   margin: 0 -10px;
   transition: background 150ms ease;
@@ -1282,8 +1282,8 @@
 }
 
 .templateStatusBezig {
-  background: rgba(252, 145, 88, 0.12);
-  color: #FC9158;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent);
 }
 
 .templateStatusAfgerond {
@@ -1321,7 +1321,7 @@
   position: absolute;
   right: 0;
   top: 100%;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px;
   overflow: hidden;
@@ -1361,8 +1361,8 @@
 /* ===== ExercisePickerModal — improvements ===== */
 
 .exerciseRow[data-selected="true"] {
-  background: rgba(252,145,88,0.09);
-  border-left: 3px solid #FC9158;
+  background: rgba(var(--accent-rgb),0.09);
+  border-left: 3px solid var(--accent);
   padding-left: 12px;
 }
 
@@ -1389,12 +1389,12 @@
   height: 50px;
   border-radius: 14px;
   border: none;
-  background: #FC9158;
+  background: var(--accent);
   color: #fff;
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(252,145,88,0.28);
+  box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.28);
   transition: opacity 150ms ease, transform 100ms ease, box-shadow 150ms ease;
 }
 
@@ -1424,7 +1424,7 @@
 .choiceSheet {
   width: 100%;
   max-width: 380px;
-  background: #232325;
+  background: var(--bg-card);
   border-radius: 24px;
   padding: 20px 20px 24px;
 }
@@ -1455,7 +1455,7 @@
 .choicePrimaryBtn {
   width: 100%;
   padding: 13px 0;
-  background: #FC9158;
+  background: var(--accent);
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -1469,8 +1469,8 @@
   width: 100%;
   padding: 13px 0;
   background: transparent;
-  color: #FC9158;
-  border: 1.5px solid #FC9158;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
   border-radius: 10px;
   font-size: 15px;
   font-weight: 700;
@@ -1481,7 +1481,7 @@
 .templateMakerOverlay {
   position: fixed;
   inset: 0;
-  background: #18181A;
+  background: var(--bg-page);
   z-index: 180;
   display: flex;
   flex-direction: column;
@@ -1540,13 +1540,13 @@
 }
 
 .stepDotActive {
-  background: #FC9158;
+  background: var(--accent);
   width: 20px;
 }
 
 /* Exercise card in template step 2 */
 .tmExCard {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 50%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
@@ -1578,9 +1578,9 @@
   margin-top: 12px;
   padding: 10px;
   border-radius: 14px;
-  border: 1px dashed rgba(252,145,88,0.4);
-  background: rgba(252,145,88,0.04);
-  color: #FC9158;
+  border: 1px dashed rgba(var(--accent-rgb),0.4);
+  background: rgba(var(--accent-rgb),0.04);
+  color: var(--accent);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -1601,7 +1601,7 @@
 .tmNextBtn {
   background: none;
   border: none;
-  color: #FC9158;
+  color: var(--accent);
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
@@ -1616,7 +1616,7 @@
 .tmSaveBtn {
   background: none;
   border: none;
-  color: #FC9158;
+  color: var(--accent);
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
@@ -1699,7 +1699,7 @@
 }
 
 .tmInput:focus {
-  background: rgba(252,145,88,0.12);
+  background: rgba(var(--accent-rgb),0.12);
 }
 
 .tmInput:disabled {
@@ -1751,9 +1751,9 @@
   gap: 8px;
   padding: 10px 16px;
   border-radius: 14px;
-  border: 1.5px dashed rgba(252,145,88,0.5);
-  background: rgba(252,145,88,0.06);
-  color: #FC9158;
+  border: 1.5px dashed rgba(var(--accent-rgb),0.5);
+  background: rgba(var(--accent-rgb),0.06);
+  color: var(--accent);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -1862,7 +1862,7 @@
   position: fixed;
   inset: 0;
   z-index: 500;
-  background: #18181A;
+  background: var(--bg-page);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1933,7 +1933,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #232325;
+  background: var(--bg-card);
   border-radius: 14px;
   padding: 12px 14px;
   margin-bottom: 10px;
@@ -1983,9 +1983,9 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #232325;
-  border: 1.5px solid #2C2C2E;
-  color: #FC9158;
+  background: var(--bg-card);
+  border: 1.5px solid var(--bg-card-2);
+  color: var(--accent);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1997,7 +1997,7 @@
 
 .tsSheet {
   width: min(520px, 100%);
-  background: #1e1e20;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.035) 0%, transparent 45%);
   border-top: 1px solid rgba(255,255,255,0.09);
   border-radius: 28px 28px 0 0;
@@ -2036,7 +2036,7 @@
 
 .tsChoiceCard {
   width: 100%;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   background-image: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 55%);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 18px;
@@ -2062,8 +2062,8 @@
 .tsChoiceIcon {
   width: 48px;
   height: 48px;
-  background: rgba(252,145,88,0.12);
-  border: 1px solid rgba(252,145,88,0.2);
+  background: rgba(var(--accent-rgb),0.12);
+  border: 1px solid rgba(var(--accent-rgb),0.2);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -2104,7 +2104,7 @@
 .tsViewBackBtn {
   background: none;
   border: none;
-  color: #FC9158;
+  color: var(--accent);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -2144,7 +2144,7 @@
 
 .tsTemplateItem {
   width: 100%;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   background-image: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, transparent 55%);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 18px;
@@ -2205,9 +2205,9 @@
 .tsMusclePill {
   font-size: 11px;
   font-weight: 600;
-  color: #FC9158;
-  background: rgba(252,145,88,0.1);
-  border: 1px solid rgba(252,145,88,0.2);
+  color: var(--accent);
+  background: rgba(var(--accent-rgb),0.1);
+  border: 1px solid rgba(var(--accent-rgb),0.2);
   border-radius: 999px;
   padding: 2px 8px;
   text-transform: capitalize;
@@ -2237,7 +2237,7 @@
 
 .tsEmptySub {
   font-size: 13px;
-  color: #3a3a3c;
+  color: var(--bg-card-3);
   text-align: center;
   max-width: 220px;
 }
@@ -2250,8 +2250,8 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid rgba(252,145,88,0.18);
-  border-top-color: #FC9158;
+  border: 2px solid rgba(var(--accent-rgb),0.18);
+  border-top-color: var(--accent);
   animation: tsSpin 0.7s linear infinite;
   flex-shrink: 0;
 }
@@ -2260,7 +2260,7 @@
 
 .pickerHead {
   flex-shrink: 0;
-  background: #232325;
+  background: var(--bg-card);
   border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
@@ -2301,7 +2301,7 @@
   height: 44px;
   border-radius: 14px;
   border: 1.5px solid rgba(255,255,255,0.1);
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   color: #fff;
   padding: 0 36px;
   outline: none;
@@ -2311,8 +2311,8 @@
 }
 
 .pickerSearchInput:focus {
-  border-color: rgba(252,145,88,0.45);
-  box-shadow: 0 0 0 3px rgba(252,145,88,0.1);
+  border-color: rgba(var(--accent-rgb),0.45);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.1);
 }
 
 .pickerSearchInput::placeholder {
@@ -2372,15 +2372,15 @@
 }
 
 .pickerChipActive {
-  border-color: rgba(252,145,88,0.45);
-  background: rgba(252,145,88,0.12);
-  color: #FC9158;
+  border-color: rgba(var(--accent-rgb),0.45);
+  background: rgba(var(--accent-rgb),0.12);
+  color: var(--accent);
 }
 
 .pickerChipSelected {
-  border-color: rgba(252,145,88,0.3);
-  background: rgba(252,145,88,0.08);
-  color: #FC9158;
+  border-color: rgba(var(--accent-rgb),0.3);
+  background: rgba(var(--accent-rgb),0.08);
+  color: var(--accent);
 }
 
 /* Filter panel */
@@ -2410,7 +2410,7 @@
 .pickerFilterClear {
   border: none;
   background: transparent;
-  color: #FC9158;
+  color: var(--accent);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -2465,7 +2465,7 @@
   bottom: 6px;
   width: 3px;
   border-radius: 0 2px 2px 0;
-  background: #FC9158;
+  background: var(--accent);
   transform: scaleY(0);
   transform-origin: center;
   transition: transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -2476,7 +2476,7 @@
 }
 
 .pickerExRowSelected {
-  background: rgba(252,145,88,0.07);
+  background: rgba(var(--accent-rgb),0.07);
 }
 
 .pickerExRowSelected::before {
@@ -2484,7 +2484,7 @@
 }
 
 .pickerExRowSelected:hover {
-  background: rgba(252,145,88,0.1);
+  background: rgba(var(--accent-rgb),0.1);
 }
 
 .pickerExImg {
@@ -2492,7 +2492,7 @@
   height: 52px;
   border-radius: 12px;
   object-fit: cover;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   flex-shrink: 0;
   display: block;
 }
@@ -2501,11 +2501,11 @@
   width: 52px;
   height: 52px;
   border-radius: 12px;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #3A3A3C;
+  color: var(--bg-card-3);
   flex-shrink: 0;
 }
 
@@ -2543,12 +2543,12 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #FC9158;
+  background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  box-shadow: 0 2px 8px rgba(252,145,88,0.35);
+  box-shadow: 0 2px 8px rgba(var(--accent-rgb),0.35);
 }
 
 .pickerExInfoBtn {

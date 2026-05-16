@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { UserProvider } from "./context/UserContext";
 import { FontProvider } from "./context/FontContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 export const viewport = {
   width: "device-width",
@@ -31,11 +32,13 @@ export default function RootLayout({
       <body
         className="antialiased"
       >
-        <UserProvider>
-          <FontProvider>
-            {children}
-          </FontProvider>
-        </UserProvider>
+        <ThemeProvider>
+          <UserProvider>
+            <FontProvider>
+              {children}
+            </FontProvider>
+          </UserProvider>
+        </ThemeProvider>
         
       </body>
     </html>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { createPortal } from "react-dom";
@@ -15,9 +15,9 @@ const DAY_LABELS_SHORT = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
 const DAY_LABELS_FULL  = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"];
 
 const MEAL_TYPE_OPTIONS: { value: "breakfast" | "lunch" | "dinner"; emoji: string; label: string }[] = [
-  { value: "breakfast", emoji: "🌅", label: "Ontbijt" },
-  { value: "lunch",     emoji: "☀️",  label: "Lunch" },
-  { value: "dinner",    emoji: "🌙",  label: "Avondeten" },
+  { value: "breakfast", emoji: "ðŸŒ…", label: "Ontbijt" },
+  { value: "lunch",     emoji: "â˜€ï¸",  label: "Lunch" },
+  { value: "dinner",    emoji: "ðŸŒ™",  label: "Avondeten" },
 ];
 
 const PATTERN_OPTIONS: { value: PrepMeal["pattern"]; label: string }[] = [
@@ -139,7 +139,7 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
   return createPortal(
     <div className={styles.overlay}>
 
-      {/* ── Top bar ── */}
+      {/* â”€â”€ Top bar â”€â”€ */}
       <div className={styles.topBar}>
         {step === 1 ? (
           <button className={styles.cancelBtn} onClick={onClose}>Annuleren</button>
@@ -157,26 +157,26 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
             disabled={!canNext[step]}
             onClick={() => setStep((s) => (s + 1) as 1|2|3|4)}
           >
-            Volgende →
+            Volgende â†’
           </button>
         ) : (
           <button className={styles.saveBtn} disabled={saving} onClick={handleSave}>
-            {saving ? "Opslaan…" : "Opslaan"}
+            {saving ? "Opslaanâ€¦" : "Opslaan"}
           </button>
         )}
       </div>
 
-      {/* ── Step dots (4) ── */}
+      {/* â”€â”€ Step dots (4) â”€â”€ */}
       <div className={styles.stepDots}>
         {([1, 2, 3, 4] as const).map((n) => (
           <div key={n} className={`${styles.dot} ${step === n ? styles.dotActive : ""}`} />
         ))}
       </div>
 
-      {/* ── Body ── */}
+      {/* â”€â”€ Body â”€â”€ */}
       <div className={styles.body}>
 
-        {/* ════ STEP 1: Maaltijdtype ════ */}
+        {/* â•â•â•â• STEP 1: Maaltijdtype â•â•â•â• */}
         {step === 1 && (
           <>
             <p className={styles.sectionHint}>Voor welke maaltijden wil je van tevoren koken?</p>
@@ -191,7 +191,7 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
                   >
                     <span className={styles.mealTypeEmoji}>{opt.emoji}</span>
                     <span className={styles.mealTypeLabel}>{opt.label}</span>
-                    {active && <span className={styles.chipCheck}>✓</span>}
+                    {active && <span className={styles.chipCheck}>âœ“</span>}
                   </button>
                 );
               })}
@@ -199,7 +199,7 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
           </>
         )}
 
-        {/* ════ STEP 2: Planning ════ */}
+        {/* â•â•â•â• STEP 2: Planning â•â•â•â• */}
         {step === 2 && (
           <>
             <div className={styles.sectionLabel}>Kookdag</div>
@@ -234,7 +234,7 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
             {cookFrequency === "custom" && (
               <div className={styles.customFreqRow}>
                 <span className={styles.customFreqLabel}>Elke</span>
-                <button className={styles.stepperBtn} onClick={() => setCookFrequencyDays((d) => Math.max(1, d - 1))}>−</button>
+                <button className={styles.stepperBtn} onClick={() => setCookFrequencyDays((d) => Math.max(1, d - 1))}>âˆ’</button>
                 <span className={styles.stepperVal}>{cookFrequencyDays}</span>
                 <button className={styles.stepperBtn} onClick={() => setCookFrequencyDays((d) => Math.min(30, d + 1))}>+</button>
                 <span className={styles.customFreqLabel}>dagen</span>
@@ -242,8 +242,8 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
             )}
 
             <div className={styles.sectionLabel} style={{ marginTop: 28 }}>
-              Tijdspan —{" "}
-              <span style={{ color: "#FC9158" }}>{timeSpanWeeks} {timeSpanWeeks !== 1 ? "weken" : "week"}</span>
+              Tijdspan â€”{" "}
+              <span style={{ color: "var(--accent)" }}>{timeSpanWeeks} {timeSpanWeeks !== 1 ? "weken" : "week"}</span>
             </div>
             <p className={styles.sectionHint}>Hoe lang wil je dit meal prep schema volhouden?</p>
             <input
@@ -258,7 +258,7 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
           </>
         )}
 
-        {/* ════ STEP 3: Maaltijden ════ */}
+        {/* â•â•â•â• STEP 3: Maaltijden â•â•â•â• */}
         {step === 3 && (
           <>
             {meals.map((meal) => (
@@ -310,7 +310,7 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
           </>
         )}
 
-        {/* ════ STEP 4: Bevestigen ════ */}
+        {/* â•â•â•â• STEP 4: Bevestigen â•â•â•â• */}
         {step === 4 && (
           <>
             <div className={styles.summaryCard}>

@@ -1,12 +1,12 @@
-.screen {
+﻿.screen {
   min-height: 100vh;
-  background: #18181A;
+  background: var(--bg-page);
   color: #fff;
   font-family: system-ui, sans-serif;
   padding: 0 0 100px;
 }
 
-/* ── Header ───────────────────────────────────────────────────────────── */
+/* â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .header {
   display: flex;
@@ -37,7 +37,7 @@
 }
 .addBtn:hover { background: rgba(255,255,255,0.1); }
 
-/* ── Progress strip ───────────────────────────────────────────────────── */
+/* â”€â”€ Progress strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .progressStrip {
   display: flex;
@@ -64,7 +64,7 @@
 
 .progressFill {
   height: 100%;
-  background: #FC9158;
+  background: var(--accent);
   border-radius: 999px;
   transition: width 0.5s ease;
 }
@@ -78,16 +78,16 @@
 }
 
 .progressDaysWarn {
-  color: #FC9158;
+  color: var(--accent);
 }
 
-/* ── Today card ───────────────────────────────────────────────────────── */
+/* â”€â”€ Today card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .todayCard {
   margin: 0 20px 28px;
-  background: #232325;
-  background-image: linear-gradient(160deg, rgba(252,145,88,0.06) 0%, transparent 60%);
-  border: 1px solid rgba(252,145,88,0.12);
+  background: var(--bg-card);
+  background-image: linear-gradient(160deg, rgba(var(--accent-rgb),0.06) 0%, transparent 60%);
+  border: 1px solid rgba(var(--accent-rgb),0.12);
   border-radius: 22px;
   padding: 22px 20px 20px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
@@ -103,7 +103,7 @@
 .todayTag {
   font-size: 11px;
   font-weight: 700;
-  color: #FC9158;
+  color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.9px;
 }
@@ -169,7 +169,7 @@
   line-height: 1.5;
 }
 
-/* ── Week section ─────────────────────────────────────────────────────── */
+/* â”€â”€ Week section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .weekSection {
   padding: 0 20px 28px;
@@ -206,8 +206,8 @@
 }
 
 .weekBtnToday {
-  background: rgba(252,145,88,0.08);
-  border-color: rgba(252,145,88,0.35);
+  background: rgba(var(--accent-rgb),0.08);
+  border-color: rgba(var(--accent-rgb),0.35);
 }
 
 .weekBtnEmpty {
@@ -225,7 +225,7 @@
   letter-spacing: 0.3px;
 }
 
-.weekBtnToday .weekBtnDay { color: #FC9158; }
+.weekBtnToday .weekBtnDay { color: var(--accent); }
 
 .weekBtnNum {
   font-size: 16px;
@@ -234,7 +234,7 @@
   line-height: 1;
 }
 
-.weekBtnToday .weekBtnNum { color: #FC9158; }
+.weekBtnToday .weekBtnNum { color: var(--accent); }
 
 .weekBtnDot {
   width: 5px;
@@ -243,7 +243,7 @@
   flex-shrink: 0;
 }
 
-/* ── Cook info ────────────────────────────────────────────────────────── */
+/* â”€â”€ Cook info â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .cookInfo {
   padding: 0 20px 24px;
@@ -259,7 +259,7 @@
   font-weight: 600;
 }
 
-/* ── Plan actions ─────────────────────────────────────────────────────── */
+/* â”€â”€ Plan actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .actionsRow {
   display: flex;
@@ -305,7 +305,7 @@
 .deleteBtn:hover    { background: rgba(193,50,50,0.06); }
 .deleteBtn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* ── Confirm card ─────────────────────────────────────────────────────── */
+/* â”€â”€ Confirm card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .confirmCard {
   margin: 0 20px;
@@ -354,7 +354,7 @@
   cursor: pointer;
 }
 
-/* ── Empty state ──────────────────────────────────────────────────────── */
+/* â”€â”€ Empty state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .emptyState {
   display: flex;
@@ -368,7 +368,7 @@
   width: 76px;
   height: 76px;
   border-radius: 24px;
-  background: rgba(252,145,88,0.1);
+  background: rgba(var(--accent-rgb),0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -396,20 +396,20 @@
   align-items: center;
   gap: 6px;
   padding: 13px 28px;
-  background: #FC9158;
+  background: var(--accent);
   border: none;
   border-radius: 10px;
   color: #fff;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(252,145,88,0.28);
+  box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.28);
   transition: opacity 150ms ease, transform 100ms ease;
 }
 .emptyBtn:hover  { opacity: 0.9; }
 .emptyBtn:active { transform: scale(0.97); }
 
-/* ── Help button ──────────────────────────────────────────────────────── */
+/* â”€â”€ Help button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .helpBtn {
   position: fixed;
@@ -419,9 +419,9 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #232325;
-  border: 1.5px solid #2C2C2E;
-  color: #FC9158;
+  background: var(--bg-card);
+  border: 1.5px solid var(--bg-card-2);
+  color: var(--accent);
   cursor: pointer;
   display: flex;
   align-items: center;

@@ -660,7 +660,7 @@ export default function FoodScreen() {
           </button>
         </div>
         {recipes.length === 0 ? (
-          <div className={styles.mealRow} style={{ borderTop: "1px solid #2e2e30", cursor: "default" }}>
+          <div className={styles.mealRow} style={{ borderTop: "1px solid var(--border-sep)", cursor: "default" }}>
             <span className={styles.mealMeta}>Nog geen recepten opgeslagen.</span>
           </div>
         ) : (
@@ -713,7 +713,7 @@ export default function FoodScreen() {
             <div className={styles.choiceList}>
               <button className={styles.choiceRow} onClick={() => openSearch(activeMealType)}>
                 <span className={styles.choiceIcon} style={{ background: "rgba(252,145,88,0.15)" }}>
-                  <IoSearchOutline size={20} color="#FC9158" />
+                  <IoSearchOutline size={20} style={{ color: "var(--accent)" }} />
                 </span>
                 <span className={styles.choiceText}>
                   <span className={styles.choiceTitle}>Zoeken</span>
@@ -1056,7 +1056,7 @@ export default function FoodScreen() {
             {/* Macro row */}
             <div className={styles.recipeDetailMacroRow}>
               <div className={styles.recipeDetailMacroItem}>
-                <span className={styles.recipeDetailMacroLabel} style={{ color: "#FC9158" }}>Kcal</span>
+                <span className={styles.recipeDetailMacroLabel} style={{ color: "var(--accent)" }}>Kcal</span>
                 <span className={styles.recipeDetailMacroVal}>{Math.round(selectedRecipe.kcal)} g</span>
               </div>
               <div className={styles.recipeDetailMacroItem}>

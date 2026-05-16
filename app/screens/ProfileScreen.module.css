@@ -2,7 +2,7 @@
 
 .profilePage {
   min-height: 100vh;
-  background: #18181A;
+  background: var(--bg-page);
   color: #fff;
   font-family: system-ui, sans-serif;
   padding: 0 0 90px;
@@ -39,7 +39,7 @@
 .navAction {
   background: none;
   border: none;
-  color: #FC9158;
+  color: var(--accent);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -71,7 +71,7 @@
 /* ── Goal card ───────────────────────────────────────────────────────────── */
 
 .goalCard {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
@@ -154,7 +154,7 @@
 }
 
 .goalCardStat {
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   border-radius: 8px;
   padding: 4px 10px;
   font-size: 12px;
@@ -164,7 +164,7 @@
 /* ── Workout-data card ───────────────────────────────────────────────────── */
 
 .infoCard {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
@@ -196,7 +196,7 @@
 
 .insightCard {
   margin: 0 20px 18px;
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 60%);
   border-radius: 18px;
   padding: 18px 20px;
@@ -240,7 +240,7 @@
 /* ── Settings ────────────────────────────────────────────────────────────── */
 
 .settingsList {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 50%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
@@ -253,7 +253,7 @@
   display: flex;
   align-items: center;
   padding: 14px 18px;
-  border-bottom: 1px solid #2e2e30;
+  border-bottom: 1px solid var(--border-sep);
   cursor: pointer;
   gap: 14px;
   transition: background var(--t-fast, 100ms ease);
@@ -267,7 +267,7 @@
 }
 
 .settingsRowIcon {
-  color: #FC9158;
+  color: var(--accent);
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -318,7 +318,7 @@
 }
 
 .accountList {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 50%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
@@ -330,7 +330,7 @@
   display: flex;
   align-items: center;
   padding: 14px 18px;
-  border-bottom: 1px solid #2e2e30;
+  border-bottom: 1px solid var(--border-sep);
   cursor: pointer;
   transition: background var(--t-fast, 100ms ease);
 }
@@ -365,7 +365,7 @@
 }
 
 .editInputWrap {
-  background: #232325;
+  background: var(--bg-card);
   border-radius: 14px;
   padding: 14px 18px;
   display: flex;
@@ -388,7 +388,7 @@
 .editVisibilityBtn {
   background: none;
   border: none;
-  color: #FC9158;
+  color: var(--accent);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -396,7 +396,7 @@
 }
 
 .editPickerWrap {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 50%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 14px;
@@ -408,7 +408,7 @@
   display: flex;
   align-items: center;
   padding: 14px 18px;
-  border-bottom: 1px solid #2e2e30;
+  border-bottom: 1px solid var(--border-sep);
   cursor: pointer;
   gap: 12px;
   transition: background var(--t-fast, 100ms ease);
@@ -428,7 +428,7 @@
 }
 
 .editPickerCheck {
-  color: #FC9158;
+  color: var(--accent);
 }
 
 /* ── Plan ────────────────────────────────────────────────────────────────── */
@@ -438,7 +438,7 @@
 }
 
 .progressCard {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
@@ -513,7 +513,7 @@
 /* ── PlanNutritionCard ───────────────────────────────────────────────────── */
 
 .nutritionCard {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
@@ -653,11 +653,11 @@
 .planCalorieValue {
   font-size: 40px;
   font-weight: 800;
-  color: #FC9158;
+  color: var(--accent);
   margin-bottom: 2px;
   letter-spacing: -0.5px;
   line-height: 1.1;
-  text-shadow: 0 0 28px rgba(252, 145, 88, 0.28);
+  text-shadow: 0 0 28px rgba(var(--accent-rgb), 0.28);
 }
 
 .planCalorieLabel {
@@ -688,7 +688,7 @@
 /* ── WeekProgressCard ────────────────────────────────────────────────────── */
 
 .onTrackCard {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
@@ -744,13 +744,13 @@
 
 .onTrackDivider {
   width: 1px;
-  background: #2e2e30;
+  background: var(--border-sep);
   margin: 0 8px;
 }
 
 .onTrackBar {
   height: 6px;
-  background: #2e2e30;
+  background: var(--border-sep);
   border-radius: 3px;
   overflow: hidden;
   margin-bottom: 6px;
@@ -784,7 +784,7 @@
 }
 
 .toggleBtnOn {
-  background: #FC9158;
+  background: var(--accent);
 }
 
 .toggleBtnOff {
@@ -826,7 +826,7 @@
 
 .modalSheet {
   width: 100%;
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 40%);
   border-top: 1px solid rgba(255,255,255,0.09);
   border-radius: 24px 24px 0 0;
@@ -867,7 +867,7 @@
 }
 
 .modalInputWrap {
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 12px;
   padding: 12px 16px;
@@ -878,7 +878,7 @@
 }
 
 .modalInputWrap:focus-within {
-  border-color: rgba(252,145,88,0.4);
+  border-color: rgba(var(--accent-rgb),0.4);
 }
 
 .modalInput {
@@ -902,14 +902,14 @@
 .modalSaveBtn {
   width: 100%;
   padding: 13px 0;
-  background: #FC9158;
+  background: var(--accent);
   border: none;
   border-radius: 10px;
   color: #fff;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(252,145,88,0.26);
+  box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.26);
   transition: opacity var(--t-base, 180ms ease), transform var(--t-fast, 100ms ease);
 }
 
@@ -928,7 +928,7 @@
 .planEditSheet {
   width: 100%;
   max-width: 420px;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   border-radius: 18px;
   padding: 20px;
   max-height: 80vh;
@@ -951,7 +951,7 @@
 
 .planFormInput {
   width: 100%;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   border: none;
   border-radius: 10px;
   padding: 11px 14px;
@@ -965,7 +965,7 @@
 
 .planFormTextarea {
   width: 100%;
-  background: #2C2C2E;
+  background: var(--bg-card-2);
   border: none;
   border-radius: 10px;
   padding: 11px 14px;
@@ -987,9 +987,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #232325;
+  background: var(--bg-card);
   border: 1px solid rgba(255,255,255,0.1);
-  color: #FC9158;
+  color: var(--accent);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -999,8 +999,8 @@
 }
 
 .helpBtn:hover {
-  border-color: rgba(252,145,88,0.35);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(252,145,88,0.12);
+  border-color: rgba(var(--accent-rgb),0.35);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(var(--accent-rgb),0.12);
 }
 
 /* ── Theme editor ─────────────────────────────────────────────────────────── */
@@ -1010,7 +1010,7 @@
 }
 
 .themeSection {
-  background: #232325;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 50%);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 18px;
@@ -1023,7 +1023,7 @@
   display: flex;
   align-items: center;
   padding: 14px 18px;
-  border-bottom: 1px solid #2e2e30;
+  border-bottom: 1px solid var(--border-sep);
   gap: 14px;
   transition: background var(--t-fast, 100ms ease);
 }
@@ -1083,14 +1083,14 @@
 .themeSaveBtn {
   flex: 1;
   padding: 13px 0;
-  background: #FC9158;
+  background: var(--accent);
   border: none;
   border-radius: 10px;
   color: #fff;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(252,145,88,0.26);
+  box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.26);
   transition: opacity var(--t-base, 180ms ease), transform var(--t-fast, 100ms ease);
 }
 
@@ -1164,6 +1164,96 @@
   margin-bottom: 10px;
 }
 
+/* ── Theme Picker ─────────────────────────────────────────────────────────── */
+
+.themePickerContent {
+  padding: 0 20px;
+}
+
+.themePickerCardList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.themePickerCard {
+  background: var(--bg-card);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.025) 0%, transparent 60%);
+  border: 1.5px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  padding: 18px;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: border-color 220ms ease, box-shadow 220ms ease;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.themePickerCard:hover {
+  border-color: rgba(255,255,255,0.14);
+}
+
+.themePickerCardActive {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent), 0 2px 12px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.themePickerCardTop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.themePickerCardInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.themePickerCardName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.themePickerCardDesc {
+  font-size: 12px;
+  color: #A1A1A1;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+.themePickerCheck {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  transition: background 220ms ease, border-color 220ms ease;
+}
+
+.themePickerCheckActive {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.themePickerSwatches {
+  display: flex;
+  gap: 8px;
+}
+
+.themePickerSwatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
 /* ── Weight history sheet ─────────────────────────────────────────────────── */
 
 @keyframes whSlideUp {
@@ -1186,7 +1276,7 @@
   width: min(520px, 100%);
   max-height: 88vh;
   max-height: 88dvh;
-  background: #1e1e20;
+  background: var(--bg-card);
   background-image: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 40%);
   border-top: 1px solid rgba(255,255,255,0.09);
   border-radius: 24px 24px 0 0;
@@ -1269,9 +1359,9 @@
 }
 
 .whPeriodBtnActive {
-  background: rgba(252,145,88,0.14);
-  border-color: rgba(252,145,88,0.4);
-  color: #FC9158;
+  background: rgba(var(--accent-rgb),0.14);
+  border-color: rgba(var(--accent-rgb),0.4);
+  color: var(--accent);
 }
 
 .whChartWrap {
@@ -1312,7 +1402,7 @@
   display: flex;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid #2e2e30;
+  border-bottom: 1px solid var(--border-sep);
   gap: 8px;
 }
 
@@ -1328,7 +1418,7 @@
 .whRowWeight {
   font-size: 15px;
   font-weight: 700;
-  color: #FC9158;
+  color: var(--accent);
   min-width: 60px;
   text-align: right;
 }

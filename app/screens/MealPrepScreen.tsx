@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ const DAY_LABELS    = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"];
 const DAY_FULL      = ["Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag","Zondag"];
 const MONTH_NL      = ["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
 const PATTERN_COLORS: Record<string, string> = {
-  daily: "#FC9158", alternateA: "#2A9DB5", alternateB: "#72A82C", manual: "#A1A1A1",
+  daily: "var(--accent)", alternateA: "#2A9DB5", alternateB: "#72A82C", manual: "#A1A1A1",
 };
 
 function daysBetween(a: string, b: string): number {
@@ -114,7 +114,7 @@ export default function MealPrepScreen() {
   return (
     <div className={styles.screen}>
 
-      {/* ─── Header ─────────────────────────────────────────────── */}
+      {/* â”€â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className={styles.header}>
         <span className={styles.headerTitle}>Meal Prep</span>
         <button className={styles.addBtn} onClick={() => setSetupOpen(true)} aria-label="Nieuw plan">
@@ -126,7 +126,7 @@ export default function MealPrepScreen() {
         const wi = weekInfo(plan);
         return (
           <>
-            {/* ─── Progress strip ──────────────────────────────── */}
+            {/* â”€â”€â”€ Progress strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className={styles.progressStrip}>
               <span className={styles.progressLabel}>Week {wi.current}/{wi.total}</span>
               <div className={styles.progressTrack}>
@@ -139,7 +139,7 @@ export default function MealPrepScreen() {
               )}
             </div>
 
-            {/* ─── Today card ──────────────────────────────────── */}
+            {/* â”€â”€â”€ Today card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className={styles.todayCard}>
               <div className={styles.todayMeta}>
                 <span className={styles.todayTag}>Vandaag</span>
@@ -155,7 +155,7 @@ export default function MealPrepScreen() {
                     <span className={styles.todayRecipeName}>{todayMeal.recipeTitle}</span>
                     {todayMeal.kcal > 0 && (
                       <span className={styles.todayRecipeMacros}>
-                        {todayMeal.kcal} kcal{todayMeal.protein > 0 ? ` · ${todayMeal.protein}g eiwit` : ""}
+                        {todayMeal.kcal} kcal{todayMeal.protein > 0 ? ` Â· ${todayMeal.protein}g eiwit` : ""}
                       </span>
                     )}
                   </div>
@@ -168,7 +168,7 @@ export default function MealPrepScreen() {
               )}
             </div>
 
-            {/* ─── Week strip ──────────────────────────────────── */}
+            {/* â”€â”€â”€ Week strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className={styles.weekSection}>
               <span className={styles.weekTitle}>Deze week</span>
               <div className={styles.weekStrip}>
@@ -192,7 +192,7 @@ export default function MealPrepScreen() {
                         className={styles.weekBtnDot}
                         style={{
                           background: hasMeal
-                            ? (PATTERN_COLORS[slot.meal!.pattern] ?? "#FC9158")
+                            ? (PATTERN_COLORS[slot.meal!.pattern] ?? "var(--accent)")
                             : "rgba(255,255,255,0.07)",
                         }}
                       />
@@ -202,19 +202,19 @@ export default function MealPrepScreen() {
               </div>
             </div>
 
-            {/* ─── Cook day info ───────────────────────────────── */}
+            {/* â”€â”€â”€ Cook day info â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <div className={styles.cookInfo}>
               <span className={styles.cookInfoText}>
                 Kookdag: <strong>{cookDayLabel(plan.cookDay)}</strong>
               </span>
             </div>
 
-            {/* ─── Plan actions ────────────────────────────────── */}
+            {/* â”€â”€â”€ Plan actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {!confirmDelete ? (
               <div className={styles.actionsRow}>
                 <button className={styles.completeBtn} onClick={doComplete} disabled={completing}>
                   <IoCheckmarkCircle size={15} />
-                  {completing ? "Bezig…" : "Voltooien"}
+                  {completing ? "Bezigâ€¦" : "Voltooien"}
                 </button>
                 <button className={styles.deleteBtn} onClick={() => setConfirmDelete(true)} disabled={deleting}>
                   <IoTrashOutline size={15} />
@@ -226,7 +226,7 @@ export default function MealPrepScreen() {
                 <p className={styles.confirmQ}>Plan verwijderen?</p>
                 <div className={styles.confirmBtns}>
                   <button className={styles.confirmYes} onClick={doDelete} disabled={deleting}>
-                    {deleting ? "Bezig…" : "Ja, verwijder"}
+                    {deleting ? "Bezigâ€¦" : "Ja, verwijder"}
                   </button>
                   <button className={styles.confirmNo} onClick={() => setConfirmDelete(false)}>
                     Annuleer
@@ -250,7 +250,7 @@ export default function MealPrepScreen() {
       ) : (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>
-            <IoRestaurantOutline size={36} color="#FC9158" />
+            <IoRestaurantOutline size={36} style={{ color: "var(--accent)" }} />
           </div>
           <span className={styles.emptyTitle}>Nog geen plan</span>
           <span className={styles.emptySub}>Stel een meal prep plan in en weet elke dag precies wat je eet.</span>
