@@ -24,6 +24,9 @@ import {
   IoTrendingUpOutline,
   IoFlagOutline,
   IoBodyOutline,
+  IoKeyOutline,
+  IoCopyOutline,
+  IoShieldCheckmarkOutline,
 } from "react-icons/io5";
 import { useTheme } from "../context/ThemeContext";
 
@@ -940,6 +943,10 @@ export default function ProfileScreen() {
   // Weight history sheet
   const [weightHistoryOpen, setWeightHistoryOpen] = useState(false);
 
+  // Recovery code display
+  const [recoveryCodeVisible, setRecoveryCodeVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
+
   // Help overlay
   const [helpOpen, setHelpOpen] = useState(false);
 
@@ -1038,6 +1045,13 @@ export default function ProfileScreen() {
 
   const openPlanEdit = () => {
     router.push("/onboarding?mode=edit");
+  };
+
+  const handleCopyRecoveryCode = () => {
+    if (!profileData.recoveryCode) return;
+    navigator.clipboard.writeText(profileData.recoveryCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   // ── Account field definitions ──────────────────────────────────────────────
@@ -1208,6 +1222,17 @@ export default function ProfileScreen() {
               </button>
             </div>
 
+            {authUser?.email === "bilal0@mealprep.local" && (
+              <div className={styles.settingsRow} onClick={() => router.push("/admin")}>
+                <span className={styles.settingsRowIcon}><IoShieldCheckmarkOutline size={20} color="#FC9158" /></span>
+                <div className={styles.settingsRowText}>
+                  <span className={styles.settingsRowLabel}>Admin dashboard</span>
+                  <span className={styles.settingsRowSub}>Gebruikers, oefeningen en recepten beheren</span>
+                </div>
+                <span className={styles.settingsRowArrow}><IoChevronForward size={18} /></span>
+              </div>
+            )}
+
             <div className={styles.settingsRow} onClick={handleLogout}>
               <span className={styles.settingsRowIcon}><IoLogOutOutline size={20} /></span>
               <div className={styles.settingsRowText}>
@@ -1301,6 +1326,27 @@ export default function ProfileScreen() {
                     <span className={styles.accountRowArrow}><IoChevronForward size={16} /></span>
                   </div>
                 ))}
+                {profileData.recoveryCode && (
+                  <div className={`${styles.accountRow} ${styles.recoveryCodeRow}`}>
+                    <span className={styles.accountRowLabel} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <IoKeyOutline size={15} color="var(--text-muted)" />
+                      Herstelcode
+                    </span>
+                    <span className={`${styles.accountRowValue} ${styles.recoveryCodeValue} ${recoveryCodeVisible ? styles.recoveryCodeValueVisible : ""}`}>
+                      {recoveryCodeVisible ? profileData.recoveryCode : "PEAK-••••-••••"}
+                    </span>
+                    <div className={styles.recoveryCodeActions}>
+                      <button className={styles.recoveryCodeBtn} onClick={() => setRecoveryCodeVisible(v => !v)} type="button">
+                        {recoveryCodeVisible ? <IoEyeOffOutline size={17} /> : <IoEyeOutline size={17} />}
+                      </button>
+                      {recoveryCodeVisible && (
+                        <button className={styles.recoveryCodeBtn} onClick={handleCopyRecoveryCode} type="button">
+                          {copied ? <IoCheckmark size={17} color="var(--accent)" /> : <IoCopyOutline size={17} />}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

@@ -1,4 +1,4 @@
-/* ── Layout ──────────────────────────────────────────────────────────────── */
+/* ── Layout ───────────────────────────────────────────────────────────────── */
 
 .page {
   min-height: 100vh;
@@ -9,46 +9,73 @@
   flex-direction: column;
 }
 
-.progressBarTrack {
-  width: 100%;
-  height: 4px;
-  background: var(--border-sep);
-  flex-shrink: 0;
-}
-
-.progressBarFill {
-  height: 4px;
-  background: var(--accent);
-  transition: width 300ms ease;
-}
-
 .content {
   flex: 1;
-  padding: 32px 24px 40px;
+  padding: 28px 24px 40px;
   overflow-y: auto;
   scrollbar-width: none;
 }
 
 .content::-webkit-scrollbar { display: none; }
 
-.stepLabel {
-  font-size: 13px;
-  color: #A1A1A1;
-  font-weight: 600;
-  margin-bottom: 8px;
+/* ── Step progress dots ───────────────────────────────────────────────────── */
+
+.stepDots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 28px;
 }
 
+.stepDot {
+  height: 6px;
+  width: 6px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.15);
+  transition: width 220ms ease, background 220ms ease;
+  flex-shrink: 0;
+}
+
+.stepDotActive {
+  width: 20px;
+  background: var(--accent);
+}
+
+.stepDotDone {
+  background: rgba(var(--accent-rgb), 0.45);
+}
+
+/* ── Step header ──────────────────────────────────────────────────────────── */
+
+.backBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 4px 0;
+  transition: color 150ms ease;
+}
+
+.backBtn:hover { color: #fff; }
+
 .stepTitle {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 800;
   color: #fff;
   margin-bottom: 6px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
 }
 
 .stepSubtitle {
-  font-size: 15px;
-  color: #A1A1A1;
+  font-size: 14px;
+  color: #888;
   margin-bottom: 28px;
   line-height: 1.5;
 }
@@ -56,37 +83,50 @@
 /* ── Form elements ────────────────────────────────────────────────────────── */
 
 .formGroup {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .label {
   display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: #A1A1A1;
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
   margin-bottom: 8px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
 .input {
   width: 100%;
   background: var(--bg-card);
-  border: none;
+  border: 1.5px solid transparent;
   border-radius: 14px;
   padding: 16px 18px;
   color: #fff;
   font-size: 15px;
   outline: none;
   box-sizing: border-box;
+  transition: border-color 150ms ease;
 }
 
-.input::placeholder { color: var(--text-muted); }
+.input:focus {
+  border-color: rgba(var(--accent-rgb), 0.5);
+}
+
+.input::placeholder { color: #555; }
 
 .inputWithUnit {
   display: flex;
   align-items: center;
   background: var(--bg-card);
+  border: 1.5px solid transparent;
   border-radius: 14px;
   padding: 0 18px;
+  transition: border-color 150ms ease;
+}
+
+.inputWithUnit:focus-within {
+  border-color: rgba(var(--accent-rgb), 0.5);
 }
 
 .inputWithUnit input {
@@ -99,15 +139,15 @@
   padding: 16px 0;
 }
 
-.inputWithUnit input::placeholder { color: var(--text-muted); }
+.inputWithUnit input::placeholder { color: #555; }
 
 .inputUnit {
   font-size: 13px;
-  color: #A1A1A1;
+  color: #555;
   flex-shrink: 0;
 }
 
-/* ── Picker rows ─────────────────────────────────────────────────────────── */
+/* ── Picker card ──────────────────────────────────────────────────────────── */
 
 .pickerCard {
   background: var(--bg-card);
@@ -119,8 +159,8 @@
 .pickerRow {
   display: flex;
   align-items: center;
-  padding: 16px 18px;
-  border-bottom: 1px solid var(--border-sep);
+  padding: 15px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   cursor: pointer;
   gap: 14px;
   transition: background 150ms ease;
@@ -128,17 +168,27 @@
 
 .pickerRow:last-child { border-bottom: none; }
 
-.pickerRow:active { background: #2a2a2c; }
+.pickerRow:hover { background: rgba(255,255,255,0.04); }
+
+.pickerRowSelected {
+  background: rgba(var(--accent-rgb), 0.08) !important;
+}
+
+.pickerRowSelected .pickerRowLabel {
+  color: var(--accent);
+}
 
 .pickerRowLabel {
   flex: 1;
   font-size: 15px;
   color: #fff;
+  font-weight: 500;
+  transition: color 150ms ease;
 }
 
 .pickerRowSub {
   font-size: 13px;
-  color: #A1A1A1;
+  color: #666;
   margin-top: 2px;
 }
 
@@ -149,114 +199,7 @@
   flex-shrink: 0;
 }
 
-/* ── Slider ──────────────────────────────────────────────────────────────── */
-
-.sliderWrap {
-  margin-bottom: 16px;
-}
-
-.sliderTrackWrap {
-  position: relative;
-  padding: 8px 0;
-}
-
-.slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 4px;
-  background: var(--bg-card-2);
-  border-radius: 99px;
-  outline: none;
-  cursor: pointer;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 50%, transparent);
-}
-
-.slider::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 50%, transparent);
-}
-
-.sliderValueRow {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-}
-
-.sliderMin, .sliderMax {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.sliderValue {
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 4px;
-}
-
-.sliderValueLabel {
-  font-size: 13px;
-  color: #A1A1A1;
-}
-
-/* ── Stepper ─────────────────────────────────────────────────────────────── */
-
-.stepper {
-  display: flex;
-  align-items: center;
-  background: var(--bg-card);
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-.stepperBtn {
-  width: 52px;
-  height: 52px;
-  background: none;
-  border: none;
-  color: var(--accent);
-  font-size: 22px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.stepperBtn:disabled { color: var(--text-dim); cursor: not-allowed; }
-
-.stepperValue {
-  flex: 1;
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.stepperLabel {
-  font-size: 13px;
-  color: #A1A1A1;
-  text-align: center;
-  margin-top: 8px;
-}
-
-/* ── Unit toggle ─────────────────────────────────────────────────────────── */
+/* ── Unit toggle ──────────────────────────────────────────────────────────── */
 
 .unitToggle {
   display: flex;
@@ -274,7 +217,7 @@
   border-radius: 9px;
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-muted);
+  color: #666;
   cursor: pointer;
   transition: background 150ms ease, color 150ms ease;
 }
@@ -284,11 +227,144 @@
   color: #fff;
 }
 
-/* ── Live preview (step 6) ───────────────────────────────────────────────── */
+/* ── Sleep chips ──────────────────────────────────────────────────────────── */
+
+.chipGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.chip {
+  flex: 1;
+  padding: 14px 4px;
+  background: var(--bg-card);
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  color: #666;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.chip:hover { background: var(--bg-card-2); color: #aaa; }
+
+.chipActive {
+  background: rgba(var(--accent-rgb), 0.1);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Stepper ──────────────────────────────────────────────────────────────── */
+
+.stepper {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.stepperBtn {
+  width: 56px;
+  height: 54px;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 150ms ease;
+}
+
+.stepperBtn:hover:not(:disabled) { background: rgba(var(--accent-rgb), 0.08); }
+.stepperBtn:disabled { color: #444; cursor: not-allowed; }
+
+.stepperValue {
+  flex: 1;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stepperLabel {
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ── Slider ───────────────────────────────────────────────────────────────── */
+
+.sliderWrap {
+  margin-bottom: 8px;
+}
+
+.sliderTrackWrap {
+  position: relative;
+  padding: 8px 0;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 99px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(var(--accent-rgb), 0.45);
+}
+
+.slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 10px rgba(var(--accent-rgb), 0.45);
+}
+
+.sliderValueRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.sliderMin, .sliderMax {
+  font-size: 12px;
+  color: #555;
+}
+
+.sliderValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+/* ── Live card (step 5) ───────────────────────────────────────────────────── */
 
 .liveCard {
   background: var(--bg-card);
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 18px;
   margin-bottom: 16px;
 }
@@ -297,57 +373,122 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-.liveRow:last-child { margin-bottom: 0; }
+.liveRow:last-child { border-bottom: none; }
 
 .liveLabel {
   font-size: 13px;
-  color: #A1A1A1;
+  color: #666;
 }
 
 .liveValue {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   color: #fff;
 }
 
 .liveValueAccent {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--accent);
 }
 
+/* ── Warning ──────────────────────────────────────────────────────────────── */
+
 .warning {
   font-size: 13px;
   color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  background: rgba(var(--accent-rgb), 0.08);
+  border-left: 3px solid var(--accent);
   border-radius: 10px;
-  padding: 10px 14px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* ── Milestone cards (step 5) ────────────────────────────────────────────── */
+
+.milestoneRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.milestoneCard {
+  flex: 1;
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 14px 8px;
+  text-align: center;
+}
+
+.milestoneCardEnd {
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+}
+
+.milestoneCardEnd .milestoneWeight {
+  color: var(--accent);
+}
+
+.milestoneLabel {
+  font-size: 10px;
+  color: #555;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+
+.milestoneWeight {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 3px;
+}
+
+.milestoneDate {
+  font-size: 11px;
+  color: #555;
+}
+
+/* ── Goal info card ───────────────────────────────────────────────────────── */
+
+.goalInfoCard {
+  background: rgba(var(--accent-rgb), 0.06);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #aaa;
+  line-height: 1.6;
   margin-bottom: 16px;
 }
 
-/* ── Result step (step 7) ────────────────────────────────────────────────── */
+/* ── Result step (step 6) ────────────────────────────────────────────────── */
 
 .sourceCard {
   background: var(--bg-card);
   border-left: 3px solid var(--accent);
   border-radius: 14px;
-  padding: 16px 18px;
+  padding: 14px 18px;
   margin-bottom: 24px;
 }
 
 .sourceTitle {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
   margin-bottom: 10px;
 }
 
 .sourceItem {
   font-size: 12px;
-  color: #A1A1A1;
+  color: #666;
   margin-bottom: 5px;
   line-height: 1.5;
 }
@@ -355,163 +496,189 @@
 .sourceItem:last-child { margin-bottom: 0; }
 
 .resultKcal {
-  font-size: 52px;
+  font-size: 64px;
   font-weight: 800;
   color: var(--accent);
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  letter-spacing: -2px;
 }
 
 .resultKcalLabel {
-  font-size: 13px;
-  color: #A1A1A1;
-  margin-bottom: 24px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 28px;
 }
 
 .macroRow {
   display: flex;
-  gap: 12px;
-  margin-bottom: 28px;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .macroCard {
   flex: 1;
-  background: var(--bg-card);
-  border-radius: 14px;
-  padding: 14px 10px;
+  border-radius: 16px;
+  padding: 16px 10px;
   text-align: center;
 }
 
+.macroCardProtein {
+  background: rgba(193, 50, 50, 0.1);
+  border: 1px solid rgba(193, 50, 50, 0.2);
+}
+
+.macroCardCarbs {
+  background: rgba(42, 157, 181, 0.1);
+  border: 1px solid rgba(42, 157, 181, 0.2);
+}
+
+.macroCardFat {
+  background: rgba(194, 138, 0, 0.1);
+  border: 1px solid rgba(194, 138, 0, 0.2);
+}
+
 .macroCardValue {
-  font-size: 22px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 2px;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 4px;
 }
 
 .macroCardLabel {
-  font-size: 12px;
-  color: #A1A1A1;
+  font-size: 11px;
+  color: #777;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
-.macroProtein { color: #C13232; }
-.macroFat     { color: #C28A00; }
-.macroCarbs   { color: #2A9DB5; }
+.macroProtein { color: #E05555; }
+.macroCarbs   { color: #3BB5CC; }
+.macroFat     { color: #D4A017; }
 
-/* ── Footer / button area ────────────────────────────────────────────────── */
+.tdeeNote {
+  font-size: 13px;
+  color: #555;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+/* ── Recovery code section ────────────────────────────────────────────────── */
+
+.recoverySection {
+  background: var(--bg-card);
+  border: 1.5px solid rgba(var(--accent-rgb), 0.22);
+  border-radius: 16px;
+  padding: 22px 20px 16px;
+  margin-bottom: 28px;
+}
+
+.recoverySectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+}
+
+.recoverySectionSub {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.recoveryWarning {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.recoveryCodeBox {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-align: center;
+  padding: 16px 12px;
+  background: rgba(var(--accent-rgb), 0.07);
+  border: 1.5px dashed rgba(var(--accent-rgb), 0.35);
+  border-radius: 12px;
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  margin-bottom: 10px;
+  user-select: all;
+}
+
+.recoveryCopyBtn {
+  width: 100%;
+  padding: 10px 0;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: #666;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.recoveryCopyBtn:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
+
+/* ── Field error ──────────────────────────────────────────────────────────── */
+
+.fieldError {
+  font-size: 12px;
+  color: #E05555;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.errorText {
+  font-size: 13px;
+  color: #E05555;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
 
 .footer {
-  padding: 16px 24px 32px;
-  background: var(--bg-page);
+  padding: 12px 24px 36px;
+  background: linear-gradient(to bottom, transparent 0%, var(--bg-page) 28%);
   flex-shrink: 0;
 }
 
 .primaryBtn {
   width: 100%;
-  padding: 13px 0;
+  padding: 15px 0;
   background: var(--accent);
   border: none;
-  border-radius: 10px;
+  border-radius: 14px;
   color: #fff;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
   cursor: pointer;
+  letter-spacing: -0.2px;
+  box-shadow: 0 4px 20px rgba(var(--accent-rgb), 0.3);
+  transition: opacity 150ms ease, transform 100ms ease;
 }
+
+.primaryBtn:hover:not(:disabled) { opacity: 0.92; }
+.primaryBtn:active:not(:disabled) { transform: scale(0.98); }
 
 .primaryBtn:disabled {
-  opacity: 0.5;
+  opacity: 0.35;
   cursor: not-allowed;
-}
-
-.backBtn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 16px;
-  padding: 4px 0;
-  border-radius: 8px;
-  transition: opacity 100ms ease;
-}
-
-.backBtn:hover { opacity: 0.7; }
-
-.errorText {
-  font-size: 13px;
-  color: #C13232;
-  margin-bottom: 12px;
-  text-align: center;
-}
-
-.tdeeNote {
-  font-size: 13px;
-  color: #A1A1A1;
-  text-align: center;
-  margin-bottom: 8px;
-}
-
-/* ── Goal info card ──────────────────────────────────────────────────────── */
-
-.goalInfoCard {
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-  border-radius: 14px;
-  padding: 14px 16px;
-  font-size: 13px;
-  color: #ccc;
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-
-/* ── Field error ─────────────────────────────────────────────────────────── */
-
-.fieldError {
-  font-size: 12px;
-  color: #C13232;
-  margin-top: 6px;
-}
-
-/* ── Week preview table ──────────────────────────────────────────────────── */
-
-.weekPreviewWrap {
-  max-height: 200px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  background: var(--bg-card);
-  border-radius: 14px;
-  margin-top: 16px;
-}
-
-.weekPreviewWrap::-webkit-scrollbar { display: none; }
-
-.weekPreviewTable {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.weekPreviewTable th {
-  position: sticky;
-  top: 0;
-  background: var(--border-sep);
-  color: #A1A1A1;
-  font-weight: 600;
-  padding: 9px 14px;
-  text-align: left;
-}
-
-.weekPreviewTable td {
-  padding: 9px 14px;
-  color: #ccc;
-  border-top: 1px solid var(--border-sep);
-}
-
-.weekPreviewTable tr.weekPreviewEnd td {
-  color: var(--accent);
-  font-weight: 700;
+  box-shadow: none;
 }

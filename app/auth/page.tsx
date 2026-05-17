@@ -8,9 +8,10 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../firebase/config";
-import { checkOnboardingComplete, saveRegistrationProfile } from "../firebase/profileService";
-import { saveToUserRegistry } from "../firebase/adminService";
+import { checkOnboardingComplete, saveRegistrationProfile, updateProfile } from "../firebase/profileService";
+import { saveToUserRegistry, ensureInUserRegistry } from "../firebase/adminService";
 import { IoPersonOutline, IoWarningOutline } from "react-icons/io5";
+import { generateRecoveryCode, saveRecoveryData } from "../firebase/recoveryService";
 import styles from "./auth.module.css";
 
 const PIN_LENGTH = 4;
@@ -83,15 +84,16 @@ function validateUsername(u: string): string | null {
 
 export default function AuthPage() {
   const router = useRouter();
+  const [isSignUp, setIsSignUp] = useState(false);
   const [username, setUsername] = useState("");
   const [pin, setPin] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const skipRedirect = useRef(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
+      if (user && !skipRedirect.current) {
         const done = await checkOnboardingComplete(user.uid);
         router.replace(done ? "/" : "/onboarding");
       }
@@ -108,19 +110,26 @@ export default function AuthPage() {
     const password = toFirebasePassword(currentPin);
 
     setLoading(true);
+    if (isSignUp) skipRedirect.current = true;
     try {
       if (isSignUp) {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
         const cleanUsername = username.toLowerCase().trim();
         await saveRegistrationProfile(cred.user.uid, cleanUsername, currentPin);
         await saveToUserRegistry(cred.user.uid, { username: cleanUsername, createdAt: Date.now() });
+        const code = generateRecoveryCode();
+        await saveRecoveryData(cred.user.uid, cleanUsername, currentPin, code);
+        await updateProfile(cred.user.uid, { recoveryCode: code });
+        sessionStorage.setItem("pendingRecoveryCode", code);
         router.replace("/onboarding");
       } else {
         const cred = await signInWithEmailAndPassword(auth, email, password);
+        await ensureInUserRegistry(cred.user.uid, username.toLowerCase().trim());
         const done = await checkOnboardingComplete(cred.user.uid);
         router.replace(done ? "/" : "/onboarding");
       }
     } catch (err: unknown) {
+      skipRedirect.current = false;
       const msg = err instanceof Error ? err.message : "";
       if (msg.includes("email-already-in-use")) setError("Gebruikersnaam is al bezet.");
       else if (msg.includes("wrong-password") || msg.includes("invalid-credential")) setError("Onjuiste PIN.");
@@ -151,7 +160,6 @@ export default function AuthPage() {
     <div className={styles.page}>
       <div className={styles.card}>
 
-        {/* Logo */}
         <div className={styles.logoWrap}>
           <div className={styles.logoIcon}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -161,7 +169,6 @@ export default function AuthPage() {
           <div className={styles.logoName}>Peak</div>
         </div>
 
-        {/* Heading */}
         <h1 className={styles.title}>
           {isSignUp ? "Account aanmaken" : "Inloggen"}
         </h1>
@@ -170,7 +177,6 @@ export default function AuthPage() {
         </p>
 
         <form onSubmit={handleSubmit}>
-          {/* Username */}
           <div className={styles.formGroup}>
             <label className={styles.label}>Gebruikersnaam</label>
             <div className={styles.inputWrap}>
@@ -190,15 +196,24 @@ export default function AuthPage() {
             </div>
           </div>
 
-          {/* PIN */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>PIN-code</label>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+              <label className={styles.label} style={{ marginBottom: 0 }}>PIN-code</label>
+              {!isSignUp && (
+                <button
+                  type="button"
+                  className={styles.forgotLink}
+                  onClick={() => router.push("/auth/recover")}
+                >
+                  Vergeten?
+                </button>
+              )}
+            </div>
             <div className={styles.pinWrap}>
               <PinInput value={pin} onChange={handlePinChange} />
             </div>
           </div>
 
-          {/* Error */}
           {error && (
             <div className={styles.errorBox}>
               <IoWarningOutline size={15} color="#ff6b6b" />

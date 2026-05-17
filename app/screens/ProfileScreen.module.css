@@ -424,6 +424,40 @@
 
 /* â”€â”€ Edit field â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
+.recoveryCodeRow {
+  cursor: default;
+}
+.recoveryCodeRow:hover { background: transparent !important; }
+.recoveryCodeRow:active { background: transparent !important; }
+
+.recoveryCodeValue {
+  font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+.recoveryCodeValueVisible {
+  color: var(--accent);
+}
+
+.recoveryCodeActions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.recoveryCodeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px 5px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+.recoveryCodeBtn:hover { color: #fff; }
+
 .editContent {
   padding: 8px 20px 0;
 }

@@ -1,6 +1,6 @@
 import {
   collection, doc, getDocs, deleteDoc, addDoc, updateDoc,
-  setDoc, serverTimestamp, onSnapshot, query, orderBy,
+  setDoc, getDoc, serverTimestamp, onSnapshot, query, orderBy, where,
   writeBatch,
 } from "firebase/firestore";
 import { db } from "./config";
@@ -20,6 +20,19 @@ export const saveToUserRegistry = async (uid: string, data: Omit<UserRegistryEnt
   await setDoc(doc(db, "userRegistry", uid), { ...data, uid }, { merge: true });
 };
 
+// Only writes if the entry doesn't exist yet — safe to call on every login
+export const ensureInUserRegistry = async (uid: string, username: string) => {
+  const ref = doc(db, "userRegistry", uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) {
+    await setDoc(ref, { uid, username, createdAt: Date.now() });
+  }
+};
+
+export const setUserAdminRole = async (uid: string, isAdmin: boolean) => {
+  await setDoc(doc(db, "userRegistry", uid), { isAdmin }, { merge: true });
+};
+
 export const subscribeToUserRegistry = (callback: (users: UserRegistryEntry[]) => void) => {
   return onSnapshot(
     query(collection(db, "userRegistry"), orderBy("createdAt", "desc")),
@@ -29,7 +42,6 @@ export const subscribeToUserRegistry = (callback: (users: UserRegistryEntry[]) =
 };
 
 export const deleteUserFirestoreData = async (uid: string) => {
-  // Deletes all known subcollections under users/{uid}
   const subcols = ["dailyLogs", "recipes", "gymSessions", "gymTemplates", "settings"];
   const batch = writeBatch(db);
 
@@ -41,6 +53,18 @@ export const deleteUserFirestoreData = async (uid: string) => {
 
   batch.delete(doc(db, "userRegistry", uid));
   await batch.commit();
+
+  // Clean up recovery codes separately so a missing index can't block deletion
+  try {
+    const recoverySnap = await getDocs(query(collection(db, "recovery"), where("uid", "==", uid)));
+    if (!recoverySnap.empty) {
+      const rb = writeBatch(db);
+      recoverySnap.docs.forEach((d) => rb.delete(d.ref));
+      await rb.commit();
+    }
+  } catch {
+    // Recovery cleanup is best-effort; main deletion already succeeded
+  }
 };
 
 // ─── Global Exercises ─────────────────────────────────────────────────────────

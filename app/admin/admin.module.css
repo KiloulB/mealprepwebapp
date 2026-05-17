@@ -117,6 +117,26 @@
   white-space: nowrap;
 }
 
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid #2e2e30;
+  border-radius: 8px;
+  color: #A1A1A1;
+  font-size: 13px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease;
+  width: 100%;
+}
+
+.backBtn:hover {
+  border-color: #FC9158;
+  color: #FC9158;
+}
+
 .logoutBtn {
   display: flex;
   align-items: center;
@@ -299,6 +319,76 @@
 .listRowLeft {
   flex: 1;
   min-width: 0;
+}
+
+.userRowAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(252, 145, 88, 0.15);
+  color: #FC9158;
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
+.userRowDate {
+  font-size: 12px;
+  color: #A1A1A1;
+  flex-shrink: 0;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.adminRowBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #2e2e30;
+  background: none;
+  color: #A1A1A1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.adminRowBtn:hover {
+  border-color: #FC9158;
+  color: #FC9158;
+}
+
+.adminRowBtnActive {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(252, 145, 88, 0.5);
+  background: rgba(252, 145, 88, 0.12);
+  color: #FC9158;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.adminRowBtnActive:hover {
+  background: rgba(252, 145, 88, 0.2);
+}
+
+.selfBadge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: rgba(252, 145, 88, 0.12);
+  color: #FC9158;
+  flex-shrink: 0;
 }
 
 .rowActions {
@@ -530,6 +620,18 @@
   line-height: 1.5;
 }
 
+.confirmError {
+  font-size: 12px;
+  color: #C13232;
+  background: rgba(193, 50, 50, 0.1);
+  border: 1px solid rgba(193, 50, 50, 0.25);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0 0 14px;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
 .confirmActions {
   display: flex;
   gap: 10px;
@@ -651,9 +753,82 @@
 
 /* â”€â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
+.mobileNav {
+  display: none;
+}
+
 @media (max-width: 640px) {
+  .page {
+    flex-direction: column;
+  }
+
   .sidebar {
     display: none;
+  }
+
+  .mobileNav {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: #18181A;
+    border-bottom: 1px solid #2e2e30;
+    padding: 0 8px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .mobileNav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobileNavBack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border: none;
+    background: none;
+    color: #A1A1A1;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 20px;
+    border-bottom: 2px solid transparent;
+  }
+
+  .mobileNavBack:hover {
+    color: #FC9158;
+  }
+
+  .mobileNavItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 14px;
+    border: none;
+    background: none;
+    color: #A1A1A1;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 150ms ease, border-color 150ms ease;
+    flex-shrink: 0;
+  }
+
+  .mobileNavItem[data-active="true"] {
+    color: #FC9158;
+    border-bottom-color: #FC9158;
+  }
+
+  .mobileNavIcon {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
   }
 
   .main {

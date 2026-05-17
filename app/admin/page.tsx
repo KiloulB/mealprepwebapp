@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { onAuthStateChanged, User, signOut } from "firebase/auth";
 import { auth } from "../firebase/config";
 import styles from "./admin.module.css";
@@ -17,6 +18,9 @@ import {
   IoClose,
   IoLogOutOutline,
   IoDownloadOutline,
+  IoShieldOutline,
+  IoShieldCheckmarkOutline,
+  IoArrowBackOutline,
 } from "react-icons/io5";
 
 import {
@@ -31,6 +35,7 @@ import {
   deleteGlobalRecipe,
   deleteUserFirestoreData,
   seedBuiltinRecipes,
+  setUserAdminRole,
   type UserRegistryEntry,
   type GlobalExercise,
   type GlobalRecipe,
@@ -38,8 +43,7 @@ import {
 
 import { builtinRecipes } from "../data/builtinRecipes";
 
-// Optional: set NEXT_PUBLIC_ADMIN_UID in .env.local to restrict access
-const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID ?? "";
+const ADMIN_EMAIL = "bilal0@mealprep.local";
 
 type Tab = "overview" | "users" | "exercises" | "recipes";
 
@@ -78,6 +82,7 @@ const EMPTY_REC_FORM: RecipeForm = {
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function AdminPage() {
+  const router = useRouter();
   const [authUser, setAuthUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [tab, setTab] = useState<Tab>("overview");
@@ -109,6 +114,8 @@ export default function AdminPage() {
     name: string;
   } | null>(null);
   const [deleteBusy, setDeleteBusy] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const [roleToggleBusy, setRoleToggleBusy] = useState<string | null>(null);
 
   // Seed state
   const [seeding, setSeeding] = useState(false);
@@ -232,14 +239,27 @@ export default function AdminPage() {
 
   // â”€â”€ Delete â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
+  const handleToggleAdmin = async (u: UserRegistryEntry) => {
+    if (roleToggleBusy) return;
+    setRoleToggleBusy(u.uid);
+    try {
+      await setUserAdminRole(u.uid, !u.isAdmin);
+    } finally {
+      setRoleToggleBusy(null);
+    }
+  };
+
   const handleConfirmDelete = async () => {
     if (!confirmDelete || deleteBusy) return;
     setDeleteBusy(true);
+    setDeleteError("");
     try {
       if (confirmDelete.type === "exercise") await deleteGlobalExercise(confirmDelete.id);
       if (confirmDelete.type === "recipe") await deleteGlobalRecipe(confirmDelete.id);
       if (confirmDelete.type === "user") await deleteUserFirestoreData(confirmDelete.id);
       setConfirmDelete(null);
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Verwijderen mislukt.");
     } finally {
       setDeleteBusy(false);
     }
@@ -295,7 +315,7 @@ export default function AdminPage() {
     );
   }
 
-  if (ADMIN_UID && authUser.uid !== ADMIN_UID) {
+  if (authUser.email !== ADMIN_EMAIL) {
     return <div className={styles.denied}>Geen toegang tot het admin dashboard.</div>;
   }
 
@@ -336,13 +356,34 @@ export default function AdminPage() {
               {authUser.email?.replace("@mealprep.local", "") ?? authUser.uid}
             </span>
           </div>
+          <button className={styles.backBtn} onClick={() => router.push("/")}>
+            <IoArrowBackOutline size={15} /> Terug naar app
+          </button>
           <button className={styles.logoutBtn} onClick={() => signOut(auth)}>
             <IoLogOutOutline size={15} /> Uitloggen
           </button>
         </div>
       </aside>
 
-      {/* â”€â”€ Main â”€â”€ */}
+      {/* Mobile top nav */}
+      <div className={styles.mobileNav}>
+        <button className={styles.mobileNavBack} onClick={() => router.push("/")}>
+          <IoArrowBackOutline size={20} />
+        </button>
+        {navItems.map(({ key, icon, label }) => (
+          <button
+            key={key}
+            className={styles.mobileNavItem}
+            data-active={tab === key}
+            onClick={() => setTab(key)}
+          >
+            <span className={styles.mobileNavIcon}>{icon}</span>
+            <span>{label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Main */}
       <main className={styles.main}>
 
         {/* OVERVIEW */}
@@ -404,26 +445,50 @@ export default function AdminPage() {
               )}
               {filteredUsers.map((u) => (
                 <div key={u.uid} className={styles.listRow}>
+                  <div className={styles.userRowAvatar}>
+                    {(u.username?.[0] ?? "?").toUpperCase()}
+                  </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div className={styles.listRowName}>
                       {u.username || "–"}
                       {u.isAdmin && <span className={styles.badge} style={{ marginLeft: 8 }}>admin</span>}
                     </div>
-                    <div className={styles.listRowMeta}>{u.uid}</div>
-                    <div className={styles.listRowMeta}>
-                      Aangemeld: {u.createdAt ? new Date(u.createdAt).toLocaleDateString("nl-NL") : "onbekend"}
+                    <div className={styles.listRowMeta} title={u.uid}>
+                      {u.uid.slice(0, 16)}…
                     </div>
                   </div>
+                  <div className={styles.userRowDate}>
+                    {u.createdAt
+                      ? new Date(u.createdAt).toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" })
+                      : "–"}
+                  </div>
                   <div className={styles.rowActions}>
-                    <button
-                      className={styles.deleteRowBtn}
-                      onClick={() =>
-                        setConfirmDelete({ type: "user", id: u.uid, name: u.username || u.uid })
-                      }
-                      aria-label="Verwijder gebruikersdata"
-                    >
-                      <IoTrashOutline size={15} />
-                    </button>
+                    {u.uid === authUser.uid ? (
+                      <span className={styles.selfBadge}>jij</span>
+                    ) : (
+                      <>
+                        <button
+                          className={u.isAdmin ? styles.adminRowBtnActive : styles.adminRowBtn}
+                          onClick={() => handleToggleAdmin(u)}
+                          disabled={roleToggleBusy === u.uid}
+                          aria-label={u.isAdmin ? "Verwijder admin-rol" : "Maak admin"}
+                          title={u.isAdmin ? "Admin — klik om te verwijderen" : "Geen admin — klik om te promoveren"}
+                        >
+                          {u.isAdmin
+                            ? <IoShieldCheckmarkOutline size={15} />
+                            : <IoShieldOutline size={15} />}
+                        </button>
+                        <button
+                          className={styles.deleteRowBtn}
+                          onClick={() =>
+                            setConfirmDelete({ type: "user", id: u.uid, name: u.username || u.uid })
+                          }
+                          aria-label="Verwijder gebruiker"
+                        >
+                          <IoTrashOutline size={15} />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
@@ -780,12 +845,15 @@ export default function AdminPage() {
             <p className={styles.confirmText}>
               Weet je zeker dat je <strong>{confirmDelete.name}</strong> wil verwijderen?
               {confirmDelete.type === "user" && (
-                <> Dit verwijdert alle Firestore-data van deze gebruiker. Het Firebase Auth-account blijft bestaan.</>
+                <> Dit verwijdert alle app-data, logs, recepten en de herstelcode van deze gebruiker. Het Firebase Auth-account blijft bestaan — de gebruiker kan daarna niet meer inloggen maar het account bestaat nog in Firebase.</>
               )}
-              {" "}Dit kan niet ongedaan worden gemaakt.
+              {confirmDelete.type !== "user" && " Dit kan niet ongedaan worden gemaakt."}
             </p>
+            {deleteError && (
+              <p className={styles.confirmError}>{deleteError}</p>
+            )}
             <div className={styles.confirmActions}>
-              <button className={styles.cancelBtn} onClick={() => setConfirmDelete(null)}>
+              <button className={styles.cancelBtn} onClick={() => { setConfirmDelete(null); setDeleteError(""); }}>
                 Annuleren
               </button>
               <button

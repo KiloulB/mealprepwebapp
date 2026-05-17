@@ -17,6 +17,7 @@ export interface ProfileData {
   onboardingComplete?: boolean;
   mealPrepEnabled?: boolean;
   helpModeEnabled?: boolean;
+  recoveryCode?: string;
 }
 
 export interface WeightEntry {

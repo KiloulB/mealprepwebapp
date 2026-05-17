@@ -270,3 +270,135 @@
   opacity: 0.8;
   background: rgba(var(--accent-rgb),0.08);
 }
+
+/* ── Warning badge ───────────────────────────────────────────────────────────────────────────────── */
+
+.warningBadge {
+  background: rgba(252, 145, 88, 0.1);
+  border: 1px solid rgba(252, 145, 88, 0.28);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #FC9158;
+  font-weight: 500;
+}
+
+/* ── Recovery code display ───────────────────────────────────────────────────────────────────────── */
+
+.recoveryCodeBox {
+  font-size: 21px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-align: center;
+  padding: 20px 16px;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1.5px dashed rgba(var(--accent-rgb), 0.4);
+  border-radius: 14px;
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  margin-bottom: 12px;
+  user-select: all;
+}
+
+/* ── Monospace input variant ─────────────────────────────────────────────────────────────────────── */
+
+.inputMono {
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  letter-spacing: 2px;
+  font-size: 14px;
+}
+
+/* ── Forgot link ─────────────────────────────────────────────────────────────────────────────────── */
+
+.forgotLink {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: 0.2px;
+  opacity: 0.8;
+  transition: opacity 150ms ease;
+}
+
+.forgotLink:hover {
+  opacity: 1;
+}
+
+/* ── Select ──────────────────────────────────────────────────────────────────────────────────────── */
+
+.select {
+  width: 100%;
+  background: var(--bg-card-2);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.12);
+}
+
+.select option {
+  background: #232325;
+  color: #fff;
+}
+
+/* ── Ghost button ────────────────────────────────────────────────────────────────────────────────── */
+
+.ghostBtn {
+  width: 100%;
+  padding: 12px 0;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.ghostBtn:hover {
+  border-color: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* ── Question card (recovery page) ──────────────────────────────────────────────────────────────── */
+
+.questionCard {
+  background: var(--bg-card-2);
+  border: 1.5px solid var(--accent-border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.questionText {
+  font-size: 15px;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.4;
+}
