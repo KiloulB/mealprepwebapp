@@ -1,4 +1,4 @@
-/* ── Shared ──────────────────────────────────────────────────────────────── */
+﻿/* â”€â”€ Shared â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .profilePage {
   min-height: 100vh;
@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: calc(env(safe-area-inset-top) + 40px) 20px 16px;
+  padding: calc(env(safe-area-inset-top) + 30px) 20px 16px;
 }
 
 .navBackBtn {
@@ -68,7 +68,7 @@
 
 .navActionIcon:hover { opacity: 0.7; }
 
-/* ── Goal card ───────────────────────────────────────────────────────────── */
+/* â”€â”€ Goal card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .goalCard {
   background: var(--bg-card);
@@ -161,7 +161,7 @@
   color: #A1A1A1;
 }
 
-/* ── Workout-data card ───────────────────────────────────────────────────── */
+/* â”€â”€ Workout-data card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .infoCard {
   background: var(--bg-card);
@@ -192,52 +192,116 @@
   margin-bottom: 0;
 }
 
-/* ── Slimme inzichten ────────────────────────────────────────────────────── */
+/* â”€â”€ Slimme inzichten â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .insightCard {
   margin: 0 20px 18px;
   background: var(--bg-card);
-  background-image: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 60%);
-  border-radius: 18px;
-  padding: 18px 20px;
-  border: 1px solid rgba(255,255,255,0.07);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.05);
+  background-image: linear-gradient(160deg, rgba(var(--accent-rgb),0.06) 0%, transparent 60%);
+  border-radius: 22px;
+  padding: 20px 20px 18px;
+  border: 1px solid rgba(var(--accent-rgb),0.12);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .insightCardTitle {
   display: block;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  color: #9f9f9f;
+  color: var(--accent);
+  opacity: 0.7;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 16px;
+  letter-spacing: 0.9px;
+  margin-bottom: 12px;
+  text-align: center;
 }
 
-.insightText {
+.insightScroll {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.insightScroll::-webkit-scrollbar { display: none; }
+
+.insightPill {
+  min-width: 100%;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 6px 4px 2px;
+}
+
+.insightPillCat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.insightPillStat {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -1.5px;
+  margin-bottom: 5px;
+  text-shadow: 0 0 28px rgba(var(--accent-rgb), 0.28);
+}
+
+.insightPillStatLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.insightPillHeading {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.insightPillBody {
   font-size: 13px;
-  line-height: 1.65;
-  color: #A1A1A1;
-  margin: 0;
-  padding: 13px 0;
-  border-top: 1px solid rgba(255,255,255,0.04);
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 260px;
 }
 
-.insightText:first-of-type {
-  padding-top: 0;
-  border-top: none;
+.insightDots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
 }
 
-.insightText:last-of-type {
-  padding-bottom: 0;
+.insightDot {
+  height: 6px;
+  width: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  transition: width 220ms ease, background 220ms ease;
+  flex-shrink: 0;
 }
 
-.insightHeading {
-  color: #e8e8e8;
-  font-weight: 600;
+.insightDotActive {
+  width: 18px;
+  background: var(--accent);
 }
 
-/* ── Settings ────────────────────────────────────────────────────────────── */
+/* â”€â”€ Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .settingsList {
   background: var(--bg-card);
@@ -298,7 +362,7 @@
   flex-shrink: 0;
 }
 
-/* ── Account ─────────────────────────────────────────────────────────────── */
+/* â”€â”€ Account â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .accountContent {
   padding: 0 20px;
@@ -358,7 +422,7 @@
   color: var(--text-muted);
 }
 
-/* ── Edit field ──────────────────────────────────────────────────────────── */
+/* â”€â”€ Edit field â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .editContent {
   padding: 8px 20px 0;
@@ -431,7 +495,7 @@
   color: var(--accent);
 }
 
-/* ── Plan ────────────────────────────────────────────────────────────────── */
+/* â”€â”€ Plan â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .planContent {
   padding: 0 20px;
@@ -510,7 +574,7 @@
   padding: 24px 0;
 }
 
-/* ── PlanNutritionCard ───────────────────────────────────────────────────── */
+/* â”€â”€ PlanNutritionCard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .nutritionCard {
   background: var(--bg-card);
@@ -623,7 +687,7 @@
   flex-shrink: 0;
 }
 
-/* ── Underpin explain section ────────────────────────────────────────────── */
+/* â”€â”€ Underpin explain section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .underpinSection {
   margin-bottom: 18px;
@@ -685,7 +749,7 @@
   margin-bottom: 16px;
 }
 
-/* ── WeekProgressCard ────────────────────────────────────────────────────── */
+/* â”€â”€ WeekProgressCard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .onTrackCard {
   background: var(--bg-card);
@@ -768,7 +832,7 @@
   text-align: right;
 }
 
-/* ── Toggle button ────────────────────────────────────────────────────────── */
+/* â”€â”€ Toggle button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .toggleBtnOn,
 .toggleBtnOff {
@@ -809,7 +873,7 @@
   left: 3px;
 }
 
-/* ── Add weight modal ────────────────────────────────────────────────────── */
+/* â”€â”€ Add weight modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .modalOverlay {
   position: fixed;
@@ -923,7 +987,7 @@
   transform: none;
 }
 
-/* ── Plan edit ────────────────────────────────────────────────────────────── */
+/* â”€â”€ Plan edit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .planEditSheet {
   width: 100%;
@@ -1003,7 +1067,7 @@
   box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 12px rgba(var(--accent-rgb),0.12);
 }
 
-/* ── Theme editor ─────────────────────────────────────────────────────────── */
+/* â”€â”€ Theme editor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .themeContent {
   padding: 0 20px;
@@ -1164,7 +1228,7 @@
   margin-bottom: 10px;
 }
 
-/* ── Theme Picker ─────────────────────────────────────────────────────────── */
+/* â”€â”€ Theme Picker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .themePickerContent {
   padding: 0 20px;
@@ -1254,7 +1318,7 @@
   flex-shrink: 0;
 }
 
-/* ── Weight history sheet ─────────────────────────────────────────────────── */
+/* â”€â”€ Weight history sheet â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 @keyframes whSlideUp {
   from { transform: translateY(100%); }

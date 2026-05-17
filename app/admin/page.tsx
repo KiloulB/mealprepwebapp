@@ -471,7 +471,7 @@ export default function AdminPage() {
                     {(ex.equipment ?? []).length > 0 && (
                       <div className={styles.listRowMeta}>
                         {(ex.equipment ?? []).join(", ")}
-                        {ex.category ? ` Â· ${ex.category}` : ""}
+                        {ex.category ? ` · ${ex.category}` : ""}
                       </div>
                     )}
                   </div>
@@ -543,10 +543,10 @@ export default function AdminPage() {
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div className={styles.listRowName}>{r.title}</div>
                     <div className={styles.listRowMeta}>
-                      {r.category ? `${r.category} Â· ` : ""}{r.portions} porties
+                      {r.category ? `${r.category} · ` : ""}{r.portions} porties
                     </div>
                     <div className={styles.listRowMeta}>
-                      {r.kcal} kcal Â· {r.protein}g eiwit Â· {r.carbs}g koolh. Â· {r.fat}g vet
+                      {r.kcal} kcal · {r.protein}g eiwit · {r.carbs}g koolh. · {r.fat}g vet
                     </div>
                   </div>
                   <div className={styles.rowActions}>

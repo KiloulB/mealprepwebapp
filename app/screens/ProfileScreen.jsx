@@ -19,6 +19,11 @@ import {
   IoInformationCircleOutline,
   IoTrashOutline,
   IoColorPaletteOutline,
+  IoBarbellOutline,
+  IoNutritionOutline,
+  IoTrendingUpOutline,
+  IoFlagOutline,
+  IoBodyOutline,
 } from "react-icons/io5";
 import { useTheme } from "../context/ThemeContext";
 
@@ -433,7 +438,7 @@ function getWorkoutInsight(sessions) {
   const twoWeeksAgo = now - 14 * DAY;
 
   if (sessions.length === 0)
-    return { heading: "Nog geen workouts geregistreerd.", body: "Zodra je begint met trainen zie je hier je voortgang." };
+    return { heading: "Nog niets getraind.", body: "Zodra je traint zie je hier je voortgang." };
 
   const thisWeek = sessions.filter((s) => s.startedAt >= weekAgo).length;
   const lastWeek = sessions.filter((s) => s.startedAt >= twoWeeksAgo && s.startedAt < weekAgo).length;
@@ -441,63 +446,240 @@ function getWorkoutInsight(sessions) {
   const daysSinceLast = Math.floor((now - sorted[0].startedAt) / DAY);
 
   if (thisWeek === 0 && daysSinceLast > 14)
-    return { heading: "Al meer dan twee weken niet getraind.", body: "Zelfs een korte sessie helpt je momentum terug te vinden." };
+    return { stat: "0", statLabel: "workouts", body: "Al meer dan twee weken niet getraind. Zelfs een korte sessie helpt je op gang te komen." };
   if (thisWeek === 0)
-    return { heading: "Nog geen workout deze week.", body: "Je hebt nog tijd om een sessie in te plannen." };
+    return { stat: "0", statLabel: "workouts deze week", body: "Je hebt nog tijd om er een in te plannen." };
   if (thisWeek === 1 && lastWeek >= 3)
-    return { heading: "Vorige week deed je het sterker.", body: `${lastWeek} workouts tegenover 1 deze week. Pak het momentum terug.` };
+    return { stat: "1", statLabel: "workout deze week", body: `Vorige week deed je er ${lastWeek}. Pak het momentum terug.` };
   if (thisWeek === 1)
-    return { heading: "Goed begin.", body: "Je eerste workout van de week staat erop." };
+    return { stat: "1", statLabel: "workout deze week", body: "Je eerste workout staat erop. Ga door zo." };
   if (thisWeek >= 3 && thisWeek > lastWeek && lastWeek > 0)
-    return { heading: "Betere week dan vorige.", body: `Je hebt al ${thisWeek} workouts afgerond — dat is progressie.` };
+    return { stat: String(thisWeek), statLabel: "workouts deze week", body: "Betere week dan vorige. Zo bouw je aan resultaat." };
   if (thisWeek >= 3)
-    return { heading: "Consistente week.", body: `${thisWeek} workouts afgerond. Zo bouw je aan resultaat.` };
-  return { heading: "Je bent goed bezig.", body: `${thisWeek} workouts deze week afgerond.` };
+    return { stat: String(thisWeek), statLabel: "workouts deze week", body: "Consistent bezig. Zo bouw je aan resultaat." };
+  return { stat: String(thisWeek), statLabel: "workouts deze week", body: "Je bent goed bezig." };
 }
 
 function getVoedingInsight(loggedDaysCount) {
   if (loggedDaysCount === null) return null;
+  const stat = `${loggedDaysCount}/7`;
+  const statLabel = "dagen gelogd";
   if (loggedDaysCount === 7)
-    return { heading: "Perfecte week.", body: "Elke dag bijgehouden — zo krijg je het beste inzicht in je voeding." };
+    return { stat, statLabel, body: "Elke dag bijgehouden. Zo krijg je het beste inzicht in je voeding." };
   if (loggedDaysCount >= 5)
-    return { heading: "Bijna een perfecte week.", body: `${loggedDaysCount} van de 7 dagen bijgehouden. Kleine stap naar volledigheid.` };
+    return { stat, statLabel, body: `${loggedDaysCount} van de 7 dagen bijgehouden. Je bent er bijna.` };
   if (loggedDaysCount >= 3)
-    return { heading: "Regelmatig bijgehouden.", body: `${loggedDaysCount} dagen gelogd deze week. Dagelijkse consistentie geeft betrouwbaarder inzicht.` };
+    return { stat, statLabel, body: "Elke dag bijhouden geeft een beter beeld. Je bent op de goede weg." };
   if (loggedDaysCount >= 1)
-    return { heading: "Sporadisch gelogd.", body: `Slechts ${loggedDaysCount} dag${loggedDaysCount > 1 ? "en" : ""} bijgehouden. Probeer het elke dag kort te doen.` };
-  return { heading: "Deze week niets gelogd.", body: "Begin vandaag — zelfs een globaal overzicht helpt al." };
+    return { stat, statLabel, body: "Weinig gelogd deze week. Probeer het elke dag even bij te houden." };
+  return { stat, statLabel, body: "Nog niets gelogd deze week. Begin vandaag, ook een kort overzicht helpt al." };
+}
+
+function getWeightTrendInsight(weightHistory, goalType) {
+  if (!weightHistory || weightHistory.length < 2) return null;
+  const recent = weightHistory.slice(-4);
+  const diff = recent[recent.length - 1].weight - recent[0].weight;
+  const absKg = Math.abs(diff).toFixed(1);
+  const n = recent.length;
+  const isLoss = goalType === "Afvallen";
+  const isGain = goalType === "Toename";
+
+  if (Math.abs(diff) < 0.3) {
+    const currentW = recent[recent.length - 1].weight;
+    const onTrack = goalType === "Behoud" || goalType === "Recomp";
+    return {
+      stat: `${currentW} kg`,
+      statLabel: "huidig gewicht",
+      body: onTrack
+        ? "Je gewicht schommelt nauwelijks. Precies wat je wilt."
+        : isLoss
+        ? "Weinig verandering de laatste metingen. Overweeg je calorie-inname iets te verlagen."
+        : isGain
+        ? "Weinig verandering. Voeg meer calorieën toe om groei te stimuleren."
+        : "Je gewicht is stabiel de laatste metingen.",
+    };
+  }
+
+  if (diff < 0) {
+    return {
+      stat: `-${absKg} kg`,
+      statLabel: `laatste ${n} metingen`,
+      body: isLoss
+        ? "Goed bezig. Blijf consistent en het resultaat komt vanzelf."
+        : isGain
+        ? "Je bent afgevallen, maar je doel is aankomen. Verhoog je calorie-inname."
+        : "Je gewicht daalt licht. Blijf meten om de trend te volgen.",
+    };
+  }
+
+  return {
+    stat: `+${absKg} kg`,
+    statLabel: `laatste ${n} metingen`,
+    body: isGain
+      ? "Prima progressie. Blijf consistent trainen en goed eten."
+      : isLoss
+      ? "Je bent wat zwaarder geworden. Bekijk je eetpatroon en blijf consistent trainen."
+      : "Je gewicht stijgt licht. Houd dit in de gaten als je stabiel wilt blijven.",
+  };
+}
+
+function getGoalProgressInsight(planData) {
+  const { goalType, startWeight, targetWeight, weightHistory } = planData || {};
+  if (!goalType || goalType === "Behoud" || goalType === "Recomp") return null;
+  if (!startWeight || !targetWeight || !weightHistory?.length) return null;
+
+  const current = weightHistory[weightHistory.length - 1].weight;
+  const total = Math.abs(targetWeight - startWeight);
+  if (total === 0) return null;
+  const achieved = Math.abs(current - startWeight);
+  const remaining = Math.abs(targetWeight - current);
+  const pct = Math.min(100, Math.round((achieved / total) * 100));
+
+  if (pct >= 100) {
+    return {
+      stat: "100%",
+      statLabel: "doel bereikt",
+      body: "Je hebt je streefgewicht behaald. Stel een nieuw doel in of schakel over naar gewichtsbehoud.",
+    };
+  }
+
+  let etaText = "";
+  if (weightHistory.length >= 2) {
+    const firstDate = new Date(weightHistory[0].date);
+    const lastDate = new Date(weightHistory[weightHistory.length - 1].date);
+    const weeksPassed = Math.max(0.5, (lastDate - firstDate) / (7 * 24 * 60 * 60 * 1000));
+    const kgPerWeek = achieved / weeksPassed;
+    if (kgPerWeek > 0.05 && remaining > 0) {
+      const weeksLeft = Math.round(remaining / kgPerWeek);
+      if (weeksLeft === 1) etaText = " Op dit tempo bereik je je doel over circa 1 week.";
+      else if (weeksLeft > 1 && weeksLeft <= 104) etaText = ` Op dit tempo bereik je je doel over circa ${weeksLeft} weken.`;
+    }
+  }
+
+  if (pct === 0) {
+    return {
+      stat: `${remaining.toFixed(1)} kg`,
+      statLabel: "te gaan",
+      body: "Je bent net begonnen. Elke week telt.",
+    };
+  }
+
+  return {
+    stat: `${pct}%`,
+    statLabel: "van je doel bereikt",
+    body: `Nog ${remaining.toFixed(1)} kg te gaan.${etaText}`,
+  };
+}
+
+function getMuscleBalanceInsight(sessions) {
+  const twoWeeksAgo = Date.now() - 14 * 86400000;
+  const recent = sessions.filter((s) => s.startedAt >= twoWeeksAgo);
+  if (recent.length < 2) return null;
+
+  const freq = {};
+  for (const s of recent) {
+    for (const m of s.musclesWorked || []) {
+      freq[m] = (freq[m] || 0) + 1;
+    }
+  }
+  if (Object.keys(freq).length === 0) return null;
+
+  const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+  const topMuscles = sorted.slice(0, 2).map(([m]) => muscleSlugToNl(m));
+  const MAJOR = ["chest", "lats", "upper-back", "quads", "hamstrings", "glutes", "shoulders"];
+  const missed = MAJOR.filter((m) => !freq[m]).map(muscleSlugToNl);
+
+  if (missed.length === 0) {
+    return {
+      heading: "Goede spierbalans.",
+      body: "Je hebt de afgelopen twee weken vrijwel alle grote spiergroepen getraind.",
+    };
+  }
+
+  const top = topMuscles.join(" en ");
+  const lowArr = missed.slice(0, 2);
+  const low = lowArr.join(" en ");
+  const verb = lowArr.length === 1 ? "kreeg" : "kregen";
+
+  if (missed.length >= 5) {
+    return {
+      heading: `Veel focus op ${top}.`,
+      body: "Voeg meer afwisseling toe voor een completer programma.",
+    };
+  }
+
+  return {
+    heading: `${low} ${verb} weinig aandacht.`,
+    body: `Je traint goed op ${top}, maar ${low} kwamen de afgelopen twee weken minder aan bod.`,
+  };
 }
 
 function getMealPrepInsight(mealPrepPlan) {
   const days = mealPrepPlan
     ? Object.keys(mealPrepPlan.days || mealPrepPlan.meals || {}).length
     : 0;
+  const stat = `${days}/7`;
+  const statLabel = "dagen gepland";
   if (days === 0)
-    return { heading: "Maaltijdplan is nog leeg.", body: "Voeg maaltijden toe om je week goed voor te bereiden." };
+    return { heading: "Maaltijdplan is leeg.", body: "Voeg maaltijden toe om je week goed voor te bereiden." };
   if (days >= 7)
-    return { heading: "Volledig gepland.", body: "Je maaltijdplan staat klaar voor de hele week." };
+    return { stat, statLabel, body: "Je maaltijdplan staat klaar voor de hele week." };
   if (days >= 5)
-    return { heading: "Plan is bijna compleet.", body: `${days} van de 7 dagen ingepland. Nog een paar maaltijden toe te voegen.` };
-  return { heading: `${days} dag${days !== 1 ? "en" : ""} gepland.`, body: "Vul het plan verder aan voor een rustigere week." };
+    return { stat, statLabel, body: `${days} van de 7 dagen gepland. Nog een paar maaltijden toe te voegen.` };
+  return { stat, statLabel, body: "Vul het plan verder aan voor een rustigere week." };
 }
 
-function SmartInsightsCard({ sessions, mealPrepEnabled, mealPrepPlan, loggedDaysCount }) {
+function SmartInsightsCard({ sessions, mealPrepEnabled, mealPrepPlan, loggedDaysCount, planData }) {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const scrollRef = useRef(null);
+
   const voedingInsight = getVoedingInsight(loggedDaysCount);
+  const weightTrendInsight = getWeightTrendInsight(planData?.weightHistory, planData?.goalType);
+  const goalProgressInsight = getGoalProgressInsight(planData);
+  const muscleBalanceInsight = getMuscleBalanceInsight(sessions);
+
   const insights = [
-    getWorkoutInsight(sessions),
-    ...(voedingInsight ? [voedingInsight] : []),
-    ...(mealPrepEnabled ? [getMealPrepInsight(mealPrepPlan)] : []),
+    { ...getWorkoutInsight(sessions),           category: "Training",     icon: <IoBarbellOutline size={12} /> },
+    ...(weightTrendInsight  ? [{ ...weightTrendInsight,  category: "Gewicht",      icon: <IoTrendingUpOutline size={12} /> }] : []),
+    ...(goalProgressInsight ? [{ ...goalProgressInsight, category: "Doelstelling", icon: <IoFlagOutline size={12} /> }] : []),
+    ...(voedingInsight      ? [{ ...voedingInsight,      category: "Voeding",      icon: <IoNutritionOutline size={12} /> }] : []),
+    ...(muscleBalanceInsight ? [{ ...muscleBalanceInsight, category: "Spieren",    icon: <IoBodyOutline size={12} /> }] : []),
+    ...(mealPrepEnabled     ? [{ ...getMealPrepInsight(mealPrepPlan), category: "Meal prep", icon: <IoCalendarOutline size={12} /> }] : []),
   ];
+
+  function handleScroll() {
+    const el = scrollRef.current;
+    if (!el) return;
+    setActiveIdx(Math.round(el.scrollLeft / el.offsetWidth));
+  }
 
   return (
     <div className={styles.insightCard}>
       <span className={styles.insightCardTitle}>Slimme inzichten</span>
-      {insights.map((item, i) => (
-        <p key={i} className={styles.insightText}>
-          <span className={styles.insightHeading}>{item.heading}</span>
-          {" "}{item.body}
-        </p>
-      ))}
+      <div className={styles.insightScroll} ref={scrollRef} onScroll={handleScroll}>
+        {insights.map((item, i) => (
+          <div key={i} className={styles.insightPill}>
+            <div className={styles.insightPillCat}>
+              {item.icon}
+              <span>{item.category}</span>
+            </div>
+            {item.stat != null ? (
+              <>
+                <div className={styles.insightPillStat}>{item.stat}</div>
+                {item.statLabel && <div className={styles.insightPillStatLabel}>{item.statLabel}</div>}
+              </>
+            ) : (
+              item.heading && <div className={styles.insightPillHeading}>{item.heading}</div>
+            )}
+            <div className={styles.insightPillBody}>{item.body}</div>
+          </div>
+        ))}
+      </div>
+      <div className={styles.insightDots}>
+        {insights.map((_, i) => (
+          <div key={i} className={`${styles.insightDot} ${i === activeIdx ? styles.insightDotActive : ""}`} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -963,6 +1145,7 @@ export default function ProfileScreen() {
             mealPrepEnabled={mealPrepEnabled}
             mealPrepPlan={mealPrepPlan}
             loggedDaysCount={loggedDaysCount}
+            planData={planData}
           />
         </>
       )}

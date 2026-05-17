@@ -1,4 +1,4 @@
-/* --- Gym Home Page Layout --- */
+﻿/* --- Gym Home Page Layout --- */
 .gymPage {
   min-height: 100vh;
   background: var(--bg-page);
@@ -8,7 +8,7 @@
 }
 
 .gymHeader {
-  padding: calc(env(safe-area-inset-top) + 40px) 20px 100px 20px;
+  padding: calc(env(safe-area-inset-top) + 30px) 20px 100px 20px;
 }
 
 .gymTitle {
@@ -1358,7 +1358,7 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* ===== ExercisePickerModal — improvements ===== */
+/* ===== ExercisePickerModal â€” improvements ===== */
 
 .exerciseRow[data-selected="true"] {
   background: rgba(var(--accent-rgb),0.09);
@@ -1993,7 +1993,7 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* ===== TemplateStartModal — bottom sheet ===== */
+/* ===== TemplateStartModal â€” bottom sheet ===== */
 
 .tsSheet {
   width: min(520px, 100%);
@@ -2090,7 +2090,7 @@
   font-weight: 400;
 }
 
-/* ── Templates view ── */
+/* â”€â”€ Templates view â”€â”€ */
 
 .tsViewBar {
   display: flex;
@@ -2256,7 +2256,7 @@
   flex-shrink: 0;
 }
 
-/* ===== ExercisePickerModal — redesigned header + rows ===== */
+/* ===== ExercisePickerModal â€” redesigned header + rows ===== */
 
 .pickerHead {
   flex-shrink: 0;
@@ -2589,7 +2589,7 @@
   text-align: center;
 }
 
-/* ===== ExercisePickerModal — fullscreen layout ===== */
+/* ===== ExercisePickerModal â€” fullscreen layout ===== */
 
 .pickerScreen {
   position: fixed;

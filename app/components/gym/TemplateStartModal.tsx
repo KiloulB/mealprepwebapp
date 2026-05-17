@@ -250,7 +250,7 @@ export default function TemplateStartModal({
                         <div className={gymStyles.tsTemplateBody}>
                           <div className={gymStyles.tsTemplateName}>{t.name}</div>
                           <div className={gymStyles.tsTemplateExs}>
-                            {(t.exercises || []).map((e) => e.ref.name).join(" Â· ") || "Geen oefeningen"}
+                            {(t.exercises || []).map((e) => e.ref.name).join(" · ") || "Geen oefeningen"}
                           </div>
                           {(t.musclesWorked || []).length > 0 && (
                             <div className={gymStyles.tsMusclePills}>

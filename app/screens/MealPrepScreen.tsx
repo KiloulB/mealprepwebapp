@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  IoAdd, IoCheckmarkCircle, IoTrashOutline, IoInformationCircleOutline,
+  IoAdd, IoPencilOutline, IoCheckmarkCircle, IoTrashOutline, IoInformationCircleOutline,
   IoRestaurantOutline, IoChevronForward,
 } from "react-icons/io5";
 import { useUser } from "../context/UserContext";
@@ -117,8 +117,8 @@ export default function MealPrepScreen() {
       {/* â”€â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className={styles.header}>
         <span className={styles.headerTitle}>Meal Prep</span>
-        <button className={styles.addBtn} onClick={() => setSetupOpen(true)} aria-label="Nieuw plan">
-          <IoAdd size={20} />
+        <button className={styles.addBtn} onClick={() => setSetupOpen(true)} aria-label={isActive ? "Plan bewerken" : "Nieuw plan"}>
+          {isActive ? <IoPencilOutline size={18} /> : <IoAdd size={20} />}
         </button>
       </div>
 
@@ -155,7 +155,7 @@ export default function MealPrepScreen() {
                     <span className={styles.todayRecipeName}>{todayMeal.recipeTitle}</span>
                     {todayMeal.kcal > 0 && (
                       <span className={styles.todayRecipeMacros}>
-                        {todayMeal.kcal} kcal{todayMeal.protein > 0 ? ` Â· ${todayMeal.protein}g eiwit` : ""}
+                        {todayMeal.kcal} kcal{todayMeal.protein > 0 ? ` · ${todayMeal.protein}g eiwit` : ""}
                       </span>
                     )}
                   </div>
