@@ -914,7 +914,7 @@ function PlanUnderpinExplain({ profileData, planData }) {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function ProfileScreen() {
-  const { authUser, mealPrepEnabled, helpModeEnabled, macroTargets, mealPrepPlan } = useUser();
+  const { authUser, mealPrepEnabled, helpModeEnabled, isAdmin, macroTargets, mealPrepPlan } = useUser();
   const { theme, themes, setTheme } = useTheme();
   const router = useRouter();
 
@@ -1222,7 +1222,7 @@ export default function ProfileScreen() {
               </button>
             </div>
 
-            {authUser?.email === "bilal0@mealprep.local" && (
+            {isAdmin && (
               <div className={styles.settingsRow} onClick={() => router.push("/admin")}>
                 <span className={styles.settingsRowIcon}><IoShieldCheckmarkOutline size={20} color="#FC9158" /></span>
                 <div className={styles.settingsRowText}>

@@ -417,6 +417,25 @@
   color: #FC9158;
 }
 
+.resetRowBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #2e2e30;
+  background: none;
+  color: #A1A1A1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.resetRowBtn:hover {
+  border-color: #2A9DB5;
+  color: #2A9DB5;
+}
+
 .deleteRowBtn {
   width: 32px;
   height: 32px;

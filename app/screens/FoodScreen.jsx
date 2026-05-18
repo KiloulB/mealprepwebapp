@@ -29,10 +29,8 @@ import CameraBarcodeModal from "../components/CameraBarcodeModal";
 import RecipeAddModal from "../components/food/RecipeAddModal";
 import HelpOverlay from "../components/HelpOverlay";
 
-// ─── Open Food Facts ────────────────────────────────────────────────────────
+// ─── Open Food Facts (via Next.js proxy routes) ──────────────────────────────
 
-const OFF_BASE = "https://world.openfoodfacts.net";
-const SEARCH_PAGE_SIZE = 15;
 const MIN_MS_BETWEEN_SEARCHES = 1200;
 const searchCache = new Map();
 const productCache = new Map();
@@ -64,16 +62,8 @@ async function offSearchV1(query, { signal } = {}) {
   const q = normalizeQuery(query);
   if (q.length < 2) return [];
   if (searchCache.has(q)) return searchCache.get(q);
-  const params = new URLSearchParams();
-  params.set("search_terms", q);
-  params.set("search_simple", "1");
-  params.set("action", "process");
-  params.set("json", "1");
-  params.set("page_size", String(SEARCH_PAGE_SIZE));
-  params.set("cc", "nl");
-  params.set("fields", "code,product_name,brands,image_front_small_url");
-  const data = await fetchJson(`${OFF_BASE}/cgi/search.pl?${params}`, { signal });
-  const products = Array.isArray(data?.products) ? data.products : [];
+  const data = await fetchJson(`/api/food/search?q=${encodeURIComponent(q)}`, { signal });
+  const products = Array.isArray(data) ? data : [];
   searchCache.set(q, products);
   return products;
 }
@@ -81,11 +71,7 @@ async function offProductV2(code, { signal } = {}) {
   const key = String(code || "").trim();
   if (!key) return null;
   if (productCache.has(key)) return productCache.get(key);
-  const fields = "code,product_name,brands,image_front_url,image_front_small_url,nutriments";
-  const data = await fetchJson(
-    `${OFF_BASE}/api/v2/product/${encodeURIComponent(key)}?fields=${encodeURIComponent(fields)}`,
-    { signal }
-  );
+  const data = await fetchJson(`/api/food/product/${encodeURIComponent(key)}`, { signal });
   const product = data?.product ?? null;
   if (product) productCache.set(key, product);
   return product;

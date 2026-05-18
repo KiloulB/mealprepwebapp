@@ -41,6 +41,32 @@ export const subscribeToUserRegistry = (callback: (users: UserRegistryEntry[]) =
   );
 };
 
+export const resetUserData = async (uid: string) => {
+  const subcols = ["dailyLogs", "recipes", "gymSessions", "gymTemplates"];
+  for (const sub of subcols) {
+    const snap = await getDocs(collection(db, "users", uid, sub));
+    if (snap.empty) continue;
+    const batch = writeBatch(db);
+    snap.docs.forEach((d) => batch.delete(d.ref));
+    await batch.commit();
+  }
+
+  const profileSnap = await getDoc(doc(db, "users", uid, "settings", "profile"));
+  const profileData = profileSnap.exists() ? profileSnap.data() : {};
+
+  const settingsBatch = writeBatch(db);
+  settingsBatch.delete(doc(db, "users", uid, "settings", "plan"));
+  settingsBatch.delete(doc(db, "users", uid, "settings", "macros"));
+  settingsBatch.delete(doc(db, "users", uid, "settings", "mealPrepPlan"));
+  settingsBatch.set(doc(db, "users", uid, "settings", "profile"), {
+    username: profileData.username ?? "",
+    pin: profileData.pin ?? "",
+    ...(profileData.recoveryCode ? { recoveryCode: profileData.recoveryCode } : {}),
+    onboardingComplete: false,
+  });
+  await settingsBatch.commit();
+};
+
 export const deleteUserFirestoreData = async (uid: string) => {
   const subcols = ["dailyLogs", "recipes", "gymSessions", "gymTemplates", "settings"];
   const batch = writeBatch(db);

@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, User, signOut } from "firebase/auth";
-import { auth } from "../firebase/config";
+import { onSnapshot, doc } from "firebase/firestore";
+import { auth, db } from "../firebase/config";
 import styles from "./admin.module.css";
 
 import {
@@ -21,6 +22,7 @@ import {
   IoShieldOutline,
   IoShieldCheckmarkOutline,
   IoArrowBackOutline,
+  IoRefreshOutline,
 } from "react-icons/io5";
 
 import {
@@ -34,6 +36,7 @@ import {
   updateGlobalRecipe,
   deleteGlobalRecipe,
   deleteUserFirestoreData,
+  resetUserData,
   seedBuiltinRecipes,
   setUserAdminRole,
   type UserRegistryEntry,
@@ -109,7 +112,7 @@ export default function AdminPage() {
 
   // Confirm delete / action
   const [confirmDelete, setConfirmDelete] = useState<{
-    type: "exercise" | "recipe" | "user";
+    type: "exercise" | "recipe" | "user" | "reset";
     id: string;
     name: string;
   } | null>(null);
@@ -120,13 +123,26 @@ export default function AdminPage() {
   // Seed state
   const [seeding, setSeeding] = useState(false);
 
+  // Admin flag
+  const [isAdmin, setIsAdmin] = useState(false);
+
   // Auth
   useEffect(() => {
     return onAuthStateChanged(auth, (u) => {
       setAuthUser(u);
       setAuthLoading(false);
+      if (!u) setIsAdmin(false);
     });
   }, []);
+
+  useEffect(() => {
+    if (!authUser) return;
+    return onSnapshot(
+      doc(db, "userRegistry", authUser.uid),
+      (snap) => setIsAdmin(snap.exists() ? snap.data()?.isAdmin === true : false),
+      () => setIsAdmin(false)
+    );
+  }, [authUser]);
 
   // Firestore subscriptions
   useEffect(() => {
@@ -257,6 +273,7 @@ export default function AdminPage() {
       if (confirmDelete.type === "exercise") await deleteGlobalExercise(confirmDelete.id);
       if (confirmDelete.type === "recipe") await deleteGlobalRecipe(confirmDelete.id);
       if (confirmDelete.type === "user") await deleteUserFirestoreData(confirmDelete.id);
+      if (confirmDelete.type === "reset") await resetUserData(confirmDelete.id);
       setConfirmDelete(null);
     } catch (err) {
       setDeleteError(err instanceof Error ? err.message : "Verwijderen mislukt.");
@@ -315,7 +332,7 @@ export default function AdminPage() {
     );
   }
 
-  if (authUser.email !== ADMIN_EMAIL) {
+  if (authUser.email !== ADMIN_EMAIL && !isAdmin) {
     return <div className={styles.denied}>Geen toegang tot het admin dashboard.</div>;
   }
 
@@ -477,6 +494,16 @@ export default function AdminPage() {
                           {u.isAdmin
                             ? <IoShieldCheckmarkOutline size={15} />
                             : <IoShieldOutline size={15} />}
+                        </button>
+                        <button
+                          className={styles.resetRowBtn}
+                          onClick={() =>
+                            setConfirmDelete({ type: "reset", id: u.uid, name: u.username || u.uid })
+                          }
+                          aria-label="Reset gebruikersdata"
+                          title="Data wissen — account blijft bestaan"
+                        >
+                          <IoRefreshOutline size={15} />
                         </button>
                         <button
                           className={styles.deleteRowBtn}
@@ -841,13 +868,25 @@ export default function AdminPage() {
       {confirmDelete && (
         <div className={styles.modalOverlay} onClick={() => setConfirmDelete(null)}>
           <div className={styles.confirmModal} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles.confirmTitle}>Verwijderen?</h3>
+            <h3 className={styles.confirmTitle}>
+              {confirmDelete.type === "reset" ? "Data wissen?" : "Verwijderen?"}
+            </h3>
             <p className={styles.confirmText}>
-              Weet je zeker dat je <strong>{confirmDelete.name}</strong> wil verwijderen?
-              {confirmDelete.type === "user" && (
-                <> Dit verwijdert alle app-data, logs, recepten en de herstelcode van deze gebruiker. Het Firebase Auth-account blijft bestaan — de gebruiker kan daarna niet meer inloggen maar het account bestaat nog in Firebase.</>
+              {confirmDelete.type === "reset" ? (
+                <>
+                  Weet je zeker dat je alle data van <strong>{confirmDelete.name}</strong> wil wissen?
+                  {" "}Dit verwijdert alle workouts, templates, voedingslogs, recepten en het actieve plan.
+                  Het account (gebruikersnaam, PIN en herstelcode) blijft intact — de gebruiker moet daarna de onboarding opnieuw doorlopen.
+                </>
+              ) : (
+                <>
+                  Weet je zeker dat je <strong>{confirmDelete.name}</strong> wil verwijderen?
+                  {confirmDelete.type === "user" && (
+                    <> Dit verwijdert alle app-data, logs, recepten en de herstelcode van deze gebruiker. Het Firebase Auth-account blijft bestaan — de gebruiker kan daarna niet meer inloggen maar het account bestaat nog in Firebase.</>
+                  )}
+                  {confirmDelete.type !== "user" && " Dit kan niet ongedaan worden gemaakt."}
+                </>
               )}
-              {confirmDelete.type !== "user" && " Dit kan niet ongedaan worden gemaakt."}
             </p>
             {deleteError && (
               <p className={styles.confirmError}>{deleteError}</p>
@@ -861,7 +900,9 @@ export default function AdminPage() {
                 onClick={handleConfirmDelete}
                 disabled={deleteBusy}
               >
-                {deleteBusy ? "Verwijderen…" : "Verwijderen"}
+                {deleteBusy
+                  ? (confirmDelete.type === "reset" ? "Wissen…" : "Verwijderen…")
+                  : (confirmDelete.type === "reset" ? "Data wissen" : "Verwijderen")}
               </button>
             </div>
           </div>

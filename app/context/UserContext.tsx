@@ -2,7 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User as FirebaseUser, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase/config';
+import { onSnapshot, doc } from 'firebase/firestore';
+import { auth, db } from '../firebase/config';
 import { subscribeToMacros, subscribeToProfile } from '../firebase/profileService';
 import { subscribeMealPrepPlan } from '../firebase/mealPrepService';
 import type { MealPrepPlan } from '../types/mealPrep';
@@ -27,6 +28,7 @@ interface UserContextType {
   macroTargets: MacroTargets;
   mealPrepEnabled: boolean;
   helpModeEnabled: boolean;
+  isAdmin: boolean;
   mealPrepPlan: MealPrepPlan | null;
   setAuthUser: (user: User | null) => void;
   loading: boolean;
@@ -40,6 +42,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [macroTargets, setMacroTargets] = useState<MacroTargets>(DEFAULT_MACROS);
   const [mealPrepEnabled, setMealPrepEnabled] = useState(false);
   const [helpModeEnabled, setHelpModeEnabled] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [mealPrepPlan, setMealPrepPlan] = useState<MealPrepPlan | null>(null);
 
   useEffect(() => {
@@ -55,6 +58,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setMacroTargets(DEFAULT_MACROS);
         setMealPrepEnabled(false);
         setHelpModeEnabled(false);
+        setIsAdmin(false);
         setMealPrepPlan(null);
       }
       setLoading(false);
@@ -87,12 +91,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [authUser]);
 
   useEffect(() => {
+    if (!authUser) { setIsAdmin(false); return; }
+    return onSnapshot(
+      doc(db, "userRegistry", authUser.uid),
+      (snap) => setIsAdmin(snap.exists() ? snap.data()?.isAdmin === true : false),
+      () => setIsAdmin(false)
+    );
+  }, [authUser]);
+
+  useEffect(() => {
     if (!authUser || !mealPrepEnabled) { setMealPrepPlan(null); return; }
     return subscribeMealPrepPlan(authUser.uid, setMealPrepPlan);
   }, [authUser, mealPrepEnabled]);
 
   return (
-    <UserContext.Provider value={{ authUser, macroTargets, mealPrepEnabled, helpModeEnabled, mealPrepPlan, setAuthUser, loading }}>
+    <UserContext.Provider value={{ authUser, macroTargets, mealPrepEnabled, helpModeEnabled, isAdmin, mealPrepPlan, setAuthUser, loading }}>
       {children}
     </UserContext.Provider>
   );
