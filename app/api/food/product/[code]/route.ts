@@ -4,14 +4,14 @@ const FIELDS = "code,product_name,brands,image_front_url,image_front_small_url,n
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { code: string } }
+  { params }: { params: Promise<{ code: string }> }
 ) {
-  const code = params.code?.trim();
-  if (!code) return NextResponse.json({ product: null });
+  const { code } = await params;
+  if (!code?.trim()) return NextResponse.json({ product: null });
 
   try {
     const res = await fetch(
-      `https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}?fields=${encodeURIComponent(FIELDS)}`,
+      `https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code.trim())}?fields=${encodeURIComponent(FIELDS)}`,
       { signal: AbortSignal.timeout(8000) }
     );
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
