@@ -186,7 +186,7 @@ export default function AuthPage() {
               <input
                 className={styles.input}
                 type="text"
-                placeholder="bijv. bilal1"
+                placeholder="Gebruikersnaam"
                 value={username}
                 onChange={(e) => { setUsername(e.target.value); setError(""); }}
                 autoComplete="username"

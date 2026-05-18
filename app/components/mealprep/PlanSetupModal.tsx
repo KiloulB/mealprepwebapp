@@ -234,7 +234,7 @@ export default function PlanSetupModal({ onClose, existingPlan }: Props) {
             {cookFrequency === "custom" && (
               <div className={styles.customFreqRow}>
                 <span className={styles.customFreqLabel}>Elke</span>
-                <button className={styles.stepperBtn} onClick={() => setCookFrequencyDays((d) => Math.max(1, d - 1))}>âˆ’</button>
+                <button className={styles.stepperBtn} onClick={() => setCookFrequencyDays((d) => Math.max(1, d - 1))}>-</button>
                 <span className={styles.stepperVal}>{cookFrequencyDays}</span>
                 <button className={styles.stepperBtn} onClick={() => setCookFrequencyDays((d) => Math.min(30, d + 1))}>+</button>
                 <span className={styles.customFreqLabel}>dagen</span>

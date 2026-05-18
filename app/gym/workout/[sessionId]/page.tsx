@@ -8,7 +8,7 @@ import { deleteDoc, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../../firebase/config";
 import styles from "./workout.module.css";
 import { FiChevronLeft } from "react-icons/fi";
-import { IoCalendarOutline, IoAdd, IoTrashOutline } from "react-icons/io5";
+import { IoCalendarOutline, IoAdd, IoTrashOutline, IoTrendingUpOutline, IoCheckmarkOutline } from "react-icons/io5";
 
 import ExercisePickerModal from "../../../components/gym/ExercisePickerModal";
 import { getPreviousSessionForTemplate } from "../../../firebase/gymSessionQueries";
@@ -117,6 +117,41 @@ export default function WorkoutSessionPage() {
     }
     return m;
   }, [prevSession]);
+
+  const [overloadModalOpen, setOverloadModalOpen] = useState(false);
+
+  // Progressive overload (Double Progression + muscle-based increment):
+  // Lower body → +5kg, upper body → +2.5kg
+  const overloadSuggestions = useMemo(() => {
+    type Suggestion = { exId: string; name: string; currentKg: number; suggestedKg: number; prevReps: number };
+    const list: Suggestion[] = [];
+    if (!prevSession?.exercises || !session?.exercises) return list;
+    const lowerMuscles = ["quadriceps", "hamstrings", "glutes", "calves", "quad", "glute", "leg"];
+    for (const ex of session.exercises) {
+      if (!ex.templateExerciseId) continue;
+      const prevEx = prevSession.exercises.find(p => p.templateExerciseId === ex.templateExerciseId);
+      if (!prevEx) continue;
+      const prevSets = prevEx.sets ?? [];
+      if (prevSets.length === 0 || !prevSets.every(s => s.done)) continue;
+      const currentKg = Math.max(0, ...(ex.sets ?? []).map(s => s.targetKg ?? 0));
+      const avgPrevReps = Math.round(prevSets.reduce((s, p) => s + (p.targetReps ?? 0), 0) / prevSets.length);
+      const muscles = [...(ex.ref?.primaryMuscles ?? []), ...(ex.ref?.secondaryMuscles ?? [])].map(m => m.toLowerCase());
+      const isLower = muscles.some(m => lowerMuscles.some(l => m.includes(l)));
+      const increment = isLower ? 5 : 2.5;
+      list.push({ exId: ex.id, name: ex.ref?.name ?? "Oefening", currentKg, suggestedKg: currentKg + increment, prevReps: avgPrevReps });
+    }
+    return list;
+  }, [prevSession, session]);
+
+  function applyOverload(exId: string, suggestedKg: number) {
+    if (!session?.exercises) return;
+    const nextExercises = session.exercises.map(ex => {
+      if (ex.id !== exId) return ex;
+      return { ...ex, sets: (ex.sets ?? []).map(s => ({ ...s, targetKg: suggestedKg })) };
+    });
+    setSession(prev => prev ? { ...prev, exercises: nextExercises } : prev);
+    debouncedPersist(nextExercises);
+  }
 
   // Progress
   const totalSets = useMemo(
@@ -408,8 +443,8 @@ export default function WorkoutSessionPage() {
               <IoTrashOutline size={18} />
             </button>
           ) : (
-            <button className={styles.finishBtn} type="button" disabled={saving} onClick={finishWorkout}>
-              {saving ? "Bezig…" : "Afronden"}
+            <button className={styles.finishBtn} type="button" disabled={saving} onClick={finishWorkout} aria-label="Afronden">
+              <IoCheckmarkOutline size={22} color="#fff" />
             </button>
           )}
         </div>
@@ -419,7 +454,20 @@ export default function WorkoutSessionPage() {
       <div className={styles.content}>
         {/* Meta block */}
         <div className={styles.metaBlock}>
-          <div className={styles.title}>{session.name ?? "Workout"}</div>
+          <div className={styles.titleRow}>
+            <div className={styles.title}>{session.name ?? "Workout"}</div>
+            {!locked && overloadSuggestions.length > 0 && (
+              <button
+                className={styles.overloadBtn}
+                type="button"
+                onClick={() => setOverloadModalOpen(true)}
+                aria-label="Progressive overload"
+              >
+                <IoTrendingUpOutline size={17} />
+                {overloadSuggestions.length}
+              </button>
+            )}
+          </div>
           <div className={styles.metaRow}>
             <div className={styles.metaItem}>
               <IoCalendarOutline size={14} />
@@ -612,6 +660,50 @@ export default function WorkoutSessionPage() {
       </div>
 
       {saving && <div className={styles.savingToast}>Opslaan…</div>}
+
+      {/* Progressive Overload Modal */}
+      {overloadModalOpen && (
+        <div className={styles.overloadOverlay} onClick={() => setOverloadModalOpen(false)}>
+          <div className={styles.overloadSheet} onClick={e => e.stopPropagation()}>
+            <div className={styles.overloadHeader}>
+              <IoTrendingUpOutline size={20} className={styles.overloadHeaderIcon} />
+              <span className={styles.overloadTitle}>Progressive Overload</span>
+              <button className={styles.overloadClose} onClick={() => setOverloadModalOpen(false)}>✕</button>
+            </div>
+
+            <p className={styles.overloadExplain}>
+              Progressive overload is de wetenschappelijk bewezen methode voor spiergroei: verhoog het gewicht zodra je alle sets haalt. Bovenlichaam +2.5kg, onderlichaam +5kg.
+            </p>
+
+            <div className={styles.overloadList}>
+              {overloadSuggestions.map(item => (
+                <div key={item.exId} className={styles.overloadRow}>
+                  <div className={styles.overloadRowInfo}>
+                    <span className={styles.overloadExName}>{item.name}</span>
+                    <span className={styles.overloadExDetail}>{item.currentKg}kg → {item.suggestedKg}kg</span>
+                  </div>
+                  <button
+                    className={styles.overloadApplyBtn}
+                    onClick={() => { applyOverload(item.exId, item.suggestedKg); setOverloadModalOpen(false); }}
+                  >
+                    Toepassen
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <button
+              className={styles.overloadApplyAll}
+              onClick={() => {
+                overloadSuggestions.forEach(item => applyOverload(item.exId, item.suggestedKg));
+                setOverloadModalOpen(false);
+              }}
+            >
+              Alles toepassen
+            </button>
+          </div>
+        </div>
+      )}
 
       <ExercisePickerModal
         open={pickerOpen}

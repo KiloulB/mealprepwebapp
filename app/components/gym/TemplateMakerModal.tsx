@@ -187,16 +187,16 @@ export default function TemplateMakerModal({
               Kies de oefeningen voor dit template.
             </p>
 
-            <div className={styles.chipGrid}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
               <button
                 className={`${styles.chip} ${exercises.length > 0 ? styles.chipActive : ""}`}
+                style={{ width: "fit-content" }}
                 onClick={() => setPickerOpen(true)}
               >
-                <span className={styles.chipEmoji}>ðŸ’ª</span>
                 <span className={styles.chipLabel}>
                   {exercises.length > 0 ? `${exercises.length} oefeningen gekozen` : "Oefeningen kiezen"}
                 </span>
-                {exercises.length > 0 && <span className={styles.chipCheck}>âœ“</span>}
+                {exercises.length > 0 && <span className={styles.chipCheck}>✓</span>}
               </button>
             </div>
 
@@ -218,7 +218,7 @@ export default function TemplateMakerModal({
                     }}>
                       {ex.ref.image
                         ? <img src={ex.ref.image} alt={ex.ref.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                        : <span style={{ fontSize: 18 }}>ðŸ’ª</span>
+                        : null
                       }
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>

@@ -93,6 +93,14 @@ export default function RecipeDetailPage({
     return `${recipe.portions ?? 1} porties`;
   }, [recipe]);
 
+  // Normalize steps: builtins use steps:string[], user recipes store instructions:[{id,step}]
+  const normalizedSteps: string[] = useMemo(() => {
+    if (!recipe) return [];
+    if (recipe.steps?.length) return recipe.steps;
+    const r = recipe as Recipe & { instructions?: { id?: string; step?: string }[] };
+    return r.instructions?.map((i) => i.step ?? "").filter(Boolean) ?? [];
+  }, [recipe]);
+
   if (!recipe) {
     return (
       <div className={styles.loading}>
@@ -213,8 +221,8 @@ export default function RecipeDetailPage({
           </div>
         ) : (
           <div className={styles.list}>
-            {recipe.steps?.length ? (
-              recipe.steps.map((step, idx) => (
+            {normalizedSteps.length ? (
+              normalizedSteps.map((step, idx) => (
                 <div key={idx} className={styles.stepItem}>
                   <div className={styles.stepNum}>{idx + 1}</div>
                   <div className={styles.stepText}>{step}</div>

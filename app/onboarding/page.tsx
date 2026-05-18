@@ -396,7 +396,7 @@ function OnboardingPage() {
             <div className={styles.formGroup}>
               <label className={styles.label}>Lengte</label>
               <div className={styles.inputWithUnit}>
-                <input type="number" inputMode="decimal" placeholder="181"
+                <input type="number" inputMode="decimal" placeholder=""
                   value={form.heightCm} onChange={(e) => set("heightCm", e.target.value)} />
                 <span className={styles.inputUnit}>cm</span>
               </div>
@@ -407,7 +407,7 @@ function OnboardingPage() {
               <label className={styles.label}>Huidig gewicht</label>
               <div className={styles.inputWithUnit}>
                 <input type="number" inputMode="decimal"
-                  placeholder={form.weightUnit === "kg" ? "80" : "176"}
+                  placeholder=""
                   value={form.weightKg} onChange={(e) => set("weightKg", e.target.value)} />
                 <span className={styles.inputUnit}>{form.weightUnit}</span>
               </div>
@@ -609,7 +609,7 @@ function OnboardingPage() {
           <>
             <div className={styles.stepTitle}>Herstelcode</div>
             <div className={styles.stepSubtitle}>
-              Gebruik deze code als je ooit je gebruikersnaam of PIN vergeet. Je ziet hem hier maar één keer.
+              Gebruik deze code als je ooit je gebruikersnaam of PIN vergeet. Je kunt deze altijd terugvinden via Instellingen.
             </div>
 
             <div className={styles.recoverySection}>
